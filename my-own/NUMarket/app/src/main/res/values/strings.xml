@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NU Market</string>
+    <string name="action_settings">Settings</string>
+    <integer name="com_vk_sdk_AppId">5597326</integer>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="no_data">Could not load data. Check the network connections and try again.</string>
+    <string name="try_again_button_text">Try again</string>
+</resources>

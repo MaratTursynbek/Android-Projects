@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi\\ic_create_white_36dp.png",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\drawable-xxxhdpi\\ic_create_white_36dp.png"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi\\ic_add_white_36dp.png",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\drawable-xxxhdpi\\ic_add_white_36dp.png"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi\\ic_delete_white_36dp.png",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\drawable-xxxhdpi\\ic_delete_white_36dp.png"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi\\ic_done_white_36dp.png",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\drawable-xxxhdpi\\ic_done_white_36dp.png"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi\\ic_date_range_white_36dp.png",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\drawable-xxxhdpi\\ic_date_range_white_36dp.png"
+    }
+]

@@ -1,0 +1,62 @@
+[
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\activity_add_new_event.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\activity_add_new_event.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\activity_main.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\days_tab_view.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\days_tab_view.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\activity_edit_saved_event.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\activity_edit_saved_event.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\content_add_new_event.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\content_add_new_event.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\list_view_content.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\list_view_content.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\activity_quick_calculation.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\activity_quick_calculation.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\activity_event_information.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\activity_event_information.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\days_list_item.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\days_list_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\content_quick_calculation.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\content_quick_calculation.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\content_event_information.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\content_event_information.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\content_edit_saved_event.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\content_edit_saved_event.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\content_main.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\content_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\date_tab_view.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\date_tab_view.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\layout-hdpi-v4\\tabs_bg.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\layout-hdpi\\tabs_bg.xml"
+    }
+]

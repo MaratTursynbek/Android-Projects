@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">IRemind</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="views_array">
+        <item>One Time Reminders</item>
+        <item>Birthdays</item>
+        <item>Repeating Reminders</item>
+    </string-array>
+    <string name="menu">Меню</string>
+    <string name="first_screen">One Time Reminders</string>
+    <string name="second_screen">Birthdays</string>
+    <string name="third_screen">Repeating Remiders</string>
+    <string name="open_menu">Open</string>
+    <string name="close_menu">Close</string>
+    <string name="empty_text_view">Nothing to Remind You :)</string>
+    <string name="new_reminder_button_text">+</string>
+</resources>

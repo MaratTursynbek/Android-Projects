@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\menu\\menu_add_event.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\menu\\menu_add_event.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\menu\\menu_event_info.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\menu\\menu_event_info.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\menu\\menu_edit_event.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\menu\\menu_edit_event.xml"
+    },
+    {
+        "merged": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\build\\intermediates\\res\\merged\\release\\menu\\menu_main.xml",
+        "source": "C:\\Users\\Marat\\AndroidStudioProjects\\Days\\app\\src\\main\\res\\menu\\menu_main.xml"
+    }
+]

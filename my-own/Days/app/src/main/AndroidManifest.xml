@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="developer.marat.apps.days">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <compatible-screens>
+        <!-- all normal size screens -->
+        <screen android:screenSize="normal" android:screenDensity="hdpi" />
+        <screen android:screenSize="normal" android:screenDensity="xhdpi" />
+        <screen android:screenSize="normal" android:screenDensity="420" />
+        <screen android:screenSize="normal" android:screenDensity="480" />
+        <screen android:screenSize="normal" android:screenDensity="560" />
+        <screen android:screenSize="normal" android:screenDensity="640" />
+        <!-- all large size screens -->
+        <screen android:screenSize="large" android:screenDensity="mdpi" />
+        <screen android:screenSize="large" android:screenDensity="hdpi" />
+        <screen android:screenSize="large" android:screenDensity="xhdpi" />
+        <screen android:screenSize="large" android:screenDensity="420" />
+        <screen android:screenSize="large" android:screenDensity="480" />
+        <screen android:screenSize="large" android:screenDensity="560" />
+        <screen android:screenSize="large" android:screenDensity="640" />
+    </compatible-screens>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="developer.marat.apps.days.Activities.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="developer.marat.apps.days.Activities.AddNewEventActivity"
+            android:label="@string/title_activity_add_new_event"
+            android:parentActivityName="developer.marat.apps.days.Activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="developer.marat.apps.days.Activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="developer.marat.apps.days.Activities.EditSavedEventActivity"
+            android:label="@string/title_activity_edit_saved_event"
+            android:parentActivityName="developer.marat.apps.days.Activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="developer.marat.apps.days.Activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="developer.marat.apps.days.Activities.QuickCalculationActivity"
+            android:label="@string/title_activity_quick_calculation"
+            android:parentActivityName="developer.marat.apps.days.Activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="developer.marat.apps.days.Activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="developer.marat.apps.days.Activities.EventInformationActivity"
+            android:label="@string/title_activity_event_information"
+            android:parentActivityName="developer.marat.apps.days.Activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="developer.marat.apps.days.Activities.MainActivity" />
+        </activity>
+
+        <receiver android:name="developer.marat.apps.days.Alarms.DayBeforeAlarmBroadcastReceiver"/>
+        <receiver android:name="developer.marat.apps.days.Alarms.OnDayAlarmBroadcastReceiver"/>
+
+        <receiver android:name="developer.marat.apps.days.Alarms.BootCompletedReceiver" android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="developer.marat.apps.days.Alarms.RestartAlarmsService"/>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.mara.daycounter.DaysActivity"
+    tools:showIn="@layout/activity_days">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/initialNumberOfDays"
+        android:id="@+id/numberOfDaysTextView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:textSize="68sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/daysText"
+        android:id="@+id/daysText"
+        android:layout_below="@+id/numberOfDaysTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fromTextView"
+        android:id="@+id/fromDatePickerTextView"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="17sp"/>
+
+    <EditText
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/fromDate"
+        android:layout_alignBaseline="@+id/fromDatePickerTextView"
+        android:layout_toRightOf="@+id/fromDatePickerTextView"
+        android:layout_toEndOf="@+id/fromDatePickerTextView"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
+        android:focusableInTouchMode="false"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toTextView"
+        android:id="@+id/toDatePickerTextView"
+        android:layout_marginTop="30dp"
+        android:textSize="17sp"
+        android:layout_below="@+id/fromDatePickerTextView"
+        android:layout_alignRight="@+id/fromDatePickerTextView"
+        android:layout_alignEnd="@+id/fromDatePickerTextView"/>
+
+    <EditText
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/toDate"
+        android:layout_alignBaseline="@+id/toDatePickerTextView"
+        android:layout_toRightOf="@+id/toDatePickerTextView"
+        android:layout_toEndOf="@+id/toDatePickerTextView"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="22dp"
+        android:focusableInTouchMode="false"/>
+
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:text="@string/calculateButtonText"
+        android:id="@+id/calculateDaysButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="95dp" />
+
+</RelativeLayout>

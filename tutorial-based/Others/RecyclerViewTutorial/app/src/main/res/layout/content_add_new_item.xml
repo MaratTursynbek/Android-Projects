@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.marat.recyclerviewtutorial.AddNewItemActivity"
+    tools:showIn="@layout/activity_add_new_item">
+
+    <EditText
+        android:id="@+id/newText"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:hint="New List Item"
+        android:textSize="17sp" />
+
+    <Button
+        android:id="@+id/saveNewItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="Save" />
+
+    <EditText
+        android:id="@+id/waitTimeEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/saveNewItem"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/waitTimeEditText"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/waitTimeEditText"
+        android:layout_toStartOf="@+id/waitTimeEditText"
+        android:text="Notification in: " />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/waitTimeEditText"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@+id/waitTimeEditText"
+        android:layout_toRightOf="@+id/waitTimeEditText"
+        android:text="seconds" />
+
+</RelativeLayout>

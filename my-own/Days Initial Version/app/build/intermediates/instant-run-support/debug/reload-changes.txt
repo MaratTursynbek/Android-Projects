@@ -1,0 +1,5 @@
+CHANGED,C:\Users\Marat\AndroidStudioProjects\Days\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\android\tools\fd\runtime\AppPatchesLoaderImpl.class
+CHANGED,C:\Users\Marat\AndroidStudioProjects\Days\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\example\marat\days\Activities\EditSavedEventActivity$override.class
+CHANGED,C:\Users\Marat\AndroidStudioProjects\Days\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\example\marat\days\Activities\EditSavedEventActivity$4$override.class
+CHANGED,C:\Users\Marat\AndroidStudioProjects\Days\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\example\marat\days\Activities\EditSavedEventActivity$6$override.class
+CHANGED,C:\Users\Marat\AndroidStudioProjects\Days\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\example\marat\days\Activities\EditSavedEventActivity$5$override.class

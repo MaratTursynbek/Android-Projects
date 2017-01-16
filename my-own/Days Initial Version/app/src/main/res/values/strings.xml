@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Days</string>
+    <string name="action_settings">Settings</string>
+    <string name="no_saved_days">No Days to Show</string>
+    <string name="title_activity_add_new_event">Add New Event</string>
+    <string name="fromTextView">from:</string>
+    <string name="untilTextView">until:</string>
+    <string name="saveButtonText">Save</string>
+    <string name="calculateButtonText">Calculate</string>
+    <string name="todayCheckBoxText">today</string>
+    <string name="eventTitleTextView">Title of the Event:</string>
+    <string name="title_activity_view_database">Database</string>
+    <string name="title_activity_edit_saved_event">Edit Event</string>
+    <string name="updateButtonText">Update</string>
+    <string name="one_time">One Time</string>
+    <string name="title_activity_one_time">Quick Calculation</string>
+    <string name="calculate_days_text">Calculate the number of days between two dates</string>
+    <string name="title_activity_quick_calculation">QuickCalculationActivity</string>
+    <string name="initialNumberOfDays">0</string>
+    <string name="daysText">DAYS</string>
+    <string name="toTextView">until:</string>
+
+    <string name="initialDate">--/--/----</string>
+    <string name="afterSomeDaysTextView">after: </string>
+    <string name="description_text_view">Description:</string>
+    <string name="add_new">+</string>
+</resources>

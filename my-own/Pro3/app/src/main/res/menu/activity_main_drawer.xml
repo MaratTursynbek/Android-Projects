@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_36dp"
+            android:title="Мой Гараж" />
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_favorite_black_36dp"
+            android:title="Мои Автомойки" />
+        <item
+            android:id="@+id/nav_car_washers"
+            android:icon="@drawable/ic_local_car_wash_black_36dp"
+            android:title="Все Автомойки" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_contacts"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Контакты" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="О Проекте" />
+            <item
+                android:id="@+id/empty"
+                android:title="" />
+            <item
+                android:id="@+id/nav_log_out"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Выйти" />
+        </menu>
+    </item>
+
+</menu>

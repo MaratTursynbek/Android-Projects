@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Activities.MainActivity">
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/one_time"
+        android:title="@string/one_time"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/add_new"
+        android:title="Add New"
+        android:icon="@drawable/plus"
+        app:showAsAction="ifRoom" />
+
+</menu>
