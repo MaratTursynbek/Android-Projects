@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.marat.apps.android.pro3.Models.PhoneEditText;
+import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
 import com.marat.apps.android.pro3.Models.PhoneTextWatcher;
 import com.marat.apps.android.pro3.Internet.PostRequestResponse;
 import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
@@ -32,24 +32,19 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
 
     private static final String TAG = "myTag";
 
-    String userAuthorizationURL = "https://whispering-crag-11991.herokuapp.com/api/v1/sessions";
-    String formattedPhoneNumber;
+    private String userAuthorizationURL = "https://whispering-crag-11991.herokuapp.com/api/v1/sessions";
+    private String formattedPhoneNumber;
 
-    PhoneEditText phoneNumberEditText;
-    EditText passwordEditText;
-    Button logInButton;
-    TextView createAccountTextView, forgotPasswordTextView;
+    private PhoneNumberEditText phoneNumberEditText;
+    private EditText passwordEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        phoneNumberEditText = (PhoneEditText) findViewById(R.id.phoneNumberEditText);
+        phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.LogInPhoneNumberEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
-        logInButton = (Button) findViewById(R.id.logInButton);
-        createAccountTextView = (TextView) findViewById(R.id.createAccountTextView);
-        forgotPasswordTextView = (TextView) findViewById(R.id.forgotPasswordTextView);
 
         findViewById(R.id.loginLayout).setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -93,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
     }
 
     public void logInUser(View v) {
+        hideKeyboard();
         UniversalPostRequest postRequest = new UniversalPostRequest(this);
         postRequest.delegate = this;
         postRequest.post(userAuthorizationURL, createUserDataInJson());
@@ -154,12 +150,7 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         passwordEditText.clearFocus();
     }
 
-    public void createAccount(View v) {
-        Intent intent1 = new Intent(this, CreateAccountActivity.class);
-        startActivity(intent1);
-    }
-
-    public void restorePassword(View v) {
+    public void goToRestorePasswordActivity(View v) {
         Intent intent2 = new Intent(this, RestorePasswordActivity.class);
         startActivity(intent2);
     }

@@ -3,7 +3,7 @@
     package="com.marat.apps.android.pro3">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".Activities.SplashScreenActivity"
             android:label="@string/app_name"
@@ -23,19 +22,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".Activities.RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
-
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.marat.apps.android.pro3.Activities.RegisterActivity" />
+        </activity>
         <activity
             android:name=".Activities.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
@@ -44,9 +48,8 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.marat.apps.pro3.Activities.LoginActivity" />
+                android:value="com.marat.apps.android.pro3.Activities.RegisterActivity" />
         </activity>
-
         <activity
             android:name=".Activities.RestorePasswordActivity"
             android:label="@string/title_activity_restore_password"
@@ -55,9 +58,8 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.marat.apps.pro3.Activities.LoginActivity" />
+                android:value="com.marat.apps.android.pro3.Activities.LoginActivity" />
         </activity>
-
     </application>
 
 </manifest>

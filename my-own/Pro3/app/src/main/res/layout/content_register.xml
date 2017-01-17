@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loginLayout"
+    android:id="@+id/registerAccount"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryBackground"
@@ -13,53 +13,55 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.marat.apps.android.pro3.Activities.LoginActivity"
-    tools:showIn="@layout/activity_login">
+    tools:context="com.marat.apps.android.pro3.Activities.RegisterActivity"
+    tools:showIn="@layout/activity_register">
+
+    <TextView
+        android:id="@+id/centerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 
     <com.marat.apps.android.pro3.Models.PhoneNumberEditText
-        android:id="@+id/LogInPhoneNumberEditText"
+        android:id="@+id/registerPhoneNumberEditText"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_above="@+id/passwordEditText"
+        android:layout_above="@+id/centerTextView"
         android:background="@android:drawable/editbox_background_normal"
         android:digits="0123456789+"
         android:inputType="phone"
         android:maxLength="15"
         android:textSize="14sp" />
 
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="10dp"
-        android:background="@android:drawable/editbox_background_normal"
-        android:hint="@string/hint_password"
-        android:inputType="textPassword"
-        android:textSize="14sp" />
-
     <Button
         android:id="@+id/logInButton"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_below="@+id/passwordEditText"
+        android:layout_below="@+id/centerTextView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
         android:background="@color/colorButtonBackground"
-        android:onClick="logInUser"
-        android:text="@string/login_text"
+        android:onClick="goToCreateAccountActivity"
+        android:text="@string/register_text"
         android:textColor="@android:color/white" />
 
     <TextView
-        android:id="@+id/forgotPasswordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/passwordEditText"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:onClick="goToRestorePasswordActivity"
-        android:text="@string/forgot_password_text" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/LogInTextView"
+        android:layout_toStartOf="@+id/LogInTextView"
+        android:text="@string/word_or" />
+
+    <TextView
+        android:id="@+id/LogInTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="goToLogInActivity"
+        android:text="@string/login_text"
+        android:textColor="@android:color/white" />
 
 </RelativeLayout>

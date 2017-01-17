@@ -32,7 +32,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         Log.v("myTag", username + " " + password + " " + token);
 
         if ("".equals(username) || "".equals(password) || "".equals(token)) {
-            intent1 = new Intent(this, LoginActivity.class);
+            intent1 = new Intent(this, RegisterActivity.class);
         }
         else {
             intent1 = new Intent(this, MainActivity.class);

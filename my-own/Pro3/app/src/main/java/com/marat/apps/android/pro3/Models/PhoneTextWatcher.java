@@ -5,10 +5,10 @@ import android.text.TextWatcher;
 
 public class PhoneTextWatcher implements TextWatcher {
 
-    private PhoneEditText phoneNumberEditText;
+    private PhoneNumberEditText phoneNumberEditText;
     private String phoneNumber = "";
 
-    public PhoneTextWatcher(PhoneEditText editText) {
+    public PhoneTextWatcher(PhoneNumberEditText editText) {
         phoneNumberEditText = editText;
     }
 

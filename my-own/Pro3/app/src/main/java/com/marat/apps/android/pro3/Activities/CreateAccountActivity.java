@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.marat.apps.android.pro3.Models.PhoneEditText;
+import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
 import com.marat.apps.android.pro3.Models.PhoneTextWatcher;
 import com.marat.apps.android.pro3.Internet.PostRequestResponse;
 import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
@@ -22,8 +22,8 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
 
     String userRegistrationURL = "https://whispering-crag-11991.herokuapp.com/api/v1/users";
 
-    EditText userNameEditText, passwordEditText, confirmPasswordEditText, cityEditText, carTypeEditText;
-    PhoneEditText phoneNumberEditText;
+    private EditText userNameEditText, passwordEditText, confirmPasswordEditText, cityEditText, carTypeEditText;
+    private PhoneNumberEditText phoneNumberEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         userNameEditText = (EditText) findViewById(R.id.userNameEditText);
-        phoneNumberEditText = (PhoneEditText) findViewById(R.id.newPhoneNumberEditText);
+        phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.newPhoneNumberEditText);
         passwordEditText = (EditText) findViewById(R.id.newPasswordEditText);
         confirmPasswordEditText = (EditText) findViewById(R.id.newPasswordEditText2);
         cityEditText = (EditText) findViewById(R.id.userCityEditText);

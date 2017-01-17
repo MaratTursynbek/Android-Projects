@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             editor.clear();
             editor.apply();
 
-            Intent intent = new Intent(this, LoginActivity.class);
+            Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
             finish();
         }

@@ -14,12 +14,12 @@
     <string name="hint_city">City</string>
     <string name="hint_car_type">Car Type</string>
 
-    <string name="login_text">Log In</string>
+    <string name="register_text">Register</string>
+    <string name="login_text"><u>Log In</u></string>
     <string name="forgot_password_text">Forgot?</string>
-    <string name="create_account_text"><u>Create account</u></string>
+    <string name="create_account_text">Create account</string>
     <string name="city_text">Select your City:</string>
     <string name="car_type_text">Choose your Car type:</string>
-
 
     <string name="title_activity_create_account">CreateAccountActivity</string>
     <string name="title_activity_restore_password">RestorePasswordActivity</string>
@@ -27,5 +27,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="app_website_link">pro3.kz</string>
+    <string name="word_or">or</string>
+    <string name="title_activity_register">RegisterActivity</string>
 
 </resources>

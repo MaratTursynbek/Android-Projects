@@ -28,7 +28,7 @@
         android:maxLength="30"
         android:textSize="14sp" />
 
-    <com.marat.apps.pro3.Models.PhoneEditText
+    <com.marat.apps.android.pro3.Models.PhoneNumberEditText
         android:id="@+id/newPhoneNumberEditText"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -129,16 +129,15 @@
     </LinearLayout>
 
     <Button
-    android:id="@+id/logInButton"
-    android:layout_width="match_parent"
-    android:layout_height="55dp"
-    android:layout_below="@+id/cityAndCarLayout"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="20dp"
-    android:background="@color/colorButtonBackground"
-    android:onClick="registerUser"
-    android:text="@string/create_account_text"
-    android:textColor="@android:color/white" />
-
+        android:id="@+id/logInButton"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@+id/cityAndCarLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorButtonBackground"
+        android:onClick="registerUser"
+        android:text="@string/create_account_text"
+        android:textColor="@android:color/white" />
 
 </RelativeLayout>
