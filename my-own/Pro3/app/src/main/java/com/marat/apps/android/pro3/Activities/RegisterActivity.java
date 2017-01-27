@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
 import com.marat.apps.android.pro3.Models.PhoneTextWatcher;
@@ -33,20 +38,49 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.registerPhoneNumberEditText);
-        phoneNumberEditText.setHint("(XXX) XXX-XX-XX");
-        PhoneTextWatcher phoneTextWatcher = new PhoneTextWatcher(phoneNumberEditText);
-        phoneNumberEditText.addTextChangedListener(phoneTextWatcher);
+        phoneNumberEditText.addTextChangedListener(new PhoneTextWatcher(phoneNumberEditText));
+        phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (phoneNumberEditText.length() == 0) {
+                        phoneNumberEditText.setHint("(XXX) XXX-XX-XX");
+                    }
+                } else {
+                    if (phoneNumberEditText.length() == 0) {
+                        phoneNumberEditText.setHint(R.string.hint_new_phone_number);
+                    }
+                }
+            }
+        });
+        phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    Log.v("tag", "action triggered");
+                    goToCreateAccountActivity(v);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     public void goToLogInActivity(View v) {
-        Intent intent1 = new Intent(this, LoginActivity.class);
-        startActivity(intent1);
+        hideKeyboard();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     public void goToCreateAccountActivity(View v) {
-        hideKeyboard();
-        Intent intent1 = new Intent(this, CreateAccountActivity.class);
-        startActivity(intent1);
+        if (phoneNumberIsFullyEntered()) {
+            //hideKeyboard();
+            Intent intent = new Intent(this, CreateAccountActivity.class);
+            intent.putExtra("phone_number", phoneNumberEditText.getText().toString());
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Incorrect Phone Number", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideKeyboard() {
@@ -55,4 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
         phoneNumberEditText.clearFocus();
     }
 
+    private boolean phoneNumberIsFullyEntered() {
+        return (phoneNumberEditText.length() == 15);
+    }
 }

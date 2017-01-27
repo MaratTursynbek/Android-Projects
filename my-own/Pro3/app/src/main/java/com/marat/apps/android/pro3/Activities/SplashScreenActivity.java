@@ -8,42 +8,53 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.marat.apps.android.pro3.Databases.AllCarWashersDatabase;
 import com.marat.apps.android.pro3.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    Intent intent1;
-    String username, password, token;
-    long startTime, endTime;
+    private Intent intent1;
     private static final int SPLASH_TIME_OUT = 1500;
+
+    private String[] data1 = new String[]{"1", "1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "2500", "123", "456"};
+    private String[] data2 = new String[]{"2", "1", "Master Keruen", "ТЦ Керуен, ул. Достык 21, 0-этаж", "3000", "123", "456"};
+    private String[] data3 = new String[]{"3", "0", "Быстро", "АЗС NOMAD, ул. Керей-Жанибек 63", "2000", "123", "456"};
+    private String[] data4 = new String[]{"4", "1", "АВТО Жуу", "Назарбаев Университет, пр. Кабанбай-Батыра 53, 1-этаж парковки", "2700", "123", "456"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
         SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-        username = sharedPreferences.getString("username", "");
-        password = sharedPreferences.getString("password", "");
-        token = sharedPreferences.getString("ACCESS_TOKEN", "");
+        String username = sharedPreferences.getString("username", "");
+        String password = sharedPreferences.getString("password", "");
+        String token = sharedPreferences.getString("ACCESS_TOKEN", "");
 
-        Log.v("myTag", username + " " + password + " " + token);
+        Log.v("tag", "Login info: " + username + " " + password + " " + token);
 
         if ("".equals(username) || "".equals(password) || "".equals(token)) {
             intent1 = new Intent(this, RegisterActivity.class);
-        }
-        else {
+        } else {
+            AllCarWashersDatabase db = new AllCarWashersDatabase(this);
+            db.open();
+            int num = db.deleteAllData();
+            Log.v("tag", num + "");
+            db.addData(Integer.parseInt(data1[0]), Integer.parseInt(data1[1]), data1[2], data1[3], Integer.parseInt(data1[4]), Integer.parseInt(data1[5]), Integer.parseInt(data1[6]));
+            db.addData(Integer.parseInt(data2[0]), Integer.parseInt(data2[1]), data2[2], data2[3], Integer.parseInt(data2[4]), Integer.parseInt(data2[5]), Integer.parseInt(data2[6]));
+            db.addData(Integer.parseInt(data3[0]), Integer.parseInt(data3[1]), data3[2], data3[3], Integer.parseInt(data3[4]), Integer.parseInt(data3[5]), Integer.parseInt(data3[6]));
+            db.addData(Integer.parseInt(data4[0]), Integer.parseInt(data4[1]), data4[2], data4[3], Integer.parseInt(data4[4]), Integer.parseInt(data4[5]), Integer.parseInt(data4[6]));
+            db.close();
             intent1 = new Intent(this, MainActivity.class);
         }
 
-        endTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();
 
         if ((endTime - startTime) >= SPLASH_TIME_OUT) {
             startActivity(intent1);
-        }
-        else {
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

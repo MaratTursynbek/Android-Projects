@@ -23,6 +23,7 @@
         android:layout_above="@+id/passwordEditText"
         android:background="@android:drawable/editbox_background_normal"
         android:digits="0123456789+"
+        android:imeOptions="actionDone"
         android:inputType="phone"
         android:maxLength="15"
         android:textSize="14sp" />
@@ -35,6 +36,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:drawable/editbox_background_normal"
         android:hint="@string/hint_password"
+        android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:textSize="14sp" />
 

@@ -7,13 +7,13 @@
             android:icon="@drawable/ic_home_black_36dp"
             android:title="Мой Гараж" />
         <item
-            android:id="@+id/nav_favorites"
-            android:icon="@drawable/ic_favorite_black_36dp"
-            android:title="Мои Автомойки" />
-        <item
             android:id="@+id/nav_car_washers"
             android:icon="@drawable/ic_local_car_wash_black_36dp"
             android:title="Все Автомойки" />
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_stars_black_36dp"
+            android:title="Мои Автомойки" />
     </group>
 
     <item android:title="Communicate">

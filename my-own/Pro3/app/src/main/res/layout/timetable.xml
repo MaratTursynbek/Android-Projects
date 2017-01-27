@@ -8,7 +8,7 @@
         android:id="@+id/allCarWashersTable"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="100dp"
+        android:columnWidth="80dp"
         android:gravity="center"
         android:horizontalSpacing="0dp"
         android:numColumns="auto_fit"

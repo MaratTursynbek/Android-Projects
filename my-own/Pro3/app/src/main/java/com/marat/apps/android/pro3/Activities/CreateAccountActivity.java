@@ -1,5 +1,6 @@
 package com.marat.apps.android.pro3.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,7 +33,7 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         userNameEditText = (EditText) findViewById(R.id.userNameEditText);
         phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.newPhoneNumberEditText);
@@ -41,10 +42,10 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         cityEditText = (EditText) findViewById(R.id.userCityEditText);
         carTypeEditText = (EditText) findViewById(R.id.userCarEditText);
 
-        phoneNumberEditText.setHint("(XXX) XXX-XX-XX");
-
-        PhoneTextWatcher phoneTextWatcher = new PhoneTextWatcher(phoneNumberEditText);
-        phoneNumberEditText.addTextChangedListener(phoneTextWatcher);
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        phoneNumberEditText.setText(extras.getString("phone_number"));
+        phoneNumberEditText.setFocusable(false);
     }
 
     public void registerUser(View v) {

@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
 
-        FavoriteFragment favoriteFragment = new FavoriteFragment();
-        fragmentTransaction.add(R.id.fragment_container, favoriteFragment);
+        AllCarWashersFragment allCarWashersFragment = new AllCarWashersFragment();
+        fragmentTransaction.add(R.id.fragment_container, allCarWashersFragment);
         fragmentTransaction.commit();
 
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);

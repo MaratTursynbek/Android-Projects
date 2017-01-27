@@ -34,8 +34,10 @@
         <activity
             android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login"
+            android:parentActivityName=".Activities.RegisterActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.marat.apps.android.pro3.Activities.RegisterActivity" />
@@ -43,7 +45,7 @@
         <activity
             android:name=".Activities.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
-            android:parentActivityName=".Activities.LoginActivity"
+            android:parentActivityName=".Activities.RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

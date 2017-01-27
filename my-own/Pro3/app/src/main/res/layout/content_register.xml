@@ -20,7 +20,7 @@
         android:id="@+id/centerTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
 
     <com.marat.apps.android.pro3.Models.PhoneNumberEditText
         android:id="@+id/registerPhoneNumberEditText"
@@ -29,6 +29,8 @@
         android:layout_above="@+id/centerTextView"
         android:background="@android:drawable/editbox_background_normal"
         android:digits="0123456789+"
+        android:hint="@string/hint_new_phone_number"
+        android:imeOptions="actionNext"
         android:inputType="phone"
         android:maxLength="15"
         android:textSize="14sp" />

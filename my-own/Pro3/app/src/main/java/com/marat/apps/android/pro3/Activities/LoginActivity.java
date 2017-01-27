@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,9 +29,7 @@ import java.io.IOException;
 
 import okhttp3.Response;
 
-public class LoginActivity extends AppCompatActivity implements PostRequestResponse{
-
-    private static final String TAG = "myTag";
+public class LoginActivity extends AppCompatActivity implements PostRequestResponse {
 
     private String userAuthorizationURL = "https://whispering-crag-11991.herokuapp.com/api/v1/sessions";
     private String formattedPhoneNumber;
@@ -55,40 +54,31 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         });
 
         phoneNumberEditText.setHint("(XXX) XXX-XX-XX");
-
-        phoneNumberEditText.setOnKeyListener(new View.OnKeyListener() {
+        phoneNumberEditText.addTextChangedListener(new PhoneTextWatcher(phoneNumberEditText));
+        phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    if (event.getAction() == KeyEvent.ACTION_UP) {
-                        phoneNumberEditText.clearFocus();
-                        passwordEditText.requestFocus();
-                        return true;
-                    }
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    phoneNumberEditText.clearFocus();
+                    passwordEditText.requestFocus();
+                    return true;
                 }
                 return false;
             }
         });
-
-        passwordEditText.setOnKeyListener(new View.OnKeyListener() {
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    if (event.getAction() == KeyEvent.ACTION_UP) {
-                        hideKeyboard();
-                        logInUser(v);
-                    }
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    logInUser(v);
+                    return true;
                 }
                 return false;
             }
         });
-
-        PhoneTextWatcher phoneTextWatcher = new PhoneTextWatcher(phoneNumberEditText);
-        phoneNumberEditText.addTextChangedListener(phoneTextWatcher);
     }
 
     public void logInUser(View v) {
-        hideKeyboard();
         UniversalPostRequest postRequest = new UniversalPostRequest(this);
         postRequest.delegate = this;
         postRequest.post(userAuthorizationURL, createUserDataInJson());
@@ -96,12 +86,11 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
 
     private String createUserDataInJson() {
         String phone = phoneNumberEditText.getText().toString();
-        formattedPhoneNumber = phone.substring(1,4) + phone.substring(6,9) + phone.substring(10,12) + phone.substring(13);
-
+        formattedPhoneNumber = phone.substring(1, 4) + phone.substring(6, 9) + phone.substring(10, 12) + phone.substring(13);
         return "{\"user\":{"
-                +   "\"phone_number\":"    +   "\""   +   formattedPhoneNumber                      +    "\""   +   ","
-                +   "\"password\":"        +   "\""   +   passwordEditText.getText().toString()     +    "\""
-                +   "}}";
+                + "\"phone_number\":" + "\"" + formattedPhoneNumber + "\"" + ","
+                + "\"password\":" + "\"" + passwordEditText.getText().toString() + "\""
+                + "}}";
     }
 
     @Override
@@ -117,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         try {
             res = response.body().string();
 
-            Log.v(TAG, res);
+            Log.v("tag", res);
 
             JSONObject user = new JSONObject(res);
             String token = user.getString("token");
@@ -128,6 +117,12 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         }
 
         if (isSuccessful) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    hideKeyboard();
+                }
+            });
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
