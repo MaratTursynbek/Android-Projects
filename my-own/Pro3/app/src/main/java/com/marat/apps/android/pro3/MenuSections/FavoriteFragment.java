@@ -12,7 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.AllCarWashersAdapter;
+import com.marat.apps.android.pro3.Adapters.AllStationsAdapter;
+import com.marat.apps.android.pro3.Adapters.FavoriteStationsAdapter;
 import com.marat.apps.android.pro3.Databases.AllCarWashersDatabase;
 import com.marat.apps.android.pro3.R;
 
@@ -23,7 +24,7 @@ public class FavoriteFragment extends Fragment {
     private AllCarWashersDatabase db;
 
     private RecyclerView recyclerView;
-    private AllCarWashersAdapter adapter;
+    private FavoriteStationsAdapter adapter;
     private TextView emptyText;
 
     @Override
@@ -47,7 +48,7 @@ public class FavoriteFragment extends Fragment {
 
         db = new AllCarWashersDatabase(context);
         db.open();
-        data = db.getData();
+        data = db.getFavoriteStations();
 
         if (data.getCount() <= 0) {
             recyclerView.setVisibility(View.INVISIBLE);
@@ -62,7 +63,7 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        adapter = new AllCarWashersAdapter(data, context, db);
+        adapter = new FavoriteStationsAdapter(data, context, db);
         recyclerView.setAdapter(adapter);
     }
 }

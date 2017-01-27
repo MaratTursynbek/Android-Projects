@@ -7,13 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.AllCarWashersAdapter;
+import com.marat.apps.android.pro3.Adapters.AllStationsAdapter;
 import com.marat.apps.android.pro3.Databases.AllCarWashersDatabase;
 import com.marat.apps.android.pro3.R;
 
@@ -24,7 +23,7 @@ public class AllCarWashersFragment extends Fragment {
     private AllCarWashersDatabase db;
 
     private RecyclerView recyclerView;
-    private AllCarWashersAdapter adapter;
+    private AllStationsAdapter adapter;
     private TextView emptyText;
 
     @Override
@@ -48,7 +47,7 @@ public class AllCarWashersFragment extends Fragment {
 
         db = new AllCarWashersDatabase(context);
         db.open();
-        data = db.getData();
+        data = db.getAllStations();
 
         if (data.getCount() <= 0) {
             recyclerView.setVisibility(View.INVISIBLE);
@@ -63,7 +62,7 @@ public class AllCarWashersFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        adapter = new AllCarWashersAdapter(data, context, db);
+        adapter = new AllStationsAdapter(data, context, db);
         recyclerView.setAdapter(adapter);
     }
 }

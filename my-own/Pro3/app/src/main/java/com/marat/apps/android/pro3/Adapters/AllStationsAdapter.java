@@ -13,13 +13,13 @@ import android.widget.TextView;
 import com.marat.apps.android.pro3.Databases.AllCarWashersDatabase;
 import com.marat.apps.android.pro3.R;
 
-public class AllCarWashersAdapter extends RecyclerView.Adapter<AllCarWashersAdapter.AllViewHolder> {
+public class AllStationsAdapter extends RecyclerView.Adapter<AllStationsAdapter.AllViewHolder> {
 
     private Cursor cursor;
     private Context context;
     private AllCarWashersDatabase db;
 
-    public AllCarWashersAdapter(Cursor data, Context c, AllCarWashersDatabase database) {
+    public AllStationsAdapter(Cursor data, Context c, AllCarWashersDatabase database) {
         cursor = data;
         context = c;
         db = database;
