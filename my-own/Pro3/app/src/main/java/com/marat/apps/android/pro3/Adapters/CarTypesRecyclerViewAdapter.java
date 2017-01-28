@@ -1,6 +1,7 @@
 package com.marat.apps.android.pro3.Adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,9 +12,10 @@ import android.widget.TextView;
 
 import com.marat.apps.android.pro3.R;
 
-import java.util.List;
-
 public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRecyclerViewAdapter.ViewHolder> {
+
+    private int seletedCar = 0;
+    private ViewHolder selectedViewHolder;
 
     private int[] carIcons = new int[]{R.drawable.ic_cars_small, R.drawable.ic_cars_sedan, R.drawable.ic_cars_limo, R.drawable.ic_cars_suv, R.drawable.ic_cars_minivan};
     private String[] carNames = new String[]{"Малолитражка", "Седан", "Премиум", "Внедорожник", "Минивэн"};
@@ -44,14 +46,18 @@ public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRe
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final int pos = position;
         holder.icon.setImageResource(carIcons[pos]);
         holder.name.setText(carNames[pos]);
+        if (seletedCar == pos) {
+            setSelected(holder, pos);
+        }
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("tag", "item " + pos + " being clicked");
+                setUnselected();
+                setSelected(holder, pos);
             }
         });
     }
@@ -59,5 +65,17 @@ public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRe
     @Override
     public int getItemCount() {
         return carNames.length;
+    }
+
+    private void setUnselected() {
+        selectedViewHolder.name.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+        selectedViewHolder.name.setBackgroundResource(0);
+    }
+
+    private void setSelected(ViewHolder holder, int i) {
+        holder.name.setBackgroundResource(R.drawable.bg_chosen_car_type_text);
+        holder.name.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+        seletedCar = i;
+        selectedViewHolder = holder;
     }
 }
