@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.marat.apps.android.pro3.Databases.AllCarWashersDatabase;
+import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -38,7 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         if ("".equals(username) || "".equals(password) || "".equals(token)) {
             intent1 = new Intent(this, RegisterActivity.class);
         } else {
-            AllCarWashersDatabase db = new AllCarWashersDatabase(this);
+            CWStationsDatabase db = new CWStationsDatabase(this);
             db.open();
             int num1 = db.deleteAllStations();
             int num2 = db.deleteFavoriteStations();

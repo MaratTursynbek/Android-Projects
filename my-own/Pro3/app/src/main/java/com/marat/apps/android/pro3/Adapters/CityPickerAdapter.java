@@ -49,7 +49,7 @@ public class CityPickerAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.menu_listview_row_item_cities, null);
+            view = LayoutInflater.from(context).inflate(R.layout.list_item_menu_cities_listview, null);
             holder = new ViewHolder();
             holder.rowCityName = (TextView) view.findViewById(R.id.rowCityNameTextView);
             holder.layout = (RelativeLayout) view.findViewById(R.id.rowListItemLayout);

@@ -1,6 +1,7 @@
 package com.marat.apps.android.pro3.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,22 +11,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Databases.AllCarWashersDatabase;
+import com.marat.apps.android.pro3.Activities.CWStationDetailsActivity;
+import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.R;
 
-public class AllStationsAdapter extends RecyclerView.Adapter<AllStationsAdapter.AllViewHolder> {
+public class CWStationsRecyclerViewAdapter extends RecyclerView.Adapter<CWStationsRecyclerViewAdapter.ViewHolder> {
 
     private Cursor cursor;
     private Context context;
-    private AllCarWashersDatabase db;
+    private CWStationsDatabase db;
 
-    public AllStationsAdapter(Cursor data, Context c, AllCarWashersDatabase database) {
+    public CWStationsRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database) {
         cursor = data;
         context = c;
         db = database;
     }
 
-    static class AllViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView carWashPhoto;
         private TextView carWashName;
         private TextView carWashAddress;
@@ -33,7 +35,7 @@ public class AllStationsAdapter extends RecyclerView.Adapter<AllStationsAdapter.
         private TextView carWashDistance;
         private View item;
 
-        public AllViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             item = itemView;
             carWashName = (TextView) itemView.findViewById(R.id.carWashNameTextView);
@@ -44,23 +46,25 @@ public class AllStationsAdapter extends RecyclerView.Adapter<AllStationsAdapter.
     }
 
     @Override
-    public AllViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.car_wash_station_card_view, parent, false);
-        return new AllViewHolder(v);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.list_item_cw_station_card, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(AllViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         final int pos = position;
         db.open();
-        cursor.moveToPosition(position);
-        holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(AllCarWashersDatabase.KEY_NAME)));
-        holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(AllCarWashersDatabase.KEY_ADDRESS)));
-        holder.carWashPrice.setText("Кузов + Салон от " + cursor.getInt(cursor.getColumnIndex(AllCarWashersDatabase.KEY_PRICE)) + " тг.");
+        cursor.moveToPosition(pos);
+        holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_NAME)));
+        holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ADDRESS)));
+        holder.carWashPrice.setText("Кузов + Салон от " + cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_PRICE)) + " тг.");
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.v("tag", "item " + pos + " being clicked");
+                Intent intent = new Intent(context, CWStationDetailsActivity.class);
+                context.startActivity(intent);
             }
         });
     }

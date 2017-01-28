@@ -12,19 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.AllStationsAdapter;
-import com.marat.apps.android.pro3.Adapters.FavoriteStationsAdapter;
-import com.marat.apps.android.pro3.Databases.AllCarWashersDatabase;
+import com.marat.apps.android.pro3.Adapters.CWStationsRecyclerViewAdapter;
+import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.R;
 
 public class FavoriteFragment extends Fragment {
 
     private Context context;
     private Cursor data;
-    private AllCarWashersDatabase db;
+    private CWStationsDatabase db;
 
     private RecyclerView recyclerView;
-    private FavoriteStationsAdapter adapter;
+    private CWStationsRecyclerViewAdapter adapter;
     private TextView emptyText;
 
     @Override
@@ -46,7 +45,7 @@ public class FavoriteFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        db = new AllCarWashersDatabase(context);
+        db = new CWStationsDatabase(context);
         db.open();
         data = db.getFavoriteStations();
 
@@ -63,7 +62,7 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        adapter = new FavoriteStationsAdapter(data, context, db);
+        adapter = new CWStationsRecyclerViewAdapter(data, context, db);
         recyclerView.setAdapter(adapter);
     }
 }

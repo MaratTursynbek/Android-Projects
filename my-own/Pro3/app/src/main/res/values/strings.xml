@@ -30,4 +30,5 @@
     <string name="word_or">or</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="no_car_washers">NO Car Washing Stations Found</string>
+    <string name="title_activity_cwstation_details">CWStationDetailsActivity</string>
 </resources>

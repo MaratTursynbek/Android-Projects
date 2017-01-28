@@ -12,18 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.AllStationsAdapter;
-import com.marat.apps.android.pro3.Databases.AllCarWashersDatabase;
+import com.marat.apps.android.pro3.Adapters.CWStationsRecyclerViewAdapter;
+import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.R;
 
 public class AllCarWashersFragment extends Fragment {
 
     private Context context;
     private Cursor data;
-    private AllCarWashersDatabase db;
+    private CWStationsDatabase db;
 
     private RecyclerView recyclerView;
-    private AllStationsAdapter adapter;
+    private CWStationsRecyclerViewAdapter adapter;
     private TextView emptyText;
 
     @Override
@@ -45,7 +45,7 @@ public class AllCarWashersFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        db = new AllCarWashersDatabase(context);
+        db = new CWStationsDatabase(context);
         db.open();
         data = db.getAllStations();
 
@@ -62,7 +62,7 @@ public class AllCarWashersFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        adapter = new AllStationsAdapter(data, context, db);
+        adapter = new CWStationsRecyclerViewAdapter(data, context, db);
         recyclerView.setAdapter(adapter);
     }
 }

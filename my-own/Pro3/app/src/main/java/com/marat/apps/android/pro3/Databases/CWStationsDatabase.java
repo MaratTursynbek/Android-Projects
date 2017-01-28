@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class AllCarWashersDatabase {
+public class CWStationsDatabase {
 
     public static final String KEY_ROW_ID = "_id";
     public static final String KEY_CAR_WASH_ID = "car_wash_id";
@@ -66,11 +66,11 @@ public class AllCarWashersDatabase {
         }
     }
 
-    public AllCarWashersDatabase(Context c) {
+    public CWStationsDatabase(Context c) {
         context = c;
     }
 
-    public AllCarWashersDatabase open() {
+    public CWStationsDatabase open() {
         helper = new DBHelper(context);
         database = helper.getWritableDatabase();
         return this;
