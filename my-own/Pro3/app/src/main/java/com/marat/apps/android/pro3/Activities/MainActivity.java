@@ -24,6 +24,7 @@ import com.marat.apps.android.pro3.Adapters.CityPickerAdapter;
 import com.marat.apps.android.pro3.MenuSections.AllCarWashersFragment;
 import com.marat.apps.android.pro3.MenuSections.FavoriteFragment;
 import com.marat.apps.android.pro3.MenuSections.HomeFragment;
+import com.marat.apps.android.pro3.MenuSections.MyOrdersFragment;
 import com.marat.apps.android.pro3.R;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -174,27 +175,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-
             HomeFragment homeFragment = new HomeFragment();
-
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, homeFragment);
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_favorites) {
-
             FavoriteFragment favoriteFragment = new FavoriteFragment();
-
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, favoriteFragment);
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_car_washers) {
-
             AllCarWashersFragment allCarWashersFragment = new AllCarWashersFragment();
-
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_my_orders) {
+            MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, myOrdersFragment);
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_contacts) {
