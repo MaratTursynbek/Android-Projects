@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,13 +43,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String cities[] = {"Астана", "Алматы", "Шымкент", "Орал", "Қызылорда", "Атырау", "Ақтөбе", "Көкшетау", "Қостанай", "Қарағанды", "Семей", "Өскемен", "Тараз", "Ақтау", "Павлодар", "Петропавл"};
     private String userCity = cities[0];
 
+    private int checkedItem;
+
     @Override
     public void onBackPressed() {
+        Log.v("MainActivity", "onBackPressed");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
             finish();
         }
     }
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v("MainActivity", "onCreate");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,8 +85,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
 
-        FavoriteFragment favoriteFragment = new FavoriteFragment();
-        fragmentTransaction.add(R.id.fragment_container, favoriteFragment);
+        String startPage = getIntent().getExtras().getString("startPage");
+
+        if ("Favorites".equals(startPage)) {
+            FavoriteFragment favoriteFragment = new FavoriteFragment();
+            fragmentTransaction.add(R.id.fragment_container, favoriteFragment);
+            checkedItem = R.id.nav_favorites;
+        } else if ("MyOrders".equals(startPage)) {
+            MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
+            fragmentTransaction.replace(R.id.fragment_container, myOrdersFragment);
+            checkedItem = R.id.nav_my_orders;
+        } else if ("AllCarWashers".equals(startPage)) {
+            AllCarWashersFragment allCarWashersFragment = new AllCarWashersFragment();
+            fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
+            checkedItem = R.id.nav_car_washers;
+        }
+
         fragmentTransaction.commit();
 
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
@@ -138,34 +156,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
         navigationView.inflateMenu(R.menu.activity_main_drawer);
-        navigationView.setCheckedItem(R.id.nav_favorites);
+        navigationView.setCheckedItem(checkedItem);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.log_out) {
-            SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.clear();
-            editor.apply();
-
-            Intent intent = new Intent(this, RegisterActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -203,7 +196,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_about) {
 
         } else if (id == R.id.nav_log_out) {
+            SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
 
+            Intent intent = new Intent(this, RegisterActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

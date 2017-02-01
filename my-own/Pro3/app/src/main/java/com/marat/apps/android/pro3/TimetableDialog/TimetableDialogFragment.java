@@ -7,15 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.TimetableListViewAdapter;
 import com.marat.apps.android.pro3.R;
 
 public class TimetableDialogFragment extends DialogFragment {
@@ -26,6 +22,8 @@ public class TimetableDialogFragment extends DialogFragment {
     private int duration = 46;
     private boolean registrationTimeIsValid = false;
     private int chosenBoxNumber;
+
+    private RegistrationSuccessfullyFinishedListener regFinDelegate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,12 +47,18 @@ public class TimetableDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (registrationTimeIsValid) {
-                    // register user for time here
+                    regFinDelegate.registrationIsDone();
                     dismiss();
                 }
             }
         });
         return v;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        regFinDelegate = (RegistrationSuccessfullyFinishedListener) context;
     }
 
     public void updateRegistrationValidity(boolean validOrNot, int n) {
@@ -64,17 +68,13 @@ public class TimetableDialogFragment extends DialogFragment {
 
     public class BoxesPagerAdapter extends FragmentPagerAdapter {
 
-        private Fragment contentFragment;
-
         BoxesPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            Log.v("TimetableDialogFragment", "getItem");
-            contentFragment = DialogContentFragment.newInstance(position + 1, box1, duration);
-            return contentFragment;
+            return DialogContentFragment.newInstance(position + 1, box1, duration);
         }
 
         @Override

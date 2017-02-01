@@ -3,7 +3,6 @@ package com.marat.apps.android.pro3.Adapters;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import com.marat.apps.android.pro3.R;
 
 public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRecyclerViewAdapter.ViewHolder> {
 
-    private int seletedCar = 0;
+    private int selectedCar = 0;
     private ViewHolder selectedViewHolder;
 
     private int[] carIcons = new int[]{R.drawable.ic_cars_small, R.drawable.ic_cars_sedan, R.drawable.ic_cars_limo, R.drawable.ic_cars_suv, R.drawable.ic_cars_minivan};
@@ -50,7 +49,7 @@ public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRe
         final int pos = position;
         holder.icon.setImageResource(carIcons[pos]);
         holder.name.setText(carNames[pos]);
-        if (seletedCar == pos) {
+        if (selectedCar == pos) {
             setSelected(holder, pos);
         }
         holder.item.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +74,7 @@ public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRe
     private void setSelected(ViewHolder holder, int i) {
         holder.name.setBackgroundResource(R.drawable.bg_chosen_car_type_text);
         holder.name.setTextColor(ContextCompat.getColor(context, android.R.color.white));
-        seletedCar = i;
+        selectedCar = i;
         selectedViewHolder = holder;
     }
 }

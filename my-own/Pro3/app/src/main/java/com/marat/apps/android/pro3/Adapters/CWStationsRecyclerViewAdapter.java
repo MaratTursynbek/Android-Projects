@@ -1,10 +1,10 @@
 package com.marat.apps.android.pro3.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,9 +62,9 @@ public class CWStationsRecyclerViewAdapter extends RecyclerView.Adapter<CWStatio
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("tag", "item " + pos + " being clicked");
                 Intent intent = new Intent(context, CWStationDetailsActivity.class);
                 context.startActivity(intent);
+                ((Activity) context).finish();
             }
         });
     }

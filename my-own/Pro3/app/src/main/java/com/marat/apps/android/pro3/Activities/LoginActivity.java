@@ -124,6 +124,7 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
                 }
             });
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("startPage", "Favorites");
             startActivity(intent);
             finish();
         }
