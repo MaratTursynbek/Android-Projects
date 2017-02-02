@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        android:paddingBottom="@dimen/activity_vertical_margin">
 
         <TextView
             android:id="@+id/chooseCarTextView"
@@ -58,12 +59,12 @@
             android:id="@+id/addNewService"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_below="@+id/carTypesRecyclerView"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:src="@drawable/ic_add_circle_outline_black_48dp" />
 
         <RelativeLayout
@@ -83,16 +84,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/servicesLayout"
-            android:gravity="center"
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
 
             <TextView
+                android:id="@+id/durationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ВРЕМЯ:"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/totalDurationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/durationTextView"
+                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_toEndOf="@+id/durationTextView"
+                android:layout_toRightOf="@+id/durationTextView"
+                android:text="26 мин"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/totalTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/durationTextView"
+                android:layout_marginTop="16dp"
                 android:text="ИТОГО:"
                 android:textStyle="bold" />
 
@@ -114,11 +136,13 @@
         <Button
             android:id="@+id/chooseTimeButton"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:layout_below="@+id/priceTextViewLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:text="Выбрать Время" />
+            android:background="@color/colorButtonBackground"
+            android:text="Выбрать Время"
+            android:textColor="@android:color/white" />
 
     </RelativeLayout>
 

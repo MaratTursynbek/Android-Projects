@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">Pro3</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_website_link">pro3.kz</string>
     <string name="action_log_out">Log Out</string>
 
+    <string name="title_activity_register">Register</string>
     <string name="title_activity_login">Log In</string>
+    <string name="title_activity_create_account">Create New Account</string>
+    <string name="title_activity_restore_password">Restore Your Password</string>
+    <string name="title_activity_cwstation_details">Car Washing Station Details</string>
+    <string name="title_activity_order_details">Order Details</string>
 
     <string name="hint_phone_number">Phone Number in format: (XXX)-XX-XX</string>
     <string name="hint_password">Password</string>
@@ -21,14 +26,9 @@
     <string name="city_text">Select your City:</string>
     <string name="car_type_text">Choose your Car type:</string>
 
-    <string name="title_activity_create_account">CreateAccountActivity</string>
-    <string name="title_activity_restore_password">RestorePasswordActivity</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="app_website_link">pro3.kz</string>
     <string name="word_or">or</string>
-    <string name="title_activity_register">RegisterActivity</string>
     <string name="no_car_washers">NO Car Washing Stations Found</string>
-    <string name="title_activity_cwstation_details">CWStationDetailsActivity</string>
+    <string name="no_my_orders">NO Order Records Found</string>
 </resources>

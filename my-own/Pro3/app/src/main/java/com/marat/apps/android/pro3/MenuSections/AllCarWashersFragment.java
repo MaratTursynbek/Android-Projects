@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.CWStationsRecyclerViewAdapter;
+import com.marat.apps.android.pro3.Adapters.CWStationsListRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.R;
 
@@ -23,7 +23,7 @@ public class AllCarWashersFragment extends Fragment {
     private CWStationsDatabase db;
 
     private RecyclerView recyclerView;
-    private CWStationsRecyclerViewAdapter adapter;
+    private CWStationsListRecyclerViewAdapter adapter;
     private TextView emptyText;
 
     @Override
@@ -62,7 +62,7 @@ public class AllCarWashersFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        adapter = new CWStationsRecyclerViewAdapter(data, context, db);
+        adapter = new CWStationsListRecyclerViewAdapter(data, context, db);
         recyclerView.setAdapter(adapter);
     }
 }

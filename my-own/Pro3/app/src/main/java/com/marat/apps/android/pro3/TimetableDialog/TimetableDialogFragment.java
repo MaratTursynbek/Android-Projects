@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,14 +21,16 @@ import com.marat.apps.android.pro3.R;
 
 public class TimetableDialogFragment extends DialogFragment {
 
-    private static String[][] box1 = new String[][]{ {"9:00", "true"}, {"9:15", "true"}, {"9:30", "false"}, {"9:45", "false"}, {"10:00", "false"}, {"10:15", "true"}, {"10:30", "true"}, {"10:45", "true"}, {"11:00", "true"}, {"11:15", "true"}, {"11:30", "true"}, };
-    private static String[][] box2 = new String[][]{ {"9:00", "true"}, {"9:15", "true"}, {"9:30", "false"}, {"9:45", "false"}, {"10:00", "true"}};
+    private static String[][] box1 = new String[][]{{"9:00", "true"}, {"9:15", "true"}, {"9:30", "false"}, {"9:45", "false"}, {"10:00", "true"}, {"10:15", "true"}, {"10:30", "false"}, {"10:45", "false"}, {"11:00", "true"}, {"11:15", "true"}, {"11:30", "true"},};
+    private static String[][] box2 = new String[][]{{"9:00", "false"}, {"9:15", "false"}, {"9:30", "false"}, {"9:45", "true"}, {"10:00", "true"}, {"10:15", "true"}, {"10:30", "true"}, {"10:45", "true"}, {"11:00", "false"}, {"11:15", "false"}, {"11:30", "true"},};
 
     private int duration = 26;
     private boolean registrationTimeIsValid = false;
     private int chosenBoxNumber;
 
-    private TextView cancelTextView, registerTextView, todayTextView, tomorrowTextView;
+    private ViewPager viewPager;
+    private TextView boxNumberTextView, cancelTextView, registerTextView, todayTextView, tomorrowTextView;
+    private ImageView toLeftImageView, toRightImageView;
     private RelativeLayout todayTextViewLayout, tomorrowTextViewLayout;
 
     private RegistrationSuccessfullyFinishedListener regFinDelegate;
@@ -36,16 +39,20 @@ public class TimetableDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_timetable_dialog, container, false);
 
-        ViewPager viewPager = (ViewPager) v.findViewById(R.id.container);
+        viewPager = (ViewPager) v.findViewById(R.id.container);
+        boxNumberTextView = (TextView) v.findViewById(R.id.boxNumberTextView);
         cancelTextView = (TextView) v.findViewById(R.id.cancelRegistrationTextView);
         registerTextView = (TextView) v.findViewById(R.id.registerTextView);
         todayTextView = (TextView) v.findViewById(R.id.todayTimeTextView);
         tomorrowTextView = (TextView) v.findViewById(R.id.tomorrowTimeTextView);
+        toLeftImageView = (ImageView) v.findViewById(R.id.toLeftArrowImageView);
+        toRightImageView = (ImageView) v.findViewById(R.id.toRightArrowImageView);
         todayTextViewLayout = (RelativeLayout) v.findViewById(R.id.todayTextViewLayout);
         tomorrowTextViewLayout = (RelativeLayout) v.findViewById(R.id.tomorrowTextViewLayout);
 
-        final BoxesPagerAdapter adapter = new BoxesPagerAdapter(getChildFragmentManager());
+        BoxesPagerAdapter adapter = new BoxesPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new OnPageChangeListener());
 
         cancelTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +102,18 @@ public class TimetableDialogFragment extends DialogFragment {
         textView2.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
     }
 
+    public void turnPage(View v) {
+        int itemId = v.getId();
+        int currentPage = viewPager.getCurrentItem();
+        if (itemId == R.id.toLeftArrowImageView) {
+            currentPage--;
+        } else if (itemId == R.id.toRightArrowImageView) {
+            currentPage++;
+        }
+        viewPager.setCurrentItem(currentPage, true);
+        boxNumberTextView.setText("Box " + (viewPager.getCurrentItem() + 1));
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -106,6 +125,13 @@ public class TimetableDialogFragment extends DialogFragment {
         chosenBoxNumber = n;
     }
 
+    private String[][] getTimetableBox(int i) {
+        if (i == 0) {
+            return box1;
+        }
+        return box2;
+    }
+
     public class BoxesPagerAdapter extends FragmentPagerAdapter {
 
         BoxesPagerAdapter(FragmentManager fm) {
@@ -114,12 +140,19 @@ public class TimetableDialogFragment extends DialogFragment {
 
         @Override
         public Fragment getItem(int position) {
-            return DialogContentFragment.newInstance(position + 1, box1, duration);
+            return DialogContentFragment.newInstance(position + 1, getTimetableBox(position), duration);
         }
 
         @Override
         public int getCount() {
             return 2;
+        }
+    }
+
+    public class OnPageChangeListener extends ViewPager.SimpleOnPageChangeListener {
+        @Override
+        public void onPageSelected(int position) {
+            boxNumberTextView.setText("Box " + (position + 1));
         }
     }
 }

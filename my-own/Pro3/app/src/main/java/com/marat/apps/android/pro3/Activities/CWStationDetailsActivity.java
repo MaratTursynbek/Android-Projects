@@ -54,6 +54,10 @@ public class CWStationDetailsActivity extends AppCompatActivity implements Regis
         });
     }
 
+    public void turnPage(View v) {
+        dialog.turnPage(v);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

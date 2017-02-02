@@ -1,6 +1,5 @@
 package com.marat.apps.android.pro3.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,13 +14,13 @@ import com.marat.apps.android.pro3.Activities.CWStationDetailsActivity;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.R;
 
-public class CWStationsRecyclerViewAdapter extends RecyclerView.Adapter<CWStationsRecyclerViewAdapter.ViewHolder> {
+public class CWStationsListRecyclerViewAdapter extends RecyclerView.Adapter<CWStationsListRecyclerViewAdapter.ViewHolder> {
 
     private Cursor cursor;
     private Context context;
     private CWStationsDatabase db;
 
-    public CWStationsRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database) {
+    public CWStationsListRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database) {
         cursor = data;
         context = c;
         db = database;
