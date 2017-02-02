@@ -64,7 +64,6 @@ public class CWStationsRecyclerViewAdapter extends RecyclerView.Adapter<CWStatio
             public void onClick(View v) {
                 Intent intent = new Intent(context, CWStationDetailsActivity.class);
                 context.startActivity(intent);
-                ((Activity) context).finish();
             }
         });
     }

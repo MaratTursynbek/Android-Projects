@@ -1,9 +1,11 @@
 package com.marat.apps.android.pro3.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -36,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
 
     private PhoneNumberEditText phoneNumberEditText;
     private EditText passwordEditText;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
     }
 
     public void logInUser(View v) {
+        showProgressDialog();
         UniversalPostRequest postRequest = new UniversalPostRequest(this);
         postRequest.delegate = this;
         postRequest.post(userAuthorizationURL, createUserDataInJson());
@@ -96,12 +100,16 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
     @Override
     public void onFailure(IOException e) {
         Toast.makeText(this, "Could not load data", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
+
     }
 
     @Override
     public void onResponse(Response response) {
         String res;
         boolean isSuccessful = false;
+
+        dialog.dismiss();
 
         try {
             res = response.body().string();
@@ -117,12 +125,8 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         }
 
         if (isSuccessful) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    hideKeyboard();
-                }
-            });
+            Intent finishIntent = new Intent("finish__register_activity");
+            LocalBroadcastManager.getInstance(LoginActivity.this).sendBroadcast(finishIntent);
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("startPage", "Favorites");
             startActivity(intent);
@@ -146,8 +150,16 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         passwordEditText.clearFocus();
     }
 
+    public void showProgressDialog() {
+        hideKeyboard();
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("Вход");
+        dialog.show();
+    }
+
     public void goToRestorePasswordActivity(View v) {
         Intent intent2 = new Intent(this, RestorePasswordActivity.class);
         startActivity(intent2);
+        finish();
     }
 }

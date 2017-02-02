@@ -3,24 +3,105 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/boxNumberTextView"
+    <RelativeLayout
+        android:id="@+id/boxNumberTextViewLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:paddingTop="2dp">
+
+        <TextView
+            android:id="@+id/boxNumberTextView"
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="Box 1"
+            android:textColor="@android:color/white"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/toLeftArrowImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/boxNumberTextView"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/boxNumberTextView"
+            android:layout_toStartOf="@+id/boxNumberTextView"
+            android:src="@drawable/ic_keyboard_arrow_left_black_36dp" />
+
+        <ImageView
+            android:id="@+id/toRightArrowImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/boxNumberTextView"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/boxNumberTextView"
+            android:layout_toRightOf="@+id/boxNumberTextView"
+            android:src="@drawable/ic_keyboard_arrow_right_black_36dp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/todayTomorrowTextsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/boxNumberTextViewLayout"
+        android:background="@drawable/bg_timetable_buttons_2"
         android:gravity="center"
-        android:paddingBottom="10dp"
-        android:paddingTop="15dp"
-        android:text="Box 1"
-        android:textColor="@android:color/white"
-        android:textSize="19sp"
-        android:textStyle="bold" />
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/todayTextViewLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/todayTimeTextView"
+                android:layout_width="80dp"
+                android:layout_height="22dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="Сегодня"
+                android:textColor="@color/colorPrimary" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tomorrowTextViewLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tomorrowTimeTextView"
+                android:layout_width="70dp"
+                android:layout_height="22dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="Завтра"
+                android:textColor="@color/colorPrimary" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_below="@+id/boxNumberTextView"
+        android:layout_height="420dp"
+        android:layout_below="@+id/todayTomorrowTextsLayout"
         android:layout_centerHorizontal="true" />
 
     <LinearLayout

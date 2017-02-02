@@ -1,7 +1,12 @@
 package com.marat.apps.android.pro3.Activities;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,6 +33,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(finishActivityReceiver, new IntentFilter("finish__register_activity"));
 
         findViewById(R.id.registerAccount).setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -92,4 +99,14 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean phoneNumberIsFullyEntered() {
         return (phoneNumberEditText.length() == 15);
     }
+
+    private BroadcastReceiver finishActivityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("finish__register_activity".equals(intent.getAction())) {
+                LocalBroadcastManager.getInstance(RegisterActivity.this).unregisterReceiver(finishActivityReceiver);
+                finish();
+            }
+        }
+    };
 }
