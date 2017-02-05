@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
@@ -132,7 +133,7 @@ public class TimetableDialogFragment extends DialogFragment {
         return box2;
     }
 
-    public class BoxesPagerAdapter extends FragmentPagerAdapter {
+    public class BoxesPagerAdapter extends FragmentStatePagerAdapter {
 
         BoxesPagerAdapter(FragmentManager fm) {
             super(fm);

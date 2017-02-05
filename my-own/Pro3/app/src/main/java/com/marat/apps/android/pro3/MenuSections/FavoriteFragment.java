@@ -23,7 +23,6 @@ public class FavoriteFragment extends Fragment {
     private CWStationsDatabase db;
 
     private RecyclerView recyclerView;
-    private CWStationsListRecyclerViewAdapter adapter;
     private TextView emptyText;
 
     @Override
@@ -62,7 +61,7 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        adapter = new CWStationsListRecyclerViewAdapter(data, context, db);
+        CWStationsListRecyclerViewAdapter adapter = new CWStationsListRecyclerViewAdapter(data, context, db);
         recyclerView.setAdapter(adapter);
     }
 }

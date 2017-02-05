@@ -142,6 +142,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:background="@android:color/holo_red_dark"
+        android:onClick="cancelOrder"
         android:text="Отменить Заказ"
         android:textColor="@android:color/white" />
 

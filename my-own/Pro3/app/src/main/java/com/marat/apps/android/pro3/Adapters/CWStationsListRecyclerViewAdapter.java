@@ -65,6 +65,7 @@ public class CWStationsListRecyclerViewAdapter extends RecyclerView.Adapter<CWSt
                 context.startActivity(intent);
             }
         });
+        db.close();
     }
 
     @Override
