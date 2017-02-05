@@ -80,7 +80,7 @@
             android:maxLines="1"
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
-            android:text="Кузов + Салон + Багажник"
+            android:text="Седан: Кузов + Салон + Багажник"
             android:textColor="@android:color/black" />
 
         <TextView

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_black_36dp"
@@ -20,24 +22,26 @@
             android:title="Мои Заказы" />
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_contacts"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Контакты" />
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="О Проекте" />
-            <item
-                android:id="@+id/empty"
-                android:title="" />
-            <item
-                android:id="@+id/nav_log_out"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Выйти" />
-        </menu>
-    </item>
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_contacts"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Контакты" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="О Проекте" />
+    </group>
+
+    <group
+        android:id="@+id/group3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Выйти" />
+    </group>
 
 </menu>

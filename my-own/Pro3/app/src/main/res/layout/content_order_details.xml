@@ -76,10 +76,30 @@
         android:textColor="@android:color/black" />
 
     <TextView
-        android:id="@+id/odOrderServicesTextView1"
+        android:id="@+id/odCarTypeTextView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/odOrderDateTextView"
+        android:layout_marginTop="20dp"
+        android:text="Машина: " />
+
+    <TextView
+        android:id="@+id/odCarTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/odCarTypeTextView1"
+        android:layout_alignLeft="@+id/odStationNameTextView"
+        android:layout_alignStart="@+id/odStationNameTextView"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Седан"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/odOrderServicesTextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/odCarTypeTextView"
         android:layout_marginTop="20dp"
         android:text="Услуги: " />
 

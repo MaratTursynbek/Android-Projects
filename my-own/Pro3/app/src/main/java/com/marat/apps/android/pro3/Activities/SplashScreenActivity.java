@@ -21,13 +21,13 @@ public class SplashScreenActivity extends AppCompatActivity {
     private String[] data3 = new String[]{"3", "0", "Fast Wash", "АЗС NOMAD, ул. Керей-Жанибек 63", "2000", "123", "456"};
     private String[] data4 = new String[]{"4", "1", "АВТО Жуу", "Назарбаев Университет, пр. Кабанбай-Батыра 53, 1-этаж парковки", "2700", "123", "456"};
 
-    private String[] order1 = new String[]{"1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "Кузов + Салон + Багажник", "02.02.2017", "3500", "Активный"};
-    private String[] order2 = new String[]{"3", "Fast Wash", "АЗС NOMAD, ул. Керей-Жанибек 63", "Кузов + Салон", "28.01.2017", "2800", "Завершен"};
-    private String[] order3 = new String[]{"3", "Fast Wash", "АЗС NOMAD, ул. Керей-Жанибек 63", "Кузов + Салон", "25.01.2017", "2800", "Завершен"};
-    private String[] order4 = new String[]{"1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "Кузов + Салон + Багажник + Двигатель", "20.01.2017", "4500", "Завершен"};
-    private String[] order5 = new String[]{"1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "Кузов + Салон", "15.01.2017", "2500", "Завершен"};
-    private String[] order6 = new String[]{"2", "Master Keruen", "ТЦ Керуен, ул. Достык 21, 0-этаж", "Кузов + Салон", "13.01.2017", "2700", "Завершен"};
-    private String[] order7 = new String[]{"3", "Fast Wash", "АЗС NOMAD, ул. Керей-Жанибек 63", "Кузов + Салон", "09.01.2017", "2800", "Завершен"};
+    private String[] order1 = new String[]{"1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "Внедорожник: Кузов + Салон + Багажник", "02.02.2017", "3500", "Активный"};
+    private String[] order2 = new String[]{"3", "Fast Wash", "АЗС NOMAD, ул. Керей-Жанибек 63", "Кроссовер: Кузов + Салон", "28.01.2017", "2800", "Завершен"};
+    private String[] order3 = new String[]{"3", "Fast Wash", "АЗС NOMAD, ул. Керей-Жанибек 63", "Кроссовер: Кузов + Салон", "25.01.2017", "2800", "Завершен"};
+    private String[] order4 = new String[]{"1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "Седан: Кузов + Салон + Багажник + Двигатель", "20.01.2017", "4500", "Завершен"};
+    private String[] order5 = new String[]{"1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "Малолитражка: Кузов + Салон", "15.01.2017", "2500", "Завершен"};
+    private String[] order6 = new String[]{"2", "Master Keruen", "ТЦ Керуен, ул. Достык 21, 0-этаж", "Седан: Кузов + Салон", "13.01.2017", "2700", "Завершен"};
+    private String[] order7 = new String[]{"3", "Fast Wash", "АЗС NOMAD, ул. Керей-Жанибек 63", "Седан: Кузов + Салон", "09.01.2017", "2800", "Завершен"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

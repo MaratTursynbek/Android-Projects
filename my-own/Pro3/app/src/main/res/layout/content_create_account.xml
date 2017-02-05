@@ -30,7 +30,7 @@
             android:background="@android:drawable/editbox_background_normal"
             android:hint="@string/hint_new_user_name"
             android:inputType="textPersonName"
-            android:maxLength="30"
+            android:maxLength="40"
             android:textSize="14sp" />
 
         <com.marat.apps.android.pro3.Models.PhoneNumberEditText

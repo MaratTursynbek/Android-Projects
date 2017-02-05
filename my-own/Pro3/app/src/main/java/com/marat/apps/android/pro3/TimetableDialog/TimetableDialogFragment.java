@@ -133,7 +133,7 @@ public class TimetableDialogFragment extends DialogFragment {
         return box2;
     }
 
-    public class BoxesPagerAdapter extends FragmentStatePagerAdapter {
+    public class BoxesPagerAdapter extends FragmentPagerAdapter {
 
         BoxesPagerAdapter(FragmentManager fm) {
             super(fm);
