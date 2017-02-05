@@ -98,9 +98,13 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
 
     @Override
     public void onFailure(IOException e) {
-        Toast.makeText(this, "Could not load data", Toast.LENGTH_SHORT).show();
-        dialog.dismiss();
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(LoginActivity.this, "Could not load data", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override
