@@ -81,10 +81,15 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
     }
 
     public void logInUser(View v) {
-        showProgressDialog();
         UniversalPostRequest postRequest = new UniversalPostRequest(this);
         postRequest.delegate = this;
-        postRequest.post(userAuthorizationURL, createUserDataInJson());
+        if (postRequest.isNetworkAvailable()) {
+            showProgressDialog();
+            postRequest.post(userAuthorizationURL, createUserDataInJson());
+        } else {
+            hideKeyboard();
+            Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String createUserDataInJson() {

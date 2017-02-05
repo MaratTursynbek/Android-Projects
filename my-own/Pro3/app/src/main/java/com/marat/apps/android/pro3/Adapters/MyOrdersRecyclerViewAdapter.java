@@ -63,7 +63,7 @@ public class MyOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyOrdersRe
         holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ADDRESS)));
         holder.orderServices.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_SERVICES)));
         holder.orderDate.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_DATE)));
-        holder.orderPrice.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_PRICE)));
+        holder.orderPrice.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_PRICE)) + " тг.");
         holder.orderStatus.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_STATUS)));
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override

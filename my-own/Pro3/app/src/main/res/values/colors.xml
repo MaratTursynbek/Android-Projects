@@ -8,4 +8,6 @@
     <color name="colorPrimaryBackground">#3F51B5</color>
     <color name="colorStart">#5C6BC0</color>
     <color name="colorEnd">#3949AB</color>
+
+    <color name="colorDisabledCancelButton">#ffb3b3</color>
 </resources>

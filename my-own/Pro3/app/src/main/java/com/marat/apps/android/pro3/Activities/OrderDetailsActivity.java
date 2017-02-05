@@ -56,7 +56,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ADDRESS)));
         orderServices.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_SERVICES)));
         orderDate.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_DATE)));
-        orderPrice.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_PRICE)));
+        orderPrice.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_PRICE)) + " тг.");
         orderStatus.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_STATUS)));
 
         if ("Активный".equals(orderStatus.getText().toString())) {
@@ -65,6 +65,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         else {
             orderStatus.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray));
             cancelOrderButton.setEnabled(false);
+            cancelOrderButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDisabledCancelButton));
         }
         db.close();
     }

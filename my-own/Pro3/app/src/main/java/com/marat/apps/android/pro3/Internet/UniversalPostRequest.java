@@ -26,38 +26,32 @@ public class UniversalPostRequest {
     }
 
     public void post(String url, String json) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
 
-        if (isNetworkAvailable()) {
-            OkHttpClient client = new OkHttpClient();
-            RequestBody body = RequestBody.create(JSON, json);
-            Request request = new Request.Builder()
-                    .url(url)
-                    .post(body)
-                    .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                delegate.onFailure(e);
+            }
 
-            Call call = client.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    delegate.onFailure(e);
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) {
-                    delegate.onResponse(response);
-                }
-            });
-        }
-        else {
-            Toast.makeText(context, "Network is unavailable!", Toast.LENGTH_LONG).show();
-        }
+            @Override
+            public void onResponse(Call call, Response response) {
+                delegate.onResponse(response);
+            }
+        });
     }
 
-    private boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         boolean isAvailable = false;
-        if (networkInfo != null && networkInfo.isConnected()){
+        if (networkInfo != null && networkInfo.isConnected()) {
             isAvailable = true;
         }
         return isAvailable;
