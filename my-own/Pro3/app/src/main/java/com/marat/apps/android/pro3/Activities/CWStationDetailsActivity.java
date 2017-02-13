@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.CarTypesRecyclerViewAdapter;
-import com.marat.apps.android.pro3.TimetableDialog.RegistrationSuccessfullyFinishedListener;
-import com.marat.apps.android.pro3.TimetableDialog.RegistrationTimeChosenListener;
+import com.marat.apps.android.pro3.Interfaces.RegistrationSuccessfullyFinishedListener;
+import com.marat.apps.android.pro3.Interfaces.RegistrationTimeChosenListener;
 import com.marat.apps.android.pro3.TimetableDialog.TimetableDialogFragment;
 import com.marat.apps.android.pro3.R;
 
@@ -54,16 +54,16 @@ public class CWStationDetailsActivity extends AppCompatActivity implements Regis
         });
     }
 
-    public void turnPage(View v) {
-        dialog.turnPage(v);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
         return true;
+    }
+
+    public void turnPage(View v) {
+        dialog.turnPage(v);
     }
 
     @Override

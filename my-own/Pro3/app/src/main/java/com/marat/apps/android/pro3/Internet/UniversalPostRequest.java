@@ -3,7 +3,8 @@ package com.marat.apps.android.pro3.Internet;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.Toast;
+
+import com.marat.apps.android.pro3.Interfaces.PostRequestResponse;
 
 import java.io.IOException;
 

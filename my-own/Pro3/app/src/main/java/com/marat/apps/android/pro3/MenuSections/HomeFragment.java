@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.R;
 
 import org.json.JSONException;
@@ -33,10 +34,14 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+
+        OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
+        listener.onTitleChanged("Мой Гараж");
+
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         token = sharedPreferences.getString("ACCESS_TOKEN", "");
-        Log.v(TAG, token);
         getUser();
+
         return v;
     }
 

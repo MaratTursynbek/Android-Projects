@@ -12,8 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.CWStationsListRecyclerViewAdapter;
+import com.marat.apps.android.pro3.Adapters.WashingStationsRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.R;
 
 public class AllCarWashersFragment extends Fragment {
@@ -23,13 +24,16 @@ public class AllCarWashersFragment extends Fragment {
     private CWStationsDatabase db;
 
     private RecyclerView recyclerView;
-    private CWStationsListRecyclerViewAdapter adapter;
+    private WashingStationsRecyclerViewAdapter adapter;
     private TextView emptyText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_car_washers, container, false);
         context = getContext();
+
+        OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
+        listener.onTitleChanged("Все Мойки");
 
         recyclerView = (RecyclerView) v.findViewById(R.id.carWashersRecyclerView);
         emptyText = (TextView) v.findViewById(R.id.emptyTextView);
@@ -62,7 +66,7 @@ public class AllCarWashersFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        adapter = new CWStationsListRecyclerViewAdapter(data, context, db);
+        adapter = new WashingStationsRecyclerViewAdapter(data, context, db);
         recyclerView.setAdapter(adapter);
     }
 }

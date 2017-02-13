@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.marat.apps.android.pro3.Adapters.TimetableListViewAdapter;
+import com.marat.apps.android.pro3.Interfaces.RegistrationTimeChosenListener;
 import com.marat.apps.android.pro3.R;
 
 public class DialogContentFragment extends Fragment {

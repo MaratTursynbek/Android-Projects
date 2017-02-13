@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
-import com.marat.apps.android.pro3.Models.PhoneTextWatcher;
-import com.marat.apps.android.pro3.Internet.PostRequestResponse;
+import com.marat.apps.android.pro3.Interfaces.PostRequestResponse;
 import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
 import com.marat.apps.android.pro3.R;
 
@@ -32,8 +32,7 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         setContentView(R.layout.activity_create_account);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         userNameEditText = (EditText) findViewById(R.id.userNameEditText);
         phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.newPhoneNumberEditText);
@@ -46,6 +45,14 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         Bundle extras = intent.getExtras();
         phoneNumberEditText.setText(extras.getString("phone_number"));
         phoneNumberEditText.setFocusable(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
     }
 
     public void registerUser(View v) {

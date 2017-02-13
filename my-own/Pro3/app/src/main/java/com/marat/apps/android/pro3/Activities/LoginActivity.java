@@ -5,9 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +20,7 @@ import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
 import com.marat.apps.android.pro3.Models.PhoneTextWatcher;
-import com.marat.apps.android.pro3.Internet.PostRequestResponse;
+import com.marat.apps.android.pro3.Interfaces.PostRequestResponse;
 import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
 import com.marat.apps.android.pro3.R;
 
@@ -84,12 +85,32 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         UniversalPostRequest postRequest = new UniversalPostRequest(this);
         postRequest.delegate = this;
         if (postRequest.isNetworkAvailable()) {
-            showProgressDialog();
-            postRequest.post(userAuthorizationURL, createUserDataInJson());
+            if (phoneNumberIsFullyEntered()) {
+                if (passwordIsEntered()) {
+                    showProgressDialog();
+                    postRequest.post(userAuthorizationURL, createUserDataInJson());
+                } else {
+                    Snackbar snackbar = Snackbar.make(v, "Введите Пароль", Snackbar.LENGTH_LONG);
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(LoginActivity.this, android.R.color.holo_red_dark));
+                    snackbar.show();
+                }
+            } else {
+                Snackbar snackbar = Snackbar.make(v, "Неверный Формат Номера Телефона", Snackbar.LENGTH_LONG);
+                snackbar.getView().setBackgroundColor(ContextCompat.getColor(LoginActivity.this, android.R.color.holo_red_dark));
+                snackbar.show();
+            }
         } else {
             hideKeyboard();
-            Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Нет Доступа к Интернету!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private boolean phoneNumberIsFullyEntered() {
+        return (phoneNumberEditText.length() == 15);
+    }
+
+    private boolean passwordIsEntered() {
+        return (passwordEditText.length() > 0);
     }
 
     private String createUserDataInJson() {
@@ -114,16 +135,11 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
 
     @Override
     public void onResponse(Response response) {
-        String res;
+        dialog.dismiss();
         boolean isSuccessful = false;
 
-        dialog.dismiss();
-
         try {
-            res = response.body().string();
-
-            Log.v("tag", res);
-
+            String res = response.body().string();
             JSONObject user = new JSONObject(res);
             String token = user.getString("token");
             saveUserData(token);
@@ -162,6 +178,8 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         hideKeyboard();
         dialog = new ProgressDialog(this);
         dialog.setMessage("Вход");
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
 

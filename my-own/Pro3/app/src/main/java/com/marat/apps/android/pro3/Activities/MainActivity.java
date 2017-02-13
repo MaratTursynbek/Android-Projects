@@ -20,18 +20,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.MenuCityPickerAdapter;
+import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.MenuSections.AllCarWashersFragment;
 import com.marat.apps.android.pro3.MenuSections.FavoriteFragment;
 import com.marat.apps.android.pro3.MenuSections.HomeFragment;
 import com.marat.apps.android.pro3.MenuSections.MyOrdersFragment;
 import com.marat.apps.android.pro3.R;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnToolbarTitleChangeListener {
 
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
@@ -156,6 +158,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for (int i = 0; i < menu.size(); ++i) {
             menu.getItem(i).setVisible(b);
         }
+    }
+
+    @Override
+    public void onTitleChanged(String title) {
+        getSupportActionBar().setTitle(title);
     }
 
     @Override

@@ -3,75 +3,108 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <TextView
-        android:id="@+id/fhNameTextView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-        android:text="Имя:"
-        android:textSize="15sp" />
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/fhNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/fhNameTextView1"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/fhNameTextView1"
-        android:layout_toRightOf="@+id/fhNameTextView1"
-        android:text="Николаев Владимир Анатольевич"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="20dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
-    <ImageView
-        android:id="@+id/fhPhoneImageView"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/fhNameTextView"
-        android:layout_marginTop="23dp"
-        android:src="@drawable/ic_phone_black_36dp" />
+            <TextView
+                android:id="@+id/fhNameTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="5dp"
+                android:text="Имя:"
+                android:textSize="15sp" />
 
-    <TextView
-        android:id="@+id/fhPhoneNumberTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/fhNameTextView"
-        android:layout_alignStart="@+id/fhNameTextView"
-        android:layout_below="@+id/fhNameTextView"
-        android:layout_marginTop="27dp"
-        android:text="(747) 487-33-88"
-        android:textColor="@android:color/black"
-        android:textSize="17sp" />
+            <TextView
+                android:id="@+id/fhNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/fhNameTextView1"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
+                android:layout_toEndOf="@+id/fhNameTextView1"
+                android:layout_toRightOf="@+id/fhNameTextView1"
+                android:text="Николаев Владимир Анатольевич"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
-    <ImageView
-        android:id="@+id/fhCarTypeImageView"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/fhPhoneImageView"
-        android:layout_marginTop="21dp"
-        android:src="@drawable/ic_directions_car_black_36dp" />
+            <ImageView
+                android:id="@+id/fhPhoneImageView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/fhNameTextView"
+                android:layout_marginTop="23dp"
+                android:src="@drawable/ic_phone_black_36dp" />
 
-    <TextView
-        android:id="@+id/fhCarTypeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/fhNameTextView"
-        android:layout_alignStart="@+id/fhNameTextView"
-        android:layout_below="@+id/fhPhoneNumberTextView"
-        android:layout_marginTop="30dp"
-        android:text="Внедорожник"
-        android:textColor="@android:color/black"
-        android:textSize="17sp" />
+            <TextView
+                android:id="@+id/fhPhoneNumberTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/fhNameTextView"
+                android:layout_alignStart="@+id/fhNameTextView"
+                android:layout_below="@+id/fhNameTextView"
+                android:layout_marginTop="27dp"
+                android:text="(747) 487-33-88"
+                android:textColor="@android:color/black"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/fhCarTypeImageView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/fhPhoneImageView"
+                android:layout_marginTop="21dp"
+                android:src="@drawable/ic_directions_car_black_36dp" />
+
+            <TextView
+                android:id="@+id/fhCarTypeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/fhNameTextView"
+                android:layout_alignStart="@+id/fhNameTextView"
+                android:layout_below="@+id/fhPhoneNumberTextView"
+                android:layout_marginTop="30dp"
+                android:text="Внедорожник"
+                android:textColor="@android:color/black"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/fhCityTypeImageView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/fhCarTypeTextView"
+                android:layout_marginTop="23dp"
+                android:src="@drawable/ic_location_city_black_36dp" />
+
+            <TextView
+                android:id="@+id/fhCityTypeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/fhNameTextView"
+                android:layout_alignStart="@+id/fhNameTextView"
+                android:layout_below="@+id/fhCarTypeTextView"
+                android:layout_marginTop="28dp"
+                android:text="Астана"
+                android:textColor="@android:color/black"
+                android:textSize="17sp" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

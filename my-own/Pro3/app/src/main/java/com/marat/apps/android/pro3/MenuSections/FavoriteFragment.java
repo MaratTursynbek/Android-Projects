@@ -12,8 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.CWStationsListRecyclerViewAdapter;
+import com.marat.apps.android.pro3.Adapters.WashingStationsRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.R;
 
 public class FavoriteFragment extends Fragment {
@@ -29,6 +30,9 @@ public class FavoriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_car_washers, container, false);
         context = getContext();
+
+        OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
+        listener.onTitleChanged("Мои Мойки");
 
         recyclerView = (RecyclerView) v.findViewById(R.id.carWashersRecyclerView);
         emptyText = (TextView) v.findViewById(R.id.emptyTextView);
@@ -61,7 +65,7 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        CWStationsListRecyclerViewAdapter adapter = new CWStationsListRecyclerViewAdapter(data, context, db);
+        WashingStationsRecyclerViewAdapter adapter = new WashingStationsRecyclerViewAdapter(data, context, db);
         recyclerView.setAdapter(adapter);
     }
 }
