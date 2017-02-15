@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,8 +57,21 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
             }
         });
 
-        phoneNumberEditText.setHint("(XXX) XXX-XX-XX");
         phoneNumberEditText.addTextChangedListener(new PhoneTextWatcher(phoneNumberEditText));
+        phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (phoneNumberEditText.length() == 0) {
+                        phoneNumberEditText.setHint(R.string.hint_phone_number);
+                    }
+                } else {
+                    if (phoneNumberEditText.length() == 0) {
+                        phoneNumberEditText.setHint(R.string.hint_new_phone_number);
+                    }
+                }
+            }
+        });
         phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -90,27 +104,15 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
                     showProgressDialog();
                     postRequest.post(userAuthorizationURL, createUserDataInJson());
                 } else {
-                    Snackbar snackbar = Snackbar.make(v, "Введите Пароль", Snackbar.LENGTH_LONG);
-                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(LoginActivity.this, android.R.color.holo_red_dark));
-                    snackbar.show();
+                    showSnackErrorMessage("Введите Пароль", v);
                 }
             } else {
-                Snackbar snackbar = Snackbar.make(v, "Неверный Формат Номера Телефона", Snackbar.LENGTH_LONG);
-                snackbar.getView().setBackgroundColor(ContextCompat.getColor(LoginActivity.this, android.R.color.holo_red_dark));
-                snackbar.show();
+                showSnackErrorMessage("Неверный Формат Номера Телефона", v);
             }
         } else {
             hideKeyboard();
-            Toast.makeText(this, "Нет Доступа к Интернету!", Toast.LENGTH_LONG).show();
+            showErrorToast("Нет доступа к Интернету!");
         }
-    }
-
-    private boolean phoneNumberIsFullyEntered() {
-        return (phoneNumberEditText.length() == 15);
-    }
-
-    private boolean passwordIsEntered() {
-        return (passwordEditText.length() > 0);
     }
 
     private String createUserDataInJson() {
@@ -124,47 +126,49 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
 
     @Override
     public void onFailure(IOException e) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(LoginActivity.this, "Could not load data", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
-        });
+        e.printStackTrace();
+        showErrorToast("Не удалось загрузить данные");
     }
 
     @Override
     public void onResponse(Response response) {
         dialog.dismiss();
         boolean isSuccessful = false;
+        String responseMessage = response.message();
+        Log.d("LoginActivity", responseMessage);
 
-        try {
-            String res = response.body().string();
-            JSONObject user = new JSONObject(res);
-            String token = user.getString("token");
-            saveUserData(token);
-            isSuccessful = true;
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
+        if ("Unauthorized ".equals(responseMessage)) {
+            showErrorToast("Неверный Логин или Пароль!");
+        } else {
+            try {
+                String res = response.body().string();
+                Log.d("LoginActivity", res);
+                JSONObject user = new JSONObject(res);
+                String userId = user.getString("id");
+                String token = user.getString("token");
+                saveUserData(userId, token);
+                isSuccessful = true;
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
 
-        if (isSuccessful) {
-            Intent finishIntent = new Intent("finish__register_activity");
-            LocalBroadcastManager.getInstance(LoginActivity.this).sendBroadcast(finishIntent);
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("startPage", "Favorites");
-            startActivity(intent);
-            finish();
+            if (isSuccessful) {
+                Intent finishIntent = new Intent("finish__register_activity");
+                LocalBroadcastManager.getInstance(LoginActivity.this).sendBroadcast(finishIntent);
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("startPage", "Favorites");
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
-    public void saveUserData(String token) {
-        SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("username", formattedPhoneNumber);
-        editor.putString("password", passwordEditText.getText().toString());
-        editor.putString("ACCESS_TOKEN", token);
-        editor.apply();
+    private boolean phoneNumberIsFullyEntered() {
+        return (phoneNumberEditText.length() == 15);
+    }
+
+    private boolean passwordIsEntered() {
+        return (passwordEditText.length() > 0);
     }
 
     public void hideKeyboard() {
@@ -181,6 +185,31 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+    }
+
+    public void saveUserData(String userId, String token) {
+        SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", formattedPhoneNumber);
+        editor.putString("password", passwordEditText.getText().toString());
+        editor.putString("user_id", userId);
+        editor.putString("ACCESS_TOKEN", token);
+        editor.apply();
+    }
+
+    private void showSnackErrorMessage(String message, View v) {
+        Snackbar snackbar = Snackbar.make(v, message, Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(LoginActivity.this, android.R.color.holo_red_dark));
+        snackbar.show();
+    }
+
+    private void showErrorToast(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void goToRestorePasswordActivity(View v) {

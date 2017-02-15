@@ -10,14 +10,13 @@
     <string name="title_activity_cwstation_details">Car Washing Station Details</string>
     <string name="title_activity_order_details">Order Details</string>
 
-    <string name="hint_phone_number">Phone Number in format: (XXX)-XX-XX</string>
-    <string name="hint_password">Password</string>
-    <string name="hint_new_user_name">Your Name</string>
-    <string name="hint_new_phone_number">Phone Number (will be used for authorization)</string>
-    <string name="hint_new_password">Password</string>
-    <string name="hint_new_password_2">Confirm Password</string>
-    <string name="hint_city">City</string>
-    <string name="hint_car_type">Car Type</string>
+    <string name="hint_new_phone_number">Номер телефона в формате: (XXX)-XX-XX</string>
+    <string name="hint_phone_number">(XXX)-XX-XX</string>
+    <string name="hint_password">Пароль</string>
+    <string name="hint_new_user_name">Ваше Имя</string>
+    <string name="hint_confirm_password">Подтвердите пароль</string>
+    <string name="hint_city">Ваш город</string>
+    <string name="hint_car_type">Тип Вашей машины</string>
 
     <string name="register_text">Register</string>
     <string name="login_text"><u>Log In</u></string>

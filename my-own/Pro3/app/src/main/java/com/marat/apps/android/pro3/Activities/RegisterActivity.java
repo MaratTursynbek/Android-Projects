@@ -49,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     if (phoneNumberEditText.length() == 0) {
-                        phoneNumberEditText.setHint("(XXX) XXX-XX-XX");
+                        phoneNumberEditText.setHint(R.string.hint_phone_number);
                     }
                 } else {
                     if (phoneNumberEditText.length() == 0) {

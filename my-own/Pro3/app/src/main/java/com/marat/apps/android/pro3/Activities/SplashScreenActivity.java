@@ -38,11 +38,13 @@ public class SplashScreenActivity extends AppCompatActivity {
         initializeDatabase();
 
         SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-        String username = sharedPreferences.getString("username", "");
-        String password = sharedPreferences.getString("password", "");
-        String token = sharedPreferences.getString("ACCESS_TOKEN", "");
+        String username = sharedPreferences.getString("username", "empty");
+        String password = sharedPreferences.getString("password", "empty");
+        String token = sharedPreferences.getString("ACCESS_TOKEN", "empty");
 
-        if ("".equals(username) || "".equals(password) || "".equals(token)) {
+        Log.d("SplashScreenActivity", username + " -- " + password + " -- " + token);
+
+        if ("empty".equals(username) || "empty".equals(password) || "empty".equals(token)) {
             intent1 = new Intent(this, RegisterActivity.class);
         } else {
             intent1 = new Intent(this, MainActivity.class);
@@ -80,7 +82,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         db.addFavoriteCarWashingStations(Integer.parseInt(data4[0]), Integer.parseInt(data4[1]), data4[2], data4[3], Integer.parseInt(data4[4]), Integer.parseInt(data4[5]), Integer.parseInt(data4[6]));
 
         long p = db.addMyOrders(Integer.parseInt(order1[0]), order1[1], order1[2], order1[3], order1[4], order1[5], order1[6]);
-        Log.v("SplashScreenActivity", p + "");
+        Log.d("SplashScreenActivity", p + "");
         db.addMyOrders(Integer.parseInt(order2[0]), order2[1], order2[2], order2[3], order2[4], order2[5], order2[6]);
         db.addMyOrders(Integer.parseInt(order3[0]), order3[1], order3[2], order3[3], order3[4], order3[5], order3[6]);
         db.addMyOrders(Integer.parseInt(order4[0]), order4[1], order4[2], order4[3], order4[4], order4[5], order4[6]);
