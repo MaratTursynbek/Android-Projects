@@ -4,15 +4,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -37,6 +41,7 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
     private String userAuthorizationURL = "https://whispering-crag-11991.herokuapp.com/api/v1/sessions";
     private String formattedPhoneNumber;
 
+    private View loginActivityLayout;
     private PhoneNumberEditText phoneNumberEditText;
     private EditText passwordEditText;
     private ProgressDialog dialog;
@@ -46,36 +51,15 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        loginActivityLayout = findViewById(R.id.loginActivityLayout);
         phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.LogInPhoneNumberEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 
-        findViewById(R.id.loginLayout).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                return true;
-            }
-        });
-
         phoneNumberEditText.addTextChangedListener(new PhoneTextWatcher(phoneNumberEditText));
-        phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    if (phoneNumberEditText.length() == 0) {
-                        phoneNumberEditText.setHint(R.string.hint_phone_number);
-                    }
-                } else {
-                    if (phoneNumberEditText.length() == 0) {
-                        phoneNumberEditText.setHint(R.string.hint_new_phone_number);
-                    }
-                }
-            }
-        });
         phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     phoneNumberEditText.clearFocus();
                     passwordEditText.requestFocus();
                     return true;
@@ -93,6 +77,13 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
                 return false;
             }
         });
+        loginActivityLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideKeyboard();
+                return true;
+            }
+        });
     }
 
     public void logInUser(View v) {
@@ -104,14 +95,14 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
                     showProgressDialog();
                     postRequest.post(userAuthorizationURL, createUserDataInJson());
                 } else {
-                    showSnackErrorMessage("Введите Пароль", v);
+                    showSnackErrorMessage(getString(R.string.error_enter_password), v);
                 }
             } else {
-                showSnackErrorMessage("Неверный Формат Номера Телефона", v);
+                showSnackErrorMessage(getString(R.string.error_phone_number_format), v);
             }
         } else {
             hideKeyboard();
-            showErrorToast("Нет доступа к Интернету!");
+            showErrorToast(getString(R.string.error_no_internet_connection));
         }
     }
 
@@ -119,14 +110,15 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         String phone = phoneNumberEditText.getText().toString();
         formattedPhoneNumber = phone.substring(1, 4) + phone.substring(6, 9) + phone.substring(10, 12) + phone.substring(13);
         return "{\"user\":{"
-                + "\"phone_number\":" + "\"" + formattedPhoneNumber + "\"" + ","
-                + "\"password\":" + "\"" + passwordEditText.getText().toString() + "\""
+                + "\"phone_number\":"    +   "\""   +     formattedPhoneNumber                       + "\""      + ","
+                + "\"password\":"        +   "\""   +     passwordEditText.getText().toString()      + "\""
                 + "}}";
     }
 
     @Override
     public void onFailure(IOException e) {
         e.printStackTrace();
+        dialog.dismiss();
         showErrorToast("Не удалось загрузить данные");
     }
 
@@ -137,9 +129,10 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
         String responseMessage = response.message();
         Log.d("LoginActivity", responseMessage);
 
-        if ("Unauthorized ".equals(responseMessage)) {
-            showErrorToast("Неверный Логин или Пароль!");
-        } else {
+        String s = getString(R.string.server_response_login_successful);
+        Log.d("LoginActivity", s);
+
+        if (getString(R.string.server_response_login_successful).equals(responseMessage)) {
             try {
                 String res = response.body().string();
                 Log.d("LoginActivity", res);
@@ -153,13 +146,15 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
             }
 
             if (isSuccessful) {
-                Intent finishIntent = new Intent("finish__register_activity");
+                Intent finishIntent = new Intent("finish_register_activity");
                 LocalBroadcastManager.getInstance(LoginActivity.this).sendBroadcast(finishIntent);
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("startPage", "Favorites");
                 startActivity(intent);
                 finish();
             }
+        } else {
+            showErrorToast(getString(R.string.error_wrong_phone_or_pass));
         }
     }
 

@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/createAccountLayout"
+    android:id="@+id/createAccountActivityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryBackground"
@@ -29,6 +29,7 @@
             android:layout_marginTop="20dp"
             android:background="@android:drawable/editbox_background_normal"
             android:hint="@string/hint_new_user_name"
+            android:imeOptions="actionNext"
             android:inputType="textPersonName"
             android:maxLength="40"
             android:textSize="14sp" />
@@ -54,6 +55,7 @@
             android:layout_marginTop="10dp"
             android:background="@android:drawable/editbox_background_normal"
             android:hint="@string/hint_password"
+            android:imeOptions="actionNext"
             android:inputType="textPassword"
             android:textSize="14sp" />
 
@@ -65,6 +67,7 @@
             android:layout_marginTop="10dp"
             android:background="@android:drawable/editbox_background_normal"
             android:hint="@string/hint_confirm_password"
+            android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:textSize="14sp" />
 
@@ -90,7 +93,7 @@
                     android:layout_alignStart="@+id/userCityEditText"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
-                    android:text="@string/city_text"
+                    android:text="@string/text_choose_city"
                     android:textColor="@android:color/white" />
 
                 <EditText
@@ -103,6 +106,7 @@
                     android:layout_marginTop="6dp"
                     android:background="@android:drawable/editbox_background_normal"
                     android:hint="@string/hint_city"
+                    android:imeOptions="actionDone"
                     android:inputType="numberDecimal"
                     android:textSize="14sp" />
 
@@ -121,7 +125,7 @@
                     android:layout_alignStart="@+id/userCarEditText"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
-                    android:text="@string/car_type_text"
+                    android:text="@string/text_choose_car_type"
                     android:textColor="@android:color/white" />
 
                 <EditText
@@ -134,6 +138,7 @@
                     android:layout_marginTop="6dp"
                     android:background="@android:drawable/editbox_background_normal"
                     android:hint="@string/hint_car_type"
+                    android:imeOptions="actionDone"
                     android:inputType="numberDecimal"
                     android:textSize="14sp" />
 
@@ -151,8 +156,9 @@
             android:layout_marginTop="20dp"
             android:background="@color/colorButtonBackground"
             android:onClick="registerUser"
-            android:text="@string/create_account_text"
+            android:text="@string/text_create_account"
             android:textColor="@android:color/white" />
 
     </RelativeLayout>
+
 </ScrollView>

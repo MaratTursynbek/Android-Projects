@@ -1,33 +1,47 @@
 <resources>
     <string name="app_name">Pro3</string>
     <string name="app_website_link">pro3.kz</string>
-    <string name="action_log_out">Log Out</string>
 
-    <string name="title_activity_register">Register</string>
-    <string name="title_activity_login">Log In</string>
-    <string name="title_activity_create_account">Create New Account</string>
-    <string name="title_activity_restore_password">Restore Your Password</string>
-    <string name="title_activity_cwstation_details">Car Washing Station Details</string>
-    <string name="title_activity_order_details">Order Details</string>
+    <string name="title_activity_register">Зарегистрироваться</string>
+    <string name="title_activity_login">Войти</string>
+    <string name="title_activity_create_account">Регистрация</string>
+    <string name="title_activity_restore_password">Восстановление Пароля</string>
+    <string name="title_activity_cwstation_details">Выбранная Автомойка</string>
+    <string name="title_activity_order_details">Выбранный Заказ</string>
 
-    <string name="hint_new_phone_number">Номер телефона в формате: (XXX)-XX-XX</string>
-    <string name="hint_phone_number">(XXX)-XX-XX</string>
+    <string name="hint_new_phone_number">Номер телефона в формате: (XXX) XXX-XX-XX</string>
+    <string name="hint_phone_number">(XXX) XXX-XX-XX</string>
     <string name="hint_password">Пароль</string>
     <string name="hint_new_user_name">Ваше Имя</string>
     <string name="hint_confirm_password">Подтвердите пароль</string>
-    <string name="hint_city">Ваш город</string>
-    <string name="hint_car_type">Тип Вашей машины</string>
+    <string name="hint_city">город</string>
+    <string name="hint_car_type">авто</string>
 
-    <string name="register_text">Register</string>
-    <string name="login_text"><u>Log In</u></string>
-    <string name="forgot_password_text">Forgot?</string>
-    <string name="create_account_text">Create account</string>
-    <string name="city_text">Select your City:</string>
-    <string name="car_type_text">Choose your Car type:</string>
+    <string name="text_register">Зарегистрироваться</string>
+    <string name="text_login"><u>Войти</u></string>
+    <string name="text_forgot_password">Забыли?</string>
+    <string name="text_create_account">Создать Аккаунт</string>
+    <string name="text_choose_city">Ваш Город:</string>
+    <string name="text_choose_car_type">Тип Вашего Авто:</string>
+    <string name="text_no_car_washers">Не удалось загрузить список автомоек</string>
+    <string name="text_no_my_orders">Не удалось загрузить список ваших заказов</string>
+    <string name="text_word_or">или</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="word_or">or</string>
-    <string name="no_car_washers">NO Car Washing Stations Found</string>
-    <string name="no_my_orders">NO Order Records Found</string>
+    <string name="navigation_drawer_open">Открыть Меню</string>
+    <string name="navigation_drawer_close">Закрыть Меню</string>
+
+    <string name="error_phone_number_format">Неверный Формат Номера Телефона</string>
+    <string name="error_choose_car">Выберите Ваш тип машины</string>
+    <string name="error_choose_city">Выберите Ваш город</string>
+    <string name="error_passwords_do_not_match">Введенные пароли не совпадают</string>
+    <string name="error_enter_password">Введите пароль</string>
+    <string name="error_enter_name">Введите Ваше Имя</string>
+    <string name="error_no_internet_connection">Нет доступа к Интернету</string>
+    <string name="error_could_not_load_data">Не удалось загрузить данные</string>
+    <string name="error_could_not_create_user">Не удалось создать пользователя</string>
+    <string name="error_wrong_phone_or_pass">Неверный Логин или Пароль</string>
+
+    <string name="server_response_user_created">Created\u0020</string>
+    <string name="server_response_login_successful">Created\u0020</string>
+    <string name="server_response_login_failed">Unauthorized\u0020</string>
 </resources>

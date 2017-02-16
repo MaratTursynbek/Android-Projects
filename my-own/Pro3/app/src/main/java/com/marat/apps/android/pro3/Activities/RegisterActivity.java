@@ -8,10 +8,13 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ import com.marat.apps.android.pro3.R;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private View registerActivityLayout;
     private PhoneNumberEditText phoneNumberEditText;
 
     @Override
@@ -32,17 +36,9 @@ public class RegisterActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(finishActivityReceiver, new IntentFilter("finish__register_activity"));
-
-        findViewById(R.id.registerAccount).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                return true;
-            }
-        });
-
+        registerActivityLayout = findViewById(R.id.registerActivityLayout);
         phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.registerPhoneNumberEditText);
+
         phoneNumberEditText.addTextChangedListener(new PhoneTextWatcher(phoneNumberEditText));
         phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -61,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
         phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     Log.v("tag", "action triggered");
                     goToCreateAccountActivity(v);
                     return true;
@@ -69,6 +65,21 @@ public class RegisterActivity extends AppCompatActivity {
                 return false;
             }
         });
+        registerActivityLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideKeyboard();
+                return true;
+            }
+        });
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(finishActivityReceiver, new IntentFilter("finish__register_activity"));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        hideKeyboard();
     }
 
     public void goToLogInActivity(View v) {
@@ -101,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
     private BroadcastReceiver finishActivityReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if ("finish__register_activity".equals(intent.getAction())) {
+            if ("finish_register_activity".equals(intent.getAction())) {
                 LocalBroadcastManager.getInstance(RegisterActivity.this).unregisterReceiver(finishActivityReceiver);
                 finish();
             }

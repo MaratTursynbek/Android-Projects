@@ -31,7 +31,8 @@
             android:name=".Activities.RegisterActivity"
             android:label="@string/title_activity_register"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login"

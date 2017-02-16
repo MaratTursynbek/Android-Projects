@@ -10,11 +10,18 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
@@ -31,9 +38,10 @@ import okhttp3.Response;
 
 public class CreateAccountActivity extends AppCompatActivity implements PostRequestResponse{
 
-    String userRegistrationURL = "https://whispering-crag-11991.herokuapp.com/api/v1/users";
+    private String userRegistrationURL = "https://whispering-crag-11991.herokuapp.com/api/v1/users";
     private String formattedPhoneNumber;
 
+    private View createAccountActivityLayout;
     private EditText userNameEditText, passwordEditText, confirmPasswordEditText, cityEditText, carTypeEditText;
     private PhoneNumberEditText phoneNumberEditText;
     private ProgressDialog dialog;
@@ -46,6 +54,7 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        createAccountActivityLayout = findViewById(R.id.createAccountActivityLayout);
         userNameEditText = (EditText) findViewById(R.id.userNameEditText);
         phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.newPhoneNumberEditText);
         passwordEditText = (EditText) findViewById(R.id.newPasswordEditText);
@@ -57,6 +66,51 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         Bundle extras = intent.getExtras();
         phoneNumberEditText.setText(extras.getString("phone_number"));
         phoneNumberEditText.setFocusable(false);
+
+        userNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    userNameEditText.clearFocus();
+                    passwordEditText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    passwordEditText.clearFocus();
+                    confirmPasswordEditText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+        confirmPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    hideKeyboard();
+                    return true;
+                }
+                return false;
+            }
+        });
+/*
+        createAccountActivityLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("CreateAccountActivity", "onTouch");
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    Log.d("CreateAccountActivity", "ACTION_DOWN");
+                    hideKeyboard();
+                }
+                return false;
+            }
+        });*/
     }
 
     @Override
@@ -79,23 +133,23 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
                                 showProgressDialog();
                                 postRequest.post(userRegistrationURL, createNewUserDataInJson());
                             } else {
-                                showSnackErrorMessage("Выберите Ваш тип машины", v);
+                                showSnackErrorMessage(getString(R.string.error_choose_car), v);
                             }
                         } else {
-                            showSnackErrorMessage("Выберите Ваш город", v);
+                            showSnackErrorMessage(getString(R.string.error_choose_city), v);
                         }
                     } else {
-                        showSnackErrorMessage("Введенные пароли не совпадают", v);
+                        showSnackErrorMessage(getString(R.string.error_passwords_do_not_match), v);
                     }
                 } else {
-                    showSnackErrorMessage("Выберите пароль", v);
+                    showSnackErrorMessage(getString(R.string.error_enter_password), v);
                 }
             } else {
-                showSnackErrorMessage("Выберите Ваше Имя", v);
+                showSnackErrorMessage(getString(R.string.error_enter_name), v);
             }
         } else {
             hideKeyboard();
-            showSnackErrorMessage("Нет доступа к Интернету", v);
+            showSnackErrorMessage(getString(R.string.error_no_internet_connection), v);
         }
     }
 
@@ -104,19 +158,19 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         formattedPhoneNumber = phone.substring(1,4) + phone.substring(6,9) + phone.substring(10,12) + phone.substring(13);
 
         return "{\"user\":{"
-                +   "\"phone_number\":"            +   "\""   +   formattedPhoneNumber                                 +    "\""   +   ","
-                +   "\"name\":"                    +   "\""   +   userNameEditText.getText().toString()          +    "\""   +   ","
-                +   "\"password\":"                +   "\""   +   passwordEditText.getText().toString()          +    "\""   +   ","
-                +   "\"password_confirmation\":"   +   "\""   +   confirmPasswordEditText.getText().toString()   +    "\""   +   ","
-                +   "\"city_id\":"                    +   "\""   +   cityEditText.getText().toString()              +    "\""   +   ","
-                +   "\"car_type_id\":"                +   "\""   +   carTypeEditText.getText().toString()               +    "\""
+                +   "\"phone_number\":"            +   "\""   +   formattedPhoneNumber                             +    "\""   +   ","
+                +   "\"name\":"                    +   "\""   +   userNameEditText.getText().toString()            +    "\""   +   ","
+                +   "\"password\":"                +   "\""   +   passwordEditText.getText().toString()            +    "\""   +   ","
+                +   "\"password_confirmation\":"   +   "\""   +   confirmPasswordEditText.getText().toString()     +    "\""   +   ","
+                +   "\"city_id\":"                 +   "\""   +   cityEditText.getText().toString()                +    "\""   +   ","
+                +   "\"car_type_id\":"             +   "\""   +   carTypeEditText.getText().toString()             +    "\""
                 +   "}}";
     }
 
     @Override
     public void onFailure(IOException e) {
         e.printStackTrace();
-        showErrorToast("Не удалось загрузить данные");
+        showErrorToast(getString(R.string.error_could_not_load_data));
     }
 
     @Override
@@ -126,7 +180,7 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         String responseMessage = response.message();
         Log.d("LoginActivity", responseMessage);
 
-        if ("Created ".equals(responseMessage)) {
+        if (getString(R.string.server_response_user_created).equals(responseMessage)) {
             try {
                 String res = response.body().string();
                 Log.d("CreateAccountActivity", res);
@@ -140,7 +194,7 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
             }
 
             if (isSuccessful) {
-                Intent finishIntent = new Intent("finish__register_activity");
+                Intent finishIntent = new Intent("finish_register_activity");
                 LocalBroadcastManager.getInstance(CreateAccountActivity.this).sendBroadcast(finishIntent);
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("startPage", "AllCarWashers");
@@ -148,7 +202,7 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
                 finish();
             }
         } else {
-            showErrorToast("Не удалось создать пользователя");
+            showErrorToast(getString(R.string.error_could_not_create_user));
         }
     }
 
@@ -175,8 +229,11 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        phoneNumberEditText.clearFocus();
+        userNameEditText.clearFocus();
         passwordEditText.clearFocus();
+        confirmPasswordEditText.clearFocus();
+        cityEditText.clearFocus();
+        carTypeEditText.clearFocus();
     }
 
     private void showProgressDialog() {
@@ -186,6 +243,16 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+    }
+
+    public void saveUserData(String userId, String token) {
+        SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", formattedPhoneNumber);
+        editor.putString("password", passwordEditText.getText().toString());
+        editor.putString("user_id", userId);
+        editor.putString("ACCESS_TOKEN", token);
+        editor.apply();
     }
 
     private void showSnackErrorMessage(String message, View v) {
@@ -203,13 +270,8 @@ public class CreateAccountActivity extends AppCompatActivity implements PostRequ
         });
     }
 
-    public void saveUserData(String userId, String token) {
-        SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("username", formattedPhoneNumber);
-        editor.putString("password", passwordEditText.getText().toString());
-        editor.putString("user_id", userId);
-        editor.putString("ACCESS_TOKEN", token);
-        editor.apply();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
