@@ -73,22 +73,22 @@ public class SplashScreenActivity extends AppCompatActivity {
         db.deleteFavoriteStations();
         db.deleteMyOrders();
 
-        db.addAllCarWashingStations(Integer.parseInt(data1[0]), Integer.parseInt(data1[1]), data1[2], data1[3], Integer.parseInt(data1[4]), Integer.parseInt(data1[5]), Integer.parseInt(data1[6]));
-        db.addAllCarWashingStations(Integer.parseInt(data2[0]), Integer.parseInt(data2[1]), data2[2], data2[3], Integer.parseInt(data2[4]), Integer.parseInt(data2[5]), Integer.parseInt(data2[6]));
-        db.addAllCarWashingStations(Integer.parseInt(data3[0]), Integer.parseInt(data3[1]), data3[2], data3[3], Integer.parseInt(data3[4]), Integer.parseInt(data3[5]), Integer.parseInt(data3[6]));
-        db.addAllCarWashingStations(Integer.parseInt(data4[0]), Integer.parseInt(data4[1]), data4[2], data4[3], Integer.parseInt(data4[4]), Integer.parseInt(data4[5]), Integer.parseInt(data4[6]));
+        db.addToAllCarWashingStations(Integer.parseInt(data1[0]), Integer.parseInt(data1[1]), data1[2], data1[3], Integer.parseInt(data1[4]), Integer.parseInt(data1[5]), Integer.parseInt(data1[6]));
+        db.addToAllCarWashingStations(Integer.parseInt(data2[0]), Integer.parseInt(data2[1]), data2[2], data2[3], Integer.parseInt(data2[4]), Integer.parseInt(data2[5]), Integer.parseInt(data2[6]));
+        db.addToAllCarWashingStations(Integer.parseInt(data3[0]), Integer.parseInt(data3[1]), data3[2], data3[3], Integer.parseInt(data3[4]), Integer.parseInt(data3[5]), Integer.parseInt(data3[6]));
+        db.addToAllCarWashingStations(Integer.parseInt(data4[0]), Integer.parseInt(data4[1]), data4[2], data4[3], Integer.parseInt(data4[4]), Integer.parseInt(data4[5]), Integer.parseInt(data4[6]));
 
-        db.addFavoriteCarWashingStations(Integer.parseInt(data1[0]), Integer.parseInt(data1[1]), data1[2], data1[3], Integer.parseInt(data1[4]), Integer.parseInt(data1[5]), Integer.parseInt(data1[6]));
-        db.addFavoriteCarWashingStations(Integer.parseInt(data4[0]), Integer.parseInt(data4[1]), data4[2], data4[3], Integer.parseInt(data4[4]), Integer.parseInt(data4[5]), Integer.parseInt(data4[6]));
+        db.addToFavoriteCarWashingStations(Integer.parseInt(data1[0]), Integer.parseInt(data1[1]), data1[2], data1[3], Integer.parseInt(data1[4]), Integer.parseInt(data1[5]), Integer.parseInt(data1[6]));
+        db.addToFavoriteCarWashingStations(Integer.parseInt(data4[0]), Integer.parseInt(data4[1]), data4[2], data4[3], Integer.parseInt(data4[4]), Integer.parseInt(data4[5]), Integer.parseInt(data4[6]));
 
-        long p = db.addMyOrders(Integer.parseInt(order1[0]), order1[1], order1[2], order1[3], order1[4], order1[5], order1[6]);
+        long p = db.addToMyOrders(Integer.parseInt(order1[0]), order1[1], order1[2], order1[3], order1[4], order1[5], order1[6]);
         Log.d("SplashScreenActivity", p + "");
-        db.addMyOrders(Integer.parseInt(order2[0]), order2[1], order2[2], order2[3], order2[4], order2[5], order2[6]);
-        db.addMyOrders(Integer.parseInt(order3[0]), order3[1], order3[2], order3[3], order3[4], order3[5], order3[6]);
-        db.addMyOrders(Integer.parseInt(order4[0]), order4[1], order4[2], order4[3], order4[4], order4[5], order4[6]);
-        db.addMyOrders(Integer.parseInt(order5[0]), order5[1], order5[2], order5[3], order5[4], order5[5], order5[6]);
-        db.addMyOrders(Integer.parseInt(order6[0]), order6[1], order6[2], order6[3], order6[4], order6[5], order6[6]);
-        db.addMyOrders(Integer.parseInt(order7[0]), order7[1], order7[2], order7[3], order7[4], order7[5], order7[6]);
+        db.addToMyOrders(Integer.parseInt(order2[0]), order2[1], order2[2], order2[3], order2[4], order2[5], order2[6]);
+        db.addToMyOrders(Integer.parseInt(order3[0]), order3[1], order3[2], order3[3], order3[4], order3[5], order3[6]);
+        db.addToMyOrders(Integer.parseInt(order4[0]), order4[1], order4[2], order4[3], order4[4], order4[5], order4[6]);
+        db.addToMyOrders(Integer.parseInt(order5[0]), order5[1], order5[2], order5[3], order5[4], order5[5], order5[6]);
+        db.addToMyOrders(Integer.parseInt(order6[0]), order6[1], order6[2], order6[3], order6[4], order6[5], order6[6]);
+        db.addToMyOrders(Integer.parseInt(order7[0]), order7[1], order7[2], order7[3], order7[4], order7[5], order7[6]);
 
         db.close();
     }

@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements PostRequestRespo
     public void onFailure(IOException e) {
         e.printStackTrace();
         dialog.dismiss();
-        showErrorToast("Не удалось загрузить данные");
+        showErrorToast(getString(R.string.error_could_not_load_data));
     }
 
     @Override

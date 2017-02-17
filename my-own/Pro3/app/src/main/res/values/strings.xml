@@ -9,6 +9,11 @@
     <string name="title_activity_cwstation_details">Выбранная Автомойка</string>
     <string name="title_activity_order_details">Выбранный Заказ</string>
 
+    <string name="title_main_fragment_account">Мой Аккаунт</string>
+    <string name="title_main_fragment_all_stations">Все Автомойки</string>
+    <string name="title_main_fragment_favorite_stations">Мои Автомойки</string>
+    <string name="title_main_fragment_user_orders">Мои Заказы</string>
+
     <string name="hint_new_phone_number">Номер телефона в формате: (XXX) XXX-XX-XX</string>
     <string name="hint_phone_number">(XXX) XXX-XX-XX</string>
     <string name="hint_password">Пароль</string>

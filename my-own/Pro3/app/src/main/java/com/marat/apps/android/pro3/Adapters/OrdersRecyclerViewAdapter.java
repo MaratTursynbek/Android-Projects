@@ -13,13 +13,13 @@ import com.marat.apps.android.pro3.Activities.OrderDetailsActivity;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.R;
 
-public class MyOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyOrdersRecyclerViewAdapter.ViewHolder> {
+public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecyclerViewAdapter.ViewHolder> {
 
     private Cursor cursor;
     private Context context;
     private CWStationsDatabase db;
 
-    public MyOrdersRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database) {
+    public OrdersRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database) {
         cursor = data;
         context = c;
         db = database;
@@ -58,13 +58,13 @@ public class MyOrdersRecyclerViewAdapter extends RecyclerView.Adapter<MyOrdersRe
         final long rowId;
         db.open();
         cursor.moveToPosition(pos);
-        rowId = Long.parseLong(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ROW_ID)));
-        holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_NAME)));
-        holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ADDRESS)));
-        holder.orderServices.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_SERVICES)));
-        holder.orderDate.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_DATE)));
-        holder.orderPrice.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_PRICE)) + " тг.");
-        holder.orderStatus.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_STATUS)));
+        rowId = Long.parseLong(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.ROW_ID)));
+        holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_NAME)));
+        holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_ADDRESS)));
+        holder.orderServices.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_SERVICES)));
+        holder.orderDate.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_DATE)));
+        holder.orderPrice.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_PRICE)) + " тг.");
+        holder.orderStatus.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_STATUS)));
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

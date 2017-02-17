@@ -2,8 +2,6 @@ package com.marat.apps.android.pro3.Activities;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -50,14 +48,14 @@ public class OrderDetailsActivity extends AppCompatActivity {
     private void setTextData(long rowId) {
         CWStationsDatabase db = new CWStationsDatabase(this);
         db.open();
-        Cursor cursor = db.getOneOrderAt(rowId);
+        Cursor cursor = db.getOrderAt(rowId);
         cursor.moveToFirst();
-        carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_NAME)));
-        carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ADDRESS)));
-        orderServices.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_SERVICES)));
-        orderDate.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_DATE)));
-        orderPrice.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_PRICE)) + " тг.");
-        orderStatus.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ORDER_STATUS)));
+        carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_NAME)));
+        carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_ADDRESS)));
+        orderServices.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_SERVICES)));
+        orderDate.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_DATE)));
+        orderPrice.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_PRICE)) + " тг.");
+        orderStatus.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_STATUS)));
 
         if ("Активный".equals(orderStatus.getText().toString())) {
             orderStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark));

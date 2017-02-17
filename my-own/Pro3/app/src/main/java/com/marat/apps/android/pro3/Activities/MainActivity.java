@@ -20,16 +20,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.MenuCityPickerAdapter;
+import com.marat.apps.android.pro3.Adapters.CityPickerAdapter;
 import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.MenuSections.AllCarWashersFragment;
 import com.marat.apps.android.pro3.MenuSections.FavoriteFragment;
-import com.marat.apps.android.pro3.MenuSections.HomeFragment;
+import com.marat.apps.android.pro3.MenuSections.AccountFragment;
 import com.marat.apps.android.pro3.MenuSections.MyOrdersFragment;
 import com.marat.apps.android.pro3.R;
 
@@ -127,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         citiesListView = (ListView) findViewById(R.id.citiesListView);
         citiesListView.setVisibility(View.INVISIBLE);
 
-        final MenuCityPickerAdapter adapter = new MenuCityPickerAdapter(this, cities, userCity);
+        final CityPickerAdapter adapter = new CityPickerAdapter(this, cities, userCity);
         citiesListView.setAdapter(adapter);
         citiesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -180,9 +179,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            HomeFragment homeFragment = new HomeFragment();
+            AccountFragment accountFragment = new AccountFragment();
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, homeFragment);
+            fragmentTransaction.replace(R.id.fragment_container, accountFragment);
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_favorites) {

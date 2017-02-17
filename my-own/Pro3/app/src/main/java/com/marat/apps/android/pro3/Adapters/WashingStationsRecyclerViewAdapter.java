@@ -55,9 +55,9 @@ public class WashingStationsRecyclerViewAdapter extends RecyclerView.Adapter<Was
         final int pos = position;
         db.open();
         cursor.moveToPosition(pos);
-        holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_NAME)));
-        holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_ADDRESS)));
-        holder.carWashPrice.setText("Кузов + Салон от " + cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_PRICE)) + " тг.");
+        holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_NAME)));
+        holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_ADDRESS)));
+        holder.carWashPrice.setText("Кузов + Салон от " + cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_EXAMPLE_PRICE)) + " тг.");
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

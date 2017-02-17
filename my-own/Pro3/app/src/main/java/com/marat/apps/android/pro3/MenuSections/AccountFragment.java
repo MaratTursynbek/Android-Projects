@@ -24,7 +24,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class HomeFragment extends Fragment {
+public class AccountFragment extends Fragment {
 
     private static final String TAG = "myTag";
 
@@ -36,7 +36,7 @@ public class HomeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
         OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
-        listener.onTitleChanged("Мой Гараж");
+        listener.onTitleChanged(getString(R.string.title_main_fragment_account));
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         token = sharedPreferences.getString("ACCESS_TOKEN", "");

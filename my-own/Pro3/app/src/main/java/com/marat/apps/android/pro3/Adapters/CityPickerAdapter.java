@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import com.marat.apps.android.pro3.R;
 
-public class MenuCityPickerAdapter extends BaseAdapter {
+public class CityPickerAdapter extends BaseAdapter {
 
     private Context context;
     private String[] cities;
     private String currentCity;
 
-    public MenuCityPickerAdapter(Context c, String[]data, String selected) {
+    public CityPickerAdapter(Context c, String[]data, String selected) {
         context = c;
         cities = data;
         currentCity = selected;

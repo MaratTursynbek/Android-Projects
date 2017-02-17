@@ -32,7 +32,7 @@ public class FavoriteFragment extends Fragment {
         context = getContext();
 
         OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
-        listener.onTitleChanged("Мои Мойки");
+        listener.onTitleChanged(getString(R.string.title_main_fragment_favorite_stations));
 
         recyclerView = (RecyclerView) v.findViewById(R.id.carWashersRecyclerView);
         emptyText = (TextView) v.findViewById(R.id.emptyTextView);

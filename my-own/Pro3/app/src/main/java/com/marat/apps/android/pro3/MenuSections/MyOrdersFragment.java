@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.MyOrdersRecyclerViewAdapter;
+import com.marat.apps.android.pro3.Adapters.OrdersRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.R;
@@ -32,7 +32,7 @@ public class MyOrdersFragment extends Fragment {
         context = getContext();
 
         OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
-        listener.onTitleChanged("Мои Заказы");
+        listener.onTitleChanged(getString(R.string.title_main_fragment_user_orders));
 
         ordersRecyclerView = (RecyclerView) v.findViewById(R.id.moMyOrdersRecyclerView);
         ordersEmptyTextView = (TextView) v.findViewById(R.id.moEmptyTextView);
@@ -65,7 +65,7 @@ public class MyOrdersFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        MyOrdersRecyclerViewAdapter adapter = new MyOrdersRecyclerViewAdapter(data, context, db);
+        OrdersRecyclerViewAdapter adapter = new OrdersRecyclerViewAdapter(data, context, db);
         ordersRecyclerView.setAdapter(adapter);
     }
 }
