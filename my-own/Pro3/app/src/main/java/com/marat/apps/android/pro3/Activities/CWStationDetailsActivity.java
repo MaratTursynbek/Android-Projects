@@ -1,6 +1,7 @@
 package com.marat.apps.android.pro3.Activities;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.CarTypesRecyclerViewAdapter;
+import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Interfaces.RegistrationSuccessfullyFinishedListener;
 import com.marat.apps.android.pro3.Interfaces.RegistrationTimeChosenListener;
 import com.marat.apps.android.pro3.TimetableDialog.TimetableDialogFragment;
@@ -40,6 +42,10 @@ public class CWStationDetailsActivity extends AppCompatActivity implements Regis
         totalPriceTextView = (TextView) findViewById(R.id.totalPriceTextView);
         chooseTimeButton = (Button) findViewById(R.id.chooseTimeButton);
 
+        long rowId = getIntent().getExtras().getLong("rowId");
+        String origin = getIntent().getExtras().getString("origin");
+        setCarWashStationData(rowId, origin);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         carTypesRecyclerView.setLayoutManager(layoutManager);
         CarTypesRecyclerViewAdapter adapter = new CarTypesRecyclerViewAdapter(this);
@@ -52,6 +58,21 @@ public class CWStationDetailsActivity extends AppCompatActivity implements Regis
                 dialog.show(getSupportFragmentManager(), "dialog");
             }
         });
+    }
+
+    private void setCarWashStationData(long rowId, String origin) {
+        CWStationsDatabase db = new CWStationsDatabase(this);
+        db.open();
+        if ("AllStations".equals(origin)) {
+            Cursor c = db.getStationAt(rowId);
+            c.moveToFirst();
+            getSupportActionBar().setTitle(c.getString(c.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_NAME)));
+        } else if ("FavoriteStations".equals(origin)) {
+            Cursor c = db.getFavoriteStationAt(rowId);
+            c.moveToFirst();
+            getSupportActionBar().setTitle(c.getString(c.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_NAME)));
+        }
+        db.close();
     }
 
     @Override

@@ -65,7 +65,7 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        WashingStationsRecyclerViewAdapter adapter = new WashingStationsRecyclerViewAdapter(data, context, db);
+        WashingStationsRecyclerViewAdapter adapter = new WashingStationsRecyclerViewAdapter(data, context, db, "FavoriteStations");
         recyclerView.setAdapter(adapter);
     }
 }

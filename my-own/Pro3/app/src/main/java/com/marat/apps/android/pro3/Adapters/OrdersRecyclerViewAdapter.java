@@ -55,10 +55,9 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final int pos = position;
-        final long rowId;
         db.open();
         cursor.moveToPosition(pos);
-        rowId = Long.parseLong(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.ROW_ID)));
+        final long rowId = Long.parseLong(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.ROW_ID)));
         holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_NAME)));
         holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_ADDRESS)));
         holder.orderServices.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_SERVICES)));
@@ -76,8 +75,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
 
         if ("Активный".equals(holder.orderStatus.getText().toString())) {
             holder.orderStatus.setBackgroundResource(R.drawable.bg_order_status_active);
-        }
-        else {
+        } else {
             holder.orderStatus.setBackgroundResource(R.drawable.bg_order_status_ended);
         }
         db.close();

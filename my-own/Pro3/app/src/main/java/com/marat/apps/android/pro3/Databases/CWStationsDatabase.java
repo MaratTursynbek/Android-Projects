@@ -410,6 +410,22 @@ public class CWStationsDatabase {
     }
 
     /**
+     * returns Cursor pointing to the chosen Car Wash Station
+     */
+    public Cursor getStationAt(long rowId) {
+        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_FAVORITE, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
+        return database.query(DATABASE_TABLE_6_ALL_STATIONS, columns, ROW_ID + "=" + rowId, null, null, null, null);
+    }
+
+    /**
+     * returns Cursor pointing to the chosen Car Wash Station
+     */
+    public Cursor getFavoriteStationAt(long rowId) {
+        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_FAVORITE, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
+        return database.query(DATABASE_TABLE_7_FAVORITES_STATIONS, columns, ROW_ID + "=" + rowId, null, null, null, null);
+    }
+
+    /**
      * returns Cursor pointing to user's 1 ORDERS
      */
     public Cursor getOrderAt(long rowId) {

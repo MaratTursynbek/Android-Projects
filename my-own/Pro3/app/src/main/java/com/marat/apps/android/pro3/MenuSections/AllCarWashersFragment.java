@@ -66,7 +66,7 @@ public class AllCarWashersFragment extends Fragment {
     }
 
     private void setAdapterToRecyclerView() {
-        adapter = new WashingStationsRecyclerViewAdapter(data, context, db);
+        adapter = new WashingStationsRecyclerViewAdapter(data, context, db, "AllStations");
         recyclerView.setAdapter(adapter);
     }
 }

@@ -77,7 +77,7 @@ public class AccountFragment extends Fragment {
         });
     }
 
-    private void parseJSON(String input) throws JSONException{
+    private void parseJSON(String input) throws JSONException {
         JSONObject data = new JSONObject(input);
         JSONObject user = data.getJSONObject("user");
     }
@@ -85,8 +85,7 @@ public class AccountFragment extends Fragment {
     private void alertUserAboutError(int id) {
         if (id == 1) {
             Toast.makeText(getContext(), "Unable to load data", Toast.LENGTH_SHORT).show();
-        }
-        else if (id == 2) {
+        } else if (id == 2) {
             Toast.makeText(getContext(), "No user found", Toast.LENGTH_SHORT).show();
         }
     }

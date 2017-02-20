@@ -13,6 +13,9 @@
     <string name="title_main_fragment_all_stations">Все Автомойки</string>
     <string name="title_main_fragment_favorite_stations">Мои Автомойки</string>
     <string name="title_main_fragment_user_orders">Мои Заказы</string>
+    <string name="title_main_fragment_contacts">Контакты</string>
+    <string name="title_main_fragment_about_project">О Проекте</string>
+    <string name="title_main_fragment_logout">Выйти</string>
 
     <string name="hint_new_phone_number">Номер телефона в формате: (XXX) XXX-XX-XX</string>
     <string name="hint_phone_number">(XXX) XXX-XX-XX</string>

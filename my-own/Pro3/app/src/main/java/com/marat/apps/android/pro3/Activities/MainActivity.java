@@ -26,7 +26,9 @@ import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.CityPickerAdapter;
 import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
+import com.marat.apps.android.pro3.MenuSections.AboutProjectFragment;
 import com.marat.apps.android.pro3.MenuSections.AllCarWashersFragment;
+import com.marat.apps.android.pro3.MenuSections.ContactsFragment;
 import com.marat.apps.android.pro3.MenuSections.FavoriteFragment;
 import com.marat.apps.android.pro3.MenuSections.AccountFragment;
 import com.marat.apps.android.pro3.MenuSections.MyOrdersFragment;
@@ -68,9 +70,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(finishActivityReceiver, new IntentFilter("finish_main_activity"));
-
         findViewById(R.id.header).setVisibility(View.INVISIBLE);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(finishActivityReceiver, new IntentFilter("finish_main_activity"));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -93,18 +95,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         String startPage = getIntent().getExtras().getString("startPage");
 
-        if ("Favorites".equals(startPage)) {
+        if ("AllCarWashers".equals(startPage)) {
+            AllCarWashersFragment allCarWashersFragment = new AllCarWashersFragment();
+            fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
+            checkedItem = R.id.nav_car_washers;
+        } else if ("Favorites".equals(startPage)) {
             FavoriteFragment favoriteFragment = new FavoriteFragment();
             fragmentTransaction.add(R.id.fragment_container, favoriteFragment);
             checkedItem = R.id.nav_favorites;
         } else if ("MyOrders".equals(startPage)) {
             MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
-            fragmentTransaction.replace(R.id.fragment_container, myOrdersFragment);
+            fragmentTransaction.add(R.id.fragment_container, myOrdersFragment);
             checkedItem = R.id.nav_my_orders;
-        } else if ("AllCarWashers".equals(startPage)) {
-            AllCarWashersFragment allCarWashersFragment = new AllCarWashersFragment();
-            fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
-            checkedItem = R.id.nav_car_washers;
         }
 
         fragmentTransaction.commit();
@@ -161,7 +163,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onTitleChanged(String title) {
-        getSupportActionBar().setTitle(title);
+        if (title != null) {
+            getSupportActionBar().setTitle(title);
+        }
     }
 
     @Override
@@ -178,33 +182,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        fragmentTransaction = fragmentManager.beginTransaction();
+
         if (id == R.id.nav_home) {
             AccountFragment accountFragment = new AccountFragment();
-            fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, accountFragment);
-            fragmentTransaction.commit();
-
-        } else if (id == R.id.nav_favorites) {
-            FavoriteFragment favoriteFragment = new FavoriteFragment();
-            fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, favoriteFragment);
-            fragmentTransaction.commit();
+            checkedItem = R.id.nav_home;
 
         } else if (id == R.id.nav_car_washers) {
             AllCarWashersFragment allCarWashersFragment = new AllCarWashersFragment();
-            fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
-            fragmentTransaction.commit();
+            checkedItem = R.id.nav_car_washers;
+
+        } else if (id == R.id.nav_favorites) {
+            FavoriteFragment favoriteFragment = new FavoriteFragment();
+            fragmentTransaction.replace(R.id.fragment_container, favoriteFragment);
+            checkedItem = R.id.nav_favorites;
 
         } else if (id == R.id.nav_my_orders) {
             MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
-            fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, myOrdersFragment);
-            fragmentTransaction.commit();
+            checkedItem = R.id.nav_my_orders;
 
         } else if (id == R.id.nav_contacts) {
+            ContactsFragment contactsFragment = new ContactsFragment();
+            fragmentTransaction.replace(R.id.fragment_container, contactsFragment);
+            checkedItem = R.id.nav_contacts;
 
         } else if (id == R.id.nav_about) {
+            AboutProjectFragment aboutProjectFragment = new AboutProjectFragment();
+            fragmentTransaction.replace(R.id.fragment_container, aboutProjectFragment);
+            checkedItem = R.id.nav_about;
 
         } else if (id == R.id.nav_log_out) {
             SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
@@ -216,6 +224,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();
         }
+
+        fragmentTransaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

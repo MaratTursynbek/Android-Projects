@@ -95,7 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
             intent.putExtra("phone_number", phoneNumberEditText.getText().toString());
             startActivity(intent);
         } else {
-            Toast.makeText(this, "Incorrect Phone Number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_phone_number_format), Toast.LENGTH_SHORT).show();
         }
     }
 

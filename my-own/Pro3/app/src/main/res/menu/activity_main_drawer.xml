@@ -7,19 +7,19 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_black_36dp"
-            android:title="Мой Гараж" />
+            android:title="@string/title_main_fragment_account" />
         <item
             android:id="@+id/nav_car_washers"
             android:icon="@drawable/ic_local_car_wash_black_36dp"
-            android:title="Все Автомойки" />
+            android:title="@string/title_main_fragment_all_stations" />
         <item
             android:id="@+id/nav_favorites"
             android:icon="@drawable/ic_stars_black_36dp"
-            android:title="Мои Автомойки" />
+            android:title="@string/title_main_fragment_favorite_stations" />
         <item
             android:id="@+id/nav_my_orders"
             android:icon="@drawable/ic_attach_money_black_36dp"
-            android:title="Мои Заказы" />
+            android:title="@string/title_main_fragment_user_orders" />
     </group>
 
     <group
@@ -27,12 +27,12 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_contacts"
-            android:icon="@drawable/ic_menu_share"
-            android:title="Контакты" />
+            android:icon="@drawable/ic_contacts_black_36dp"
+            android:title="@string/title_main_fragment_contacts" />
         <item
             android:id="@+id/nav_about"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="О Проекте" />
+            android:icon="@drawable/ic_info_outline_black_36dp"
+            android:title="@string/title_main_fragment_about_project" />
     </group>
 
     <group
@@ -40,8 +40,8 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_log_out"
-            android:icon="@drawable/ic_menu_send"
-            android:title="Выйти" />
+            android:icon="@drawable/ic_logout_black_36dp"
+            android:title="@string/title_main_fragment_logout" />
     </group>
 
 </menu>

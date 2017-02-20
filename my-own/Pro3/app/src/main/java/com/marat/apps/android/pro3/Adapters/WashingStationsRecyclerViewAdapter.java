@@ -19,11 +19,13 @@ public class WashingStationsRecyclerViewAdapter extends RecyclerView.Adapter<Was
     private Cursor cursor;
     private Context context;
     private CWStationsDatabase db;
+    private String origin = "";
 
-    public WashingStationsRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database) {
+    public WashingStationsRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database, String origin) {
         cursor = data;
         context = c;
         db = database;
+        this.origin = origin;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -55,6 +57,7 @@ public class WashingStationsRecyclerViewAdapter extends RecyclerView.Adapter<Was
         final int pos = position;
         db.open();
         cursor.moveToPosition(pos);
+        final long rowId = cursor.getLong(cursor.getColumnIndex(CWStationsDatabase.ROW_ID));
         holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_NAME)));
         holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_ADDRESS)));
         holder.carWashPrice.setText("Кузов + Салон от " + cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_EXAMPLE_PRICE)) + " тг.");
@@ -62,7 +65,12 @@ public class WashingStationsRecyclerViewAdapter extends RecyclerView.Adapter<Was
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CWStationDetailsActivity.class);
-                intent.putExtra("position", pos);
+                intent.putExtra("rowId", rowId);
+                if ("AllStations".equals(origin)) {
+                    intent.putExtra("origin", "AllStations");
+                } else if ("FavoriteStations".equals(origin)) {
+                    intent.putExtra("origin", "FavoriteStations");
+                }
                 context.startActivity(intent);
             }
         });
