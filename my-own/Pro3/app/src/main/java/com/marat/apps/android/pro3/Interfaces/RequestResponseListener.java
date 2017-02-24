@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import okhttp3.Response;
 
-public interface PostRequestResponse {
+public interface RequestResponseListener {
     void onFailure(IOException e);
-    void onResponse(Response res);
+    void onResponse(Response response);
 }

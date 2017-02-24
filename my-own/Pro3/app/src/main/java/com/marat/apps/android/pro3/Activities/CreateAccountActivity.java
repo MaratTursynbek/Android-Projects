@@ -10,14 +10,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -25,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
-import com.marat.apps.android.pro3.Interfaces.PostRequestResponse;
+import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
 import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
 import com.marat.apps.android.pro3.R;
 
@@ -36,7 +32,7 @@ import java.io.IOException;
 
 import okhttp3.Response;
 
-public class CreateAccountActivity extends AppCompatActivity implements PostRequestResponse{
+public class CreateAccountActivity extends AppCompatActivity implements RequestResponseListener {
 
     private String userRegistrationURL = "https://whispering-crag-11991.herokuapp.com/api/v1/users";
     private String formattedPhoneNumber;

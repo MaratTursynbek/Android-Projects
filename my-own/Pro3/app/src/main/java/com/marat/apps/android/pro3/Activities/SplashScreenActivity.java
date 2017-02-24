@@ -7,14 +7,24 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
+import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
 import com.marat.apps.android.pro3.R;
 
-public class SplashScreenActivity extends AppCompatActivity {
+import java.io.IOException;
+
+import okhttp3.Response;
+
+public class SplashScreenActivity extends AppCompatActivity implements RequestResponseListener {
+
+    private static final String CITIES_AND_CAR_TYPES_URL = "https://whispering-crag-11991.herokuapp.com/api/v1/sessions";
 
     private Intent intent1;
     private static final int SPLASH_TIME_OUT = 1500;
+    long startTime, endTime;
 
     private String[] data1 = new String[]{"1", "1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "2500", "123", "456"};
     private String[] data2 = new String[]{"2", "0", "Master Keruen", "ТЦ Керуен, ул. Достык 21, 0-этаж", "3000", "123", "456"};
@@ -34,7 +44,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        long startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         initializeDatabase();
 
         SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
@@ -51,19 +61,78 @@ public class SplashScreenActivity extends AppCompatActivity {
             intent1.putExtra("startPage", "Favorites");
         }
 
-        long endTime = System.currentTimeMillis();
+        UniversalGetRequest getRequest = new UniversalGetRequest(this);
+        getRequest.delegate = this;
+        if (getRequest.isNetworkAvailable()) {
+            getRequest.get(CITIES_AND_CAR_TYPES_URL, null, null);
+        } else {
+            Toast.makeText(this, getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
+            goToNextActivity();
+        }
+    }
+
+    @Override
+    public void onFailure(IOException e) {
+        showErrorToast(getString(R.string.error_could_not_load_data));
+        Log.d("SplashScreenActivity", "onFailure");
+        goToNextActivity();
+    }
+
+    @Override
+    public void onResponse(Response response) {
+        boolean isSuccessful = false;
+        String responseMessage = response.message();
+        Log.d("SplashScreenActivity", responseMessage);
+
+        String res = "body empty";
+        try {
+            res = response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.d("SplashScreenActivity", res);
+
+        goToNextActivity();
+    }
+
+    private void goToNextActivity() {
+        endTime = System.currentTimeMillis();
+
+        Log.d("SplashScreenActivity", startTime + "");
+        Log.d("SplashScreenActivity", endTime + "");
+        Log.d("SplashScreenActivity", endTime - startTime + "");
+        Log.d("SplashScreenActivity", SPLASH_TIME_OUT - (endTime - startTime) + "");
 
         if ((endTime - startTime) >= SPLASH_TIME_OUT) {
             startActivity(intent1);
         } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(intent1);
-                    finish();
+            if ("main".equals(Thread.currentThread().getName())) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(intent1);
+                        finish();
+                    }
+                }, (SPLASH_TIME_OUT - (endTime - startTime)));
+            } else {
+                try {
+                    Thread.sleep(SPLASH_TIME_OUT - (endTime - startTime));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            }, (SPLASH_TIME_OUT - (endTime - startTime)));
+                startActivity(intent1);
+                finish();
+            }
         }
+    }
+
+    private void showErrorToast(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(SplashScreenActivity.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void initializeDatabase() {

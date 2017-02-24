@@ -10,29 +10,36 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class UniversalPostRequest {
+public class UniversalGetRequest {
 
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private Context context;
     public RequestResponseListener delegate = null;
 
-    public UniversalPostRequest(Context c) {
+    private String header = null;
+
+    public UniversalGetRequest(Context c) {
         context = c;
     }
 
-    public void post(String url, String json) {
+    public void get(String url, String action, String header) {
+
         OkHttpClient client = new OkHttpClient();
-        RequestBody body = RequestBody.create(JSON, json);
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
+        Request request;
+
+        if (action != null && header != null) {
+            request = new Request.Builder()
+                    .header(action, header)
+                    .url(url)
+                    .build();
+        } else {
+            request = new Request.Builder()
+                    .url(url)
+                    .build();
+        }
 
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
