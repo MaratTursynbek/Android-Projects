@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <RelativeLayout
+        android:id="@+id/dialogCarTypePickerTitleLayout"
+        android:layout_width="280dp"
+        android:layout_height="54dp"
+        android:background="@drawable/bg_city_and_car_picker_title">
+
+        <TextView
+            android:id="@+id/dialogCarTypePickerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="13dp"
+            android:paddingEnd="18dp"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:paddingStart="18dp"
+            android:text="@string/dialog_choose_car_type"
+            android:textColor="@android:color/black"
+            android:textSize="17.2sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/dialogCarTypePickerListView"
+        android:layout_width="280dp"
+        android:layout_height="380dp"
+        android:layout_below="@+id/dialogCarTypePickerTitleLayout"
+        android:divider="@android:color/transparent"
+        android:scrollbars="vertical" />
+
+    <RelativeLayout
+        android:id="@+id/dialogCarTypePickerButtonLayout"
+        android:layout_width="280dp"
+        android:layout_height="52dp"
+        android:layout_below="@+id/dialogCarTypePickerListView">
+
+        <TextView
+            android:id="@+id/dialogCarTypePositiveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:text="@string/dialog_ok_button"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dialogCarTypeNegativeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_toLeftOf="@+id/dialogCarTypePositiveButton"
+            android:layout_toStartOf="@+id/dialogCarTypePositiveButton"
+            android:text="@string/dialog_cancel_button"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

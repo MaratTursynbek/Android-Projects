@@ -17,7 +17,7 @@ import com.marat.apps.android.pro3.Adapters.CarTypesRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Interfaces.RegistrationSuccessfullyFinishedListener;
 import com.marat.apps.android.pro3.Interfaces.RegistrationTimeChosenListener;
-import com.marat.apps.android.pro3.TimetableDialog.TimetableDialogFragment;
+import com.marat.apps.android.pro3.Dialogs.TimetableDialogFragment;
 import com.marat.apps.android.pro3.R;
 
 public class CWStationDetailsActivity extends AppCompatActivity implements RegistrationTimeChosenListener, RegistrationSuccessfullyFinishedListener {

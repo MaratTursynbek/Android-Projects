@@ -20,6 +20,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.marat.apps.android.pro3.Dialogs.CarTypePickerDialog;
+import com.marat.apps.android.pro3.Dialogs.CityPickerDialog;
+import com.marat.apps.android.pro3.Interfaces.CarTypeChosenListener;
+import com.marat.apps.android.pro3.Interfaces.CityChosenListener;
+import com.marat.apps.android.pro3.Models.CarType;
+import com.marat.apps.android.pro3.Models.City;
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
 import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
@@ -32,15 +38,21 @@ import java.io.IOException;
 
 import okhttp3.Response;
 
-public class CreateAccountActivity extends AppCompatActivity implements RequestResponseListener {
+public class CreateAccountActivity extends AppCompatActivity implements RequestResponseListener, CityChosenListener, CarTypeChosenListener {
 
     private String userRegistrationURL = "https://propropro.herokuapp.com/api/v1/users";
     private String formattedPhoneNumber;
 
-    private View createAccountActivityLayout;
     private EditText userNameEditText, passwordEditText, confirmPasswordEditText, cityEditText, carTypeEditText;
     private PhoneNumberEditText phoneNumberEditText;
     private ProgressDialog dialog;
+    private CityPickerDialog dialogChooseCity;
+    private CarTypePickerDialog dialogChooseCarType;
+
+    private City chosenCity;
+    private int chosenCityPosition;
+    private CarType chosenCarType;
+    private int chosenCarTypePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +62,6 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        createAccountActivityLayout = findViewById(R.id.createAccountActivityLayout);
         userNameEditText = (EditText) findViewById(R.id.userNameEditText);
         phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.newPhoneNumberEditText);
         passwordEditText = (EditText) findViewById(R.id.newPasswordEditText);
@@ -95,18 +106,36 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
                 return false;
             }
         });
-/*
-        createAccountActivityLayout.setOnTouchListener(new View.OnTouchListener() {
+
+        cityEditText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.d("CreateAccountActivity", "onTouch");
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.d("CreateAccountActivity", "ACTION_DOWN");
-                    hideKeyboard();
-                }
-                return false;
+            public void onClick(View v) {
+                dialogChooseCity = CityPickerDialog.newInstance(chosenCityPosition);
+                dialogChooseCity.show(getSupportFragmentManager(), "dialog");
             }
-        });*/
+        });
+
+        carTypeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogChooseCarType = CarTypePickerDialog.newInstance(chosenCarTypePosition);
+                dialogChooseCarType.show(getSupportFragmentManager(), "dialog");
+            }
+        });
+    }
+
+    @Override
+    public void cityChosen(City city, int position) {
+        chosenCity = city;
+        chosenCityPosition = position;
+        cityEditText.setText(city.getCityName());
+    }
+
+    @Override
+    public void carTypeChosen(CarType carType, int position) {
+        chosenCarType = carType;
+        chosenCarTypePosition = position;
+        carTypeEditText.setText(carType.getCarTypeName());
     }
 
     @Override
@@ -151,16 +180,16 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
 
     private String createNewUserDataInJson() {
         String phone = phoneNumberEditText.getText().toString();
-        formattedPhoneNumber = phone.substring(1,4) + phone.substring(6,9) + phone.substring(10,12) + phone.substring(13);
+        formattedPhoneNumber = phone.substring(1, 4) + phone.substring(6, 9) + phone.substring(10, 12) + phone.substring(13);
 
         return "{\"user\":{"
-                +   "\"phone_number\":"            +   "\""   +   formattedPhoneNumber                             +    "\""   +   ","
-                +   "\"name\":"                    +   "\""   +   userNameEditText.getText().toString()            +    "\""   +   ","
-                +   "\"password\":"                +   "\""   +   passwordEditText.getText().toString()            +    "\""   +   ","
-                +   "\"password_confirmation\":"   +   "\""   +   confirmPasswordEditText.getText().toString()     +    "\""   +   ","
-                +   "\"city_id\":"                 +   "\""   +   cityEditText.getText().toString()                +    "\""   +   ","
-                +   "\"car_type_id\":"             +   "\""   +   carTypeEditText.getText().toString()             +    "\""
-                +   "}}";
+                + "\"phone_number\":"             +   "\""   +     formattedPhoneNumber                             + "\""   +   ","
+                + "\"name\":"                     +   "\""   +     userNameEditText.getText().toString()            + "\""   +   ","
+                + "\"password\":"                 +   "\""   +     passwordEditText.getText().toString()            + "\""   +   ","
+                + "\"password_confirmation\":"    +   "\""   +     confirmPasswordEditText.getText().toString()     + "\""   +   ","
+                + "\"city_id\":"                  +   "\""   +     chosenCity.getCityID()                           + "\""   +   ","
+                + "\"car_type_id\":"              +   "\""   +     chosenCarType.getCarTypeID()                     + "\""
+                + "}}";
     }
 
     @Override
@@ -180,10 +209,8 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
             try {
                 String res = response.body().string();
                 Log.d("CreateAccountActivity", res);
-                JSONObject user = new JSONObject(res);
-                String userId = user.getString("id");
-                String token = user.getString("token");
-                saveUserData(userId, token);
+                JSONObject responseJSON = new JSONObject(res);
+                saveUserData(responseJSON);
                 isSuccessful = true;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -241,13 +268,13 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
         dialog.show();
     }
 
-    public void saveUserData(String userId, String token) {
+    public void saveUserData(JSONObject response) throws JSONException {
         SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("username", formattedPhoneNumber);
+        editor.putString("username", response.getString("name"));
         editor.putString("password", passwordEditText.getText().toString());
-        editor.putString("user_id", userId);
-        editor.putString("ACCESS_TOKEN", token);
+        editor.putInt("user_id", response.getInt("id"));
+        editor.putString("ACCESS_TOKEN", response.getString("token"));
         editor.apply();
     }
 

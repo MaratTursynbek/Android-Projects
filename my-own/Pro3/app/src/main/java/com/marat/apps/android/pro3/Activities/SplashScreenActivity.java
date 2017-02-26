@@ -15,6 +15,8 @@ import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
 import com.marat.apps.android.pro3.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -27,6 +29,7 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
     private Intent intent1;
     private static final int SPLASH_TIME_OUT = 1000;
     private long startTime, endTime;
+    private boolean isSuccessful = false;
 
     private String[] data1 = new String[]{"1", "1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "2500", "123", "456"};
     private String[] data2 = new String[]{"2", "0", "Master Keruen", "ТЦ Керуен, ул. Достык 21, 0-этаж", "3000", "123", "456"};
@@ -82,19 +85,61 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
 
     @Override
     public void onResponse(Response response) {
-        boolean isSuccessful = false;
         String responseMessage = response.message();
         Log.d("SplashScreenActivity", responseMessage);
 
         String res = "body empty";
         try {
             res = response.body().string();
-        } catch (IOException e) {
+            JSONObject result = new JSONObject(res);
+            JSONArray cities = result.getJSONArray("cities");           // get cities array
+            JSONArray carTypes = result.getJSONArray("car_types");      // get car_types array
+            saveCitiesAndCarTypes(cities, carTypes);                    // save two arrays to DB
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         Log.d("SplashScreenActivity", res);
 
         goToNextActivity();
+    }
+
+    private void saveCitiesAndCarTypes(JSONArray cities, JSONArray carTypes) {
+        CWStationsDatabase db = new CWStationsDatabase(this);
+        db.open();
+        db.deleteAllCities();
+        db.deleteAllCarTypes();
+
+        Log.d("SplashScreenActivity", Thread.currentThread().getName());
+
+        // saving all cities to internal database
+        for (int i = 0; i < cities.length(); i++) {
+            try {
+                JSONObject city = cities.getJSONObject(i);
+                int cityId = city.getInt("id");
+                String cityName = city.getString("name");
+                db.addToAllCities(cityId, cityName);
+                isSuccessful = true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // saving all carTypes to internal database
+        for (int i = 0; i < carTypes.length(); i++) {
+            try {
+                JSONObject car = carTypes.getJSONObject(i);
+                int carId = car.getInt("id");
+                String carName = car.getString("name");
+                db.addToAllCarTypes(carId, carName);
+                isSuccessful = true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.d("SplashScreenActivity", "Successful - " + isSuccessful + "");
+
+        db.close();
     }
 
     private void goToNextActivity() {

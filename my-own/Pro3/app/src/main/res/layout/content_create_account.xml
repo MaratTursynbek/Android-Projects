@@ -105,9 +105,11 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="6dp"
                     android:background="@android:drawable/editbox_background_normal"
+                    android:cursorVisible="false"
+                    android:focusableInTouchMode="false"
                     android:hint="@string/hint_city"
                     android:imeOptions="actionDone"
-                    android:inputType="numberDecimal"
+                    android:inputType="text"
                     android:textSize="14sp" />
 
             </RelativeLayout>
@@ -137,6 +139,8 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="6dp"
                     android:background="@android:drawable/editbox_background_normal"
+                    android:cursorVisible="false"
+                    android:focusableInTouchMode="false"
                     android:hint="@string/hint_car_type"
                     android:imeOptions="actionDone"
                     android:inputType="numberDecimal"

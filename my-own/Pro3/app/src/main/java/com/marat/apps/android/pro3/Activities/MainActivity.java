@@ -24,7 +24,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.CityPickerAdapter;
+import com.marat.apps.android.pro3.Adapters.MenuCityPickerAdapter;
 import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.MenuSections.AboutProjectFragment;
 import com.marat.apps.android.pro3.MenuSections.AllCarWashersFragment;
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         citiesListView = (ListView) findViewById(R.id.citiesListView);
         citiesListView.setVisibility(View.INVISIBLE);
 
-        final CityPickerAdapter adapter = new CityPickerAdapter(this, cities, userCity);
+        final MenuCityPickerAdapter adapter = new MenuCityPickerAdapter(this, cities, userCity);
         citiesListView.setAdapter(adapter);
         citiesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

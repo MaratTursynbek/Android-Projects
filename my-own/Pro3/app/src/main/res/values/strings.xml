@@ -53,4 +53,9 @@
     <string name="server_response_user_created">Created\u0020</string>
     <string name="server_response_login_successful">Created\u0020</string>
     <string name="server_response_login_failed">Unauthorized\u0020</string>
+
+    <string name="dialog_choose_city">Выберите Город</string>
+    <string name="dialog_choose_car_type">Выберите Тип Авто</string>
+    <string name="dialog_ok_button">OK</string>
+    <string name="dialog_cancel_button">ОТМЕНА</string>
 </resources>
