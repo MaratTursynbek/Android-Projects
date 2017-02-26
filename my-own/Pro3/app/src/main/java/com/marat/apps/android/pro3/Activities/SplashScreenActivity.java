@@ -14,17 +14,19 @@ import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
 import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
 import com.marat.apps.android.pro3.R;
 
+import org.json.JSONArray;
+
 import java.io.IOException;
 
 import okhttp3.Response;
 
 public class SplashScreenActivity extends AppCompatActivity implements RequestResponseListener {
 
-    private static final String CITIES_AND_CAR_TYPES_URL = "https://whispering-crag-11991.herokuapp.com/api/v1/sessions";
+    private static final String CITIES_AND_CAR_TYPES_URL = "https://propropro.herokuapp.com/api/v1/sessions";
 
     private Intent intent1;
-    private static final int SPLASH_TIME_OUT = 1500;
-    long startTime, endTime;
+    private static final int SPLASH_TIME_OUT = 1000;
+    private long startTime, endTime;
 
     private String[] data1 = new String[]{"1", "1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "2500", "123", "456"};
     private String[] data2 = new String[]{"2", "0", "Master Keruen", "ТЦ Керуен, ул. Достык 21, 0-этаж", "3000", "123", "456"};
@@ -111,7 +113,7 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
                     @Override
                     public void run() {
                         startActivity(intent1);
-                        finish();
+                        SplashScreenActivity.this.finish();
                     }
                 }, (SPLASH_TIME_OUT - (endTime - startTime)));
             } else {

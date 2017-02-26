@@ -34,7 +34,7 @@ import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity implements RequestResponseListener {
 
-    private static final String USER_AUTHORIZATION_URL = "https://whispering-crag-11991.herokuapp.com/api/v1/sessions";
+    private static final String USER_AUTHORIZATION_URL = "https://propropro.herokuapp.com/api/v1/sessions";
     private String formattedPhoneNumber;
 
     private View loginActivityLayout;

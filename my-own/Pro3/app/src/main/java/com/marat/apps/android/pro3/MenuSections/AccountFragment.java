@@ -28,7 +28,7 @@ public class AccountFragment extends Fragment {
 
     private static final String TAG = "myTag";
 
-    private String userURL = "https://whispering-crag-11991.herokuapp.com/api/v1/users/4";
+    private String userURL = "https://propropro.herokuapp.com/api/v1/users/4";
     private String token;
 
     @Override

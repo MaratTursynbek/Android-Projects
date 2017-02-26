@@ -34,7 +34,7 @@ import okhttp3.Response;
 
 public class CreateAccountActivity extends AppCompatActivity implements RequestResponseListener {
 
-    private String userRegistrationURL = "https://whispering-crag-11991.herokuapp.com/api/v1/users";
+    private String userRegistrationURL = "https://propropro.herokuapp.com/api/v1/users";
     private String formattedPhoneNumber;
 
     private View createAccountActivityLayout;

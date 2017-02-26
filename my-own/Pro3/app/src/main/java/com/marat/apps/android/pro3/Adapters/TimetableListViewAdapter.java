@@ -100,7 +100,7 @@ public class TimetableListViewAdapter extends BaseAdapter {
 
         if (chosenSlots[position] == 0) {
             if ("true".equals(timetable[position][1])) {
-                holder.availability.setBackgroundResource(R.drawable.bg_timetable_row_1);
+                holder.availability.setBackgroundResource(R.drawable.bg_timetable_row_slot_column);
             } else {
                 holder.availability.setBackgroundResource(R.drawable.bg_timetable_row_4);
             }

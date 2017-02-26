@@ -33,7 +33,7 @@ public class AllCarWashersFragment extends Fragment {
         context = getContext();
 
         OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
-        listener.onTitleChanged(getString(R.string.title_main_fragment_all_stations));
+        listener.onTitleChanged(getString(R.string.title_main_fragment_all_stations_toolbar) + "Астана");
 
         recyclerView = (RecyclerView) v.findViewById(R.id.carWashersRecyclerView);
         emptyText = (TextView) v.findViewById(R.id.emptyTextView);

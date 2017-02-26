@@ -11,6 +11,7 @@
 
     <string name="title_main_fragment_account">Мой Аккаунт</string>
     <string name="title_main_fragment_all_stations">Все Автомойки</string>
+    <string name="title_main_fragment_all_stations_toolbar">Автомойки:\u0020</string>
     <string name="title_main_fragment_favorite_stations">Мои Автомойки</string>
     <string name="title_main_fragment_user_orders">Мои Заказы</string>
     <string name="title_main_fragment_contacts">Контакты</string>
