@@ -25,53 +25,63 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
         db = database;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView carWashName;
         private TextView carWashAddress;
         private TextView orderServices;
         private TextView orderDate;
         private TextView orderPrice;
         private TextView orderStatus;
-        private View item;
+        private ItemClickListener listener;
 
-        ViewHolder(View itemView) {
+        ViewHolder(View itemView, ItemClickListener listener) {
             super(itemView);
-            item = itemView;
             carWashName = (TextView) itemView.findViewById(R.id.moStationNameTextView);
             carWashAddress = (TextView) itemView.findViewById(R.id.moStationAddressTextView);
             orderServices = (TextView) itemView.findViewById(R.id.moOrderServiceTextView);
             orderDate = (TextView) itemView.findViewById(R.id.moOrderDateTextView);
             orderPrice = (TextView) itemView.findViewById(R.id.moOrderPriceTextView);
             orderStatus = (TextView) itemView.findViewById(R.id.moOrderStatus);
+            this.listener = listener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onItemClick(getAdapterPosition());
+        }
+
+        interface ItemClickListener {
+            void onItemClick(int position);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.list_item_order_card, parent, false);
-        return new ViewHolder(v);
+        return new ViewHolder(v, new ViewHolder.ItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                db.open();
+                cursor.moveToPosition(position);
+                Intent intent = new Intent(context, OrderDetailsActivity.class);
+                intent.putExtra("row_id", cursor.getLong(cursor.getColumnIndex(CWStationsDatabase.ROW_ID)));
+                db.close();
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final int pos = position;
         db.open();
-        cursor.moveToPosition(pos);
-        final long rowId = Long.parseLong(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.ROW_ID)));
+        cursor.moveToPosition(position);
         holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_NAME)));
         holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_ADDRESS)));
         holder.orderServices.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_SERVICES)));
         holder.orderDate.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_DATE)));
         holder.orderPrice.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_PRICE)) + " тг.");
         holder.orderStatus.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_STATUS)));
-        holder.item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, OrderDetailsActivity.class);
-                intent.putExtra("row_id", rowId);
-                context.startActivity(intent);
-            }
-        });
 
         if ("Активный".equals(holder.orderStatus.getText().toString())) {
             holder.orderStatus.setBackgroundResource(R.drawable.bg_order_status_active);

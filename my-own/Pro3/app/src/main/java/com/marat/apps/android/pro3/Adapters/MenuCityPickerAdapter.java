@@ -9,33 +9,36 @@ import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.marat.apps.android.pro3.Models.City;
 import com.marat.apps.android.pro3.R;
+
+import java.util.ArrayList;
 
 public class MenuCityPickerAdapter extends BaseAdapter {
 
     private Context context;
-    private String[] cities;
-    private String currentCity;
+    private ArrayList<City> cities = new ArrayList<>();
+    private int currentCityID;
 
-    public MenuCityPickerAdapter(Context c, String[]data, String selected) {
+    public MenuCityPickerAdapter(Context c, ArrayList<City> data, int selected) {
         context = c;
         cities = data;
-        currentCity = selected;
+        currentCityID = selected;
     }
 
-    public void updateCurrentCity(String newSelected) {
-        currentCity = newSelected;
+    public void updateCurrentCity(int newSelected) {
+        currentCityID = newSelected;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return cities.length;
+        return cities.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return cities[i];
+        return cities.get(i);
     }
 
     @Override
@@ -58,9 +61,9 @@ public class MenuCityPickerAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.rowCityName.setText(cities[i]);
+        holder.rowCityName.setText(cities.get(i).getCityName());
 
-        if (currentCity.equals(cities[i])) {
+        if (currentCityID == cities.get(i).getCityID()) {
             holder.rowCityName.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         } else {
             holder.rowCityName.setTextColor(ContextCompat.getColor(context, android.R.color.black));

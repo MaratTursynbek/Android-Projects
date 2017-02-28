@@ -24,10 +24,20 @@ import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
 import com.marat.apps.android.pro3.Models.PhoneTextWatcher;
 import com.marat.apps.android.pro3.R;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements View.OnFocusChangeListener, TextView.OnEditorActionListener, View.OnTouchListener{
 
     private View registerActivityLayout;
     private PhoneNumberEditText phoneNumberEditText;
+
+    private BroadcastReceiver finishActivityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("finish_register_activity".equals(intent.getAction())) {
+                LocalBroadcastManager.getInstance(RegisterActivity.this).unregisterReceiver(finishActivityReceiver);
+                finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,40 +50,43 @@ public class RegisterActivity extends AppCompatActivity {
         phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.registerPhoneNumberEditText);
 
         phoneNumberEditText.addTextChangedListener(new PhoneTextWatcher(phoneNumberEditText));
-        phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    if (phoneNumberEditText.length() == 0) {
-                        phoneNumberEditText.setHint(R.string.hint_phone_number);
-                    }
-                } else {
-                    if (phoneNumberEditText.length() == 0) {
-                        phoneNumberEditText.setHint(R.string.hint_new_phone_number);
-                    }
-                }
-            }
-        });
-        phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    Log.v("tag", "action triggered");
-                    goToCreateAccountActivity(v);
-                    return true;
-                }
-                return false;
-            }
-        });
-        registerActivityLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                return true;
-            }
-        });
+        phoneNumberEditText.setOnFocusChangeListener(this);
+        phoneNumberEditText.setOnEditorActionListener(this);
+        registerActivityLayout.setOnTouchListener(this);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(finishActivityReceiver, new IntentFilter("finish__register_activity"));
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (v.getId() == R.id.registerPhoneNumberEditText) {
+            if (hasFocus) {
+                if (phoneNumberEditText.length() == 0) {
+                    phoneNumberEditText.setHint(R.string.hint_phone_number);
+                }
+            } else {
+                if (phoneNumberEditText.length() == 0) {
+                    phoneNumberEditText.setHint(R.string.hint_new_phone_number);
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (v.getId() == R.id.registerPhoneNumberEditText) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                goToCreateAccountActivity(v);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        hideKeyboard();
+        return true;
     }
 
     @Override
@@ -108,14 +121,4 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean phoneNumberIsFullyEntered() {
         return (phoneNumberEditText.length() == 15);
     }
-
-    private BroadcastReceiver finishActivityReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if ("finish_register_activity".equals(intent.getAction())) {
-                LocalBroadcastManager.getInstance(RegisterActivity.this).unregisterReceiver(finishActivityReceiver);
-                finish();
-            }
-        }
-    };
 }

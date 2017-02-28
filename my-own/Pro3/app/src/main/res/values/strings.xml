@@ -50,6 +50,8 @@
     <string name="error_could_not_create_user">Не удалось создать пользователя</string>
     <string name="error_wrong_phone_or_pass">Неверный Логин или Пароль</string>
 
+    <string name="server_response_cities_received">OK\u0020</string>
+    <string name="server_response_user_info_received">OK\u0020</string>
     <string name="server_response_user_created">Created\u0020</string>
     <string name="server_response_login_successful">Created\u0020</string>
     <string name="server_response_login_failed">Unauthorized\u0020</string>

@@ -17,31 +17,36 @@ import okhttp3.Response;
 public class UniversalGetRequest {
 
     private Context context;
-    public RequestResponseListener delegate = null;
+    private Call call;
 
-    private String header = null;
+    public RequestResponseListener delegate = null;
 
     public UniversalGetRequest(Context c) {
         context = c;
     }
 
-    public void get(String url, String action, String header) {
-
+    public void get(String url) {
         OkHttpClient client = new OkHttpClient();
-        Request request;
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
 
-        if (action != null && header != null) {
-            request = new Request.Builder()
-                    .header(action, header)
-                    .url(url)
-                    .build();
-        } else {
-            request = new Request.Builder()
-                    .url(url)
-                    .build();
-        }
+        call = client.newCall(request);
+        executeCall();
+    }
 
-        Call call = client.newCall(request);
+    public void getUsingToken(String url, String action, String header) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .header(action, header)
+                .url(url)
+                .build();
+
+        call = client.newCall(request);
+        executeCall();
+    }
+
+    private void executeCall() {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

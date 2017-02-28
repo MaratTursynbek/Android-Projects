@@ -1,9 +1,7 @@
 package com.marat.apps.android.pro3.Activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Dialogs.CarTypePickerDialog;
 import com.marat.apps.android.pro3.Dialogs.CityPickerDialog;
 import com.marat.apps.android.pro3.Interfaces.CarTypeChosenListener;
@@ -38,7 +37,9 @@ import java.io.IOException;
 
 import okhttp3.Response;
 
-public class CreateAccountActivity extends AppCompatActivity implements RequestResponseListener, CityChosenListener, CarTypeChosenListener {
+public class CreateAccountActivity extends AppCompatActivity implements RequestResponseListener, CityChosenListener, CarTypeChosenListener, TextView.OnEditorActionListener, View.OnClickListener {
+
+    private static final String TAG = "logtag";
 
     private String userRegistrationURL = "https://propropro.herokuapp.com/api/v1/users";
     private String formattedPhoneNumber;
@@ -54,6 +55,8 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
     private CarType chosenCarType;
     private int chosenCarTypePosition;
 
+    private boolean isSuccessful = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,66 +65,66 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        userNameEditText = (EditText) findViewById(R.id.userNameEditText);
-        phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.newPhoneNumberEditText);
-        passwordEditText = (EditText) findViewById(R.id.newPasswordEditText);
-        confirmPasswordEditText = (EditText) findViewById(R.id.newPasswordEditText2);
-        cityEditText = (EditText) findViewById(R.id.userCityEditText);
-        carTypeEditText = (EditText) findViewById(R.id.userCarEditText);
+        userNameEditText = (EditText) findViewById(R.id.createAccountUserNameEditText);
+        phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.createAccountPhoneNumberEditText);
+        passwordEditText = (EditText) findViewById(R.id.createAccountPasswordEditText);
+        confirmPasswordEditText = (EditText) findViewById(R.id.createAccountPasswordEditText2);
+        cityEditText = (EditText) findViewById(R.id.createAccountCityEditText);
+        carTypeEditText = (EditText) findViewById(R.id.createAccountCarTypeEditText);
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         phoneNumberEditText.setText(extras.getString("phone_number"));
         phoneNumberEditText.setFocusable(false);
 
-        userNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        userNameEditText.setOnEditorActionListener(this);
+        passwordEditText.setOnEditorActionListener(this);
+        confirmPasswordEditText.setOnEditorActionListener(this);
+
+        cityEditText.setOnClickListener(this);
+        carTypeEditText.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        boolean isHandled = false;
+        switch (v.getId()) {
+            case R.id.createAccountUserNameEditText:
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     userNameEditText.clearFocus();
                     passwordEditText.requestFocus();
-                    return true;
+                    isHandled = true;
                 }
-                return false;
-            }
-        });
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                break;
+            case R.id.createAccountPasswordEditText:
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     passwordEditText.clearFocus();
                     confirmPasswordEditText.requestFocus();
-                    return true;
+                    isHandled = true;
                 }
-                return false;
-            }
-        });
-        confirmPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                break;
+            case R.id.createAccountPasswordEditText2:
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     hideKeyboard();
-                    return true;
+                    isHandled = true;
                 }
-                return false;
-            }
-        });
+                break;
+        }
+        return isHandled;
+    }
 
-        cityEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.createAccountCityEditText:
                 dialogChooseCity = CityPickerDialog.newInstance(chosenCityPosition);
                 dialogChooseCity.show(getSupportFragmentManager(), "dialog");
-            }
-        });
-
-        carTypeEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            case R.id.createAccountCarTypeEditText:
                 dialogChooseCarType = CarTypePickerDialog.newInstance(chosenCarTypePosition);
                 dialogChooseCarType.show(getSupportFragmentManager(), "dialog");
-            }
-        });
+                break;
+        }
     }
 
     @Override
@@ -136,14 +139,6 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
         chosenCarType = carType;
         chosenCarTypePosition = position;
         carTypeEditText.setText(carType.getCarTypeName());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
-        return true;
     }
 
     public void registerUser(View v) {
@@ -201,17 +196,15 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
     @Override
     public void onResponse(Response response) {
         dialog.dismiss();
-        boolean isSuccessful = false;
         String responseMessage = response.message();
-        Log.d("LoginActivity", responseMessage);
+        Log.d(TAG, "CreateAccountActivity: " + "response message - " + responseMessage);
 
         if (getString(R.string.server_response_user_created).equals(responseMessage)) {
             try {
                 String res = response.body().string();
-                Log.d("CreateAccountActivity", res);
+                Log.d(TAG, "CreateAccountActivity: " + "response body - " + res);
                 JSONObject responseJSON = new JSONObject(res);
                 saveUserData(responseJSON);
-                isSuccessful = true;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
@@ -268,14 +261,9 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
         dialog.show();
     }
 
-    public void saveUserData(JSONObject response) throws JSONException {
-        SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("username", response.getString("name"));
-        editor.putString("password", passwordEditText.getText().toString());
-        editor.putInt("user_id", response.getInt("id"));
-        editor.putString("ACCESS_TOKEN", response.getString("token"));
-        editor.apply();
+    public void saveUserData(JSONObject userObject) throws JSONException {
+        StoreToDatabaseHelper helper = new StoreToDatabaseHelper(this);
+        isSuccessful = helper.saveUserLogInData(userObject, passwordEditText.getText().toString());
     }
 
     private void showSnackErrorMessage(String message, View v) {
@@ -296,5 +284,13 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
     }
 }

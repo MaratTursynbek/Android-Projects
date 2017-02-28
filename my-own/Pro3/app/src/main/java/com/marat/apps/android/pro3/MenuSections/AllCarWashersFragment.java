@@ -7,17 +7,33 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Adapters.WashingStationsRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
+import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
+import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
 import com.marat.apps.android.pro3.R;
 
-public class AllCarWashersFragment extends Fragment {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Response;
+
+public class AllCarWashersFragment extends Fragment implements RequestResponseListener {
+
+    private static final String TAG = "logtag";
+
+    private static final String CITIES_AND_CAR_TYPES_URL = "https://propropro.herokuapp.com/api/v1/sessions";
 
     private Context context;
     private Cursor data;
@@ -29,6 +45,7 @@ public class AllCarWashersFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG, "AllCarWashersFragment: " + "onCreateView");
         View v = inflater.inflate(R.layout.fragment_car_washers, container, false);
         context = getContext();
 
@@ -42,12 +59,14 @@ public class AllCarWashersFragment extends Fragment {
         recyclerView.setItemAnimator(itemAnimator);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
+
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "AllCarWashersFragment: " + "onResume");
 
         db = new CWStationsDatabase(context);
         db.open();
@@ -63,10 +82,96 @@ public class AllCarWashersFragment extends Fragment {
         }
 
         db.close();
+
+        UniversalGetRequest getRequest = new UniversalGetRequest(getContext());
+        getRequest.delegate = this;
+        if (getRequest.isNetworkAvailable()) {
+            getRequest.get(CITIES_AND_CAR_TYPES_URL);
+        } else {
+            Toast.makeText(getContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void setAdapterToRecyclerView() {
         adapter = new WashingStationsRecyclerViewAdapter(data, context, db, "AllStations");
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onFailure(IOException e) {
+        Toast.makeText(getContext(), getString(R.string.error_could_not_load_data), Toast.LENGTH_LONG).show();
+        Log.d(TAG, "AllCarWashersFragment: " + "onFailure");
+        e.printStackTrace();
+    }
+
+    @Override
+    public void onResponse(Response response) {
+        String responseMessage = response.message();
+        Log.d(TAG, "AllCarWashersFragment: " + "response message - " + responseMessage);
+
+        String res = "body empty";
+        try {
+            res = response.body().string();
+            JSONObject result = new JSONObject(res);
+            JSONArray cities = result.getJSONArray("cities");           // get cities array
+            JSONArray carTypes = result.getJSONArray("car_types");      // get car_types array
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "AllCarWashersFragment: " + "response body - " + res);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.d(TAG, "AllCarWashersFragment: " + "onAttach");
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "AllCarWashersFragment: " + "onCreate");
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "AllCarWashersFragment: " + "onActivityCreated");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "AllCarWashersFragment: " + "onStart");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "AllCarWashersFragment: " + "onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "AllCarWashersFragment: " + "onStop");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d(TAG, "AllCarWashersFragment: " + "onDestroyView");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "AllCarWashersFragment: " + "onDestroy");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d(TAG, "AllCarWashersFragment: " + "onDetach");
     }
 }

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loginActivityLayout"
+    android:id="@+id/logInActivityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryBackground"
@@ -17,10 +17,10 @@
     tools:showIn="@layout/activity_login">
 
     <com.marat.apps.android.pro3.Models.PhoneNumberEditText
-        android:id="@+id/LogInPhoneNumberEditText"
+        android:id="@+id/logInPhoneNumberEditText"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_above="@+id/passwordEditText"
+        android:layout_above="@+id/logInPasswordEditText"
         android:background="@android:drawable/editbox_background_normal"
         android:digits="0123456789+"
         android:hint="@string/hint_new_phone_number"
@@ -30,7 +30,7 @@
         android:textSize="14sp" />
 
     <EditText
-        android:id="@+id/passwordEditText"
+        android:id="@+id/logInPasswordEditText"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
@@ -45,7 +45,7 @@
         android:id="@+id/logInButton"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_below="@+id/passwordEditText"
+        android:layout_below="@+id/logInPasswordEditText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:background="@color/colorButtonBackground"
@@ -57,7 +57,7 @@
         android:id="@+id/forgotPasswordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/passwordEditText"
+        android:layout_alignBaseline="@+id/logInPasswordEditText"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginEnd="15dp"

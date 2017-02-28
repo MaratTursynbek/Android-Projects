@@ -3,6 +3,7 @@ package com.marat.apps.android.pro3.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,8 +11,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
 import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
+import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
 import com.marat.apps.android.pro3.R;
 
 import org.json.JSONArray;
@@ -19,17 +22,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import okhttp3.Response;
 
 public class SplashScreenActivity extends AppCompatActivity implements RequestResponseListener {
 
+    private static final String TAG = "logtag";
+
     private static final String CITIES_AND_CAR_TYPES_URL = "https://propropro.herokuapp.com/api/v1/sessions";
+    private static final String USER_AUTHORIZATION_URL = "https://propropro.herokuapp.com/api/v1/sessions";
 
     private Intent intent1;
-    private static final int SPLASH_TIME_OUT = 1000;
+    private final int SPLASH_TIME_OUT = 800;
     private long startTime, endTime;
-    private boolean isSuccessful = false;
+    private boolean isSuccessful = false, loggedIn;
+    private String todaysData;
+
+    private String phoneNumber, password;         // user credentials
 
     private String[] data1 = new String[]{"1", "1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "2500", "123", "456"};
     private String[] data2 = new String[]{"2", "0", "Master Keruen", "ТЦ Керуен, ул. Достык 21, 0-этаж", "3000", "123", "456"};
@@ -53,105 +66,209 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
         initializeDatabase();
 
         SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-        String username = sharedPreferences.getString("username", "empty");
-        String password = sharedPreferences.getString("password", "empty");
-        String token = sharedPreferences.getString("ACCESS_TOKEN", "empty");
+        phoneNumber = sharedPreferences.getString("phone_number", "empty");
+        password = sharedPreferences.getString("password", "empty");
 
-        Log.d("SplashScreenActivity", username + " -- " + password + " -- " + token);
-
-        if ("empty".equals(username) || "empty".equals(password) || "empty".equals(token)) {
+        if ("empty".equals(phoneNumber) || "empty".equals(password)) {
             intent1 = new Intent(this, RegisterActivity.class);
+            loggedIn = false;
+            getCitiesAndCarTypes();
         } else {
             intent1 = new Intent(this, MainActivity.class);
             intent1.putExtra("startPage", "Favorites");
+            loggedIn = true;
+            logInUser();
         }
+    }
 
-        UniversalGetRequest getRequest = new UniversalGetRequest(this);
-        getRequest.delegate = this;
-        if (getRequest.isNetworkAvailable()) {
-            getRequest.get(CITIES_AND_CAR_TYPES_URL, null, null);
+    private void getCitiesAndCarTypes() {
+        if (citiesAndCarTypesDataIsOld()) {
+            Log.d(TAG, "SplashScreenActivity: " + "GetCitiesAndCarTypes: " + "data is to be updated");
+            UniversalGetRequest getRequest = new UniversalGetRequest(this);
+            getRequest.delegate = this;
+            if (getRequest.isNetworkAvailable()) {
+                getRequest.get(CITIES_AND_CAR_TYPES_URL);
+            } else {
+                Toast.makeText(this, getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
+                goToNextActivity();
+            }
         } else {
-            Toast.makeText(this, getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
+            Log.d(TAG, "SplashScreenActivity: " + "GetCitiesAndCarTypes: " +  "data is OK");
             goToNextActivity();
         }
+    }
+
+    private void logInUser() {
+        UniversalPostRequest postRequest = new UniversalPostRequest(this);
+        postRequest.delegate = this;
+        if (postRequest.isNetworkAvailable()) {
+            postRequest.post(USER_AUTHORIZATION_URL, createUserDataInJson());
+        } else {
+            showErrorToast(getString(R.string.error_no_internet_connection));
+            goToNextActivity();
+        }
+    }
+
+    private String createUserDataInJson() {
+        return "{\"user\":{"
+                + "\"phone_number\":"    +   "\""   + phoneNumber    + "\""     + ","
+                + "\"password\":"        +   "\""   + password       + "\""
+                + "}}";
     }
 
     @Override
     public void onFailure(IOException e) {
         showErrorToast(getString(R.string.error_could_not_load_data));
-        Log.d("SplashScreenActivity", "onFailure");
+        Log.d(TAG, "SplashScreenActivity: " + "onFailure");
+        e.printStackTrace();
         goToNextActivity();
     }
 
     @Override
     public void onResponse(Response response) {
-        String responseMessage = response.message();
-        Log.d("SplashScreenActivity", responseMessage);
-
-        String res = "body empty";
-        try {
-            res = response.body().string();
-            JSONObject result = new JSONObject(res);
-            JSONArray cities = result.getJSONArray("cities");           // get cities array
-            JSONArray carTypes = result.getJSONArray("car_types");      // get car_types array
-            saveCitiesAndCarTypes(cities, carTypes);                    // save two arrays to DB
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
+        if (loggedIn) {
+            logInResponse(response);
+        } else {
+            citiesAndCarTypesResponse(response);
         }
-        Log.d("SplashScreenActivity", res);
+    }
 
+    /**
+     * Called from OkHttp onResponse method
+     * Handles the response from server: 1. Gets and Stores the user information in local DB
+     */
+
+    private void logInResponse(Response response) {
+        String responseMessage = response.message();
+        Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  responseMessage);
+
+        if (getString(R.string.server_response_login_successful).equals(responseMessage)) {
+            try {
+                String res = response.body().string();
+                Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  res);
+
+                JSONObject result = new JSONObject(res);
+                JSONObject userObject = result.getJSONObject("user");
+                JSONArray cities = result.getJSONArray("cities");             // get cities array
+                JSONArray carTypes = result.getJSONArray("car_types");        // get car_types array
+
+                if (citiesAndCarTypesDataIsOld()) {
+                    Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " + "data is to be updated");
+                    saveCitiesAndCarTypes(cities, carTypes);                  // save two arrays to DB
+                } else {
+                    Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  "data is OK");
+                }
+                saveUserData(userObject);
+                goToNextActivity();
+                return;
+            } catch (IOException | JSONException e) {
+                showErrorToast(getString(R.string.error_could_not_load_data));
+                e.printStackTrace();
+            }
+        } else if (getString(R.string.server_response_login_failed).equals(responseMessage)) {
+            showErrorToast(getString(R.string.error_wrong_phone_or_pass));
+        } else {
+            showErrorToast(getString(R.string.error_could_not_load_data));
+        }
+        intent1 = new Intent(this, RegisterActivity.class);
+        getCitiesAndCarTypes();
+    }
+
+    private void citiesAndCarTypesResponse(Response response) {
+        String responseMessage = response.message();
+        Log.d(TAG, "SplashScreenActivity: " + "citiesAndCarTypesResponse: " +  responseMessage);
+
+        if (getString(R.string.server_response_cities_received).equals(responseMessage)) {
+            try {
+                String res = response.body().string();
+                Log.d(TAG, "SplashScreenActivity: " + "citiesAndCarTypesResponse: " +  res);
+                JSONObject result = new JSONObject(res);
+                JSONArray cities = result.getJSONArray("cities");             // get cities array
+                JSONArray carTypes = result.getJSONArray("car_types");        // get car_types array
+                saveCitiesAndCarTypes(cities, carTypes);                      // save two arrays to DB
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showErrorToast(getString(R.string.error_could_not_load_data));
+        }
         goToNextActivity();
     }
 
+    /**
+     * saves the list of Cities and CarTypes received from server to SQLite.
+     */
     private void saveCitiesAndCarTypes(JSONArray cities, JSONArray carTypes) {
+        StoreToDatabaseHelper helper = new StoreToDatabaseHelper(this);
+        isSuccessful = helper.saveCitiesAndCarTypes(cities, carTypes, todaysData);
+    }
+
+    /**
+     * saves User Data received from server to SQLite.
+     */
+    public void saveUserData(JSONObject userObject) throws JSONException {
+        StoreToDatabaseHelper helper = new StoreToDatabaseHelper(this);
+        isSuccessful = helper.saveUserLogInData(userObject, password);
+    }
+
+    /**
+     * returns true if cities or carTypes were downloaded before 6am today.
+     */
+    private boolean citiesAndCarTypesDataIsOld() {
+        Calendar c = Calendar.getInstance();
+        todaysData = c.get(Calendar.YEAR)      + "-" +   (c.get(Calendar.MONTH) + 1)    + "-" +    c.get(Calendar.DAY_OF_MONTH)   + " " +
+                c.get(Calendar.HOUR_OF_DAY)    + ":" +    c.get(Calendar.MINUTE)        + ":" +    c.get(Calendar.SECOND);
+
         CWStationsDatabase db = new CWStationsDatabase(this);
         db.open();
-        db.deleteAllCities();
-        db.deleteAllCarTypes();
+        Cursor c1 = db.getAllCities();
+        Cursor c2 = db.getAllCarTypes();
 
-        Log.d("SplashScreenActivity", Thread.currentThread().getName());
+        String cityDate = "", carTypeDate = "";
 
-        // saving all cities to internal database
-        for (int i = 0; i < cities.length(); i++) {
-            try {
-                JSONObject city = cities.getJSONObject(i);
-                int cityId = city.getInt("id");
-                String cityName = city.getString("name");
-                db.addToAllCities(cityId, cityName);
-                isSuccessful = true;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        if (c1.getCount() > 0 && c2.getCount() > 0) {
+            c1.moveToFirst();
+            c2.moveToFirst();
+            cityDate = c1.getString(c1.getColumnIndex(CWStationsDatabase.KEY_CITY_UPDATED));
+            carTypeDate = c2.getString(c2.getColumnIndex(CWStationsDatabase.KEY_CAR_TYPE_UPDATED));
+            db.close();
+        } else {
+            db.close();
+            return true;
         }
 
-        // saving all carTypes to internal database
-        for (int i = 0; i < carTypes.length(); i++) {
-            try {
-                JSONObject car = carTypes.getJSONObject(i);
-                int carId = car.getInt("id");
-                String carName = car.getString("name");
-                db.addToAllCarTypes(carId, carName);
-                isSuccessful = true;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        c.set(Calendar.HOUR_OF_DAY, 6);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+
+        Calendar cityC = Calendar.getInstance();
+        Calendar carTypeC = Calendar.getInstance();
+        try {
+            Date cityD = format.parse(cityDate);
+            Date carTypeD = format.parse(carTypeDate);
+            cityC.setTime(cityD);
+            carTypeC.setTime(carTypeD);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
-        Log.d("SplashScreenActivity", "Successful - " + isSuccessful + "");
-
-        db.close();
+        return ((cityC.getTimeInMillis() < c.getTimeInMillis()) || (carTypeC.getTimeInMillis() < c.getTimeInMillis()));
     }
 
     private void goToNextActivity() {
         endTime = System.currentTimeMillis();
 
-        Log.d("SplashScreenActivity", startTime + "");
-        Log.d("SplashScreenActivity", endTime + "");
-        Log.d("SplashScreenActivity", endTime - startTime + "");
-        Log.d("SplashScreenActivity", SPLASH_TIME_OUT - (endTime - startTime) + "");
+        Log.d(TAG, "SplashScreenActivity: " + "start time = " + startTime + "");
+        Log.d(TAG, "SplashScreenActivity: " + "end time   = " + endTime + "");
+        Log.d(TAG, "SplashScreenActivity: " + "difference = " + (endTime - startTime) + "");
+        Log.d(TAG, "SplashScreenActivity: " + "to wait    = " + (SPLASH_TIME_OUT - (endTime - startTime)) + "");
 
         if ((endTime - startTime) >= SPLASH_TIME_OUT) {
             startActivity(intent1);
+            finish();
         } else {
             if ("main".equals(Thread.currentThread().getName())) {
                 new Handler().postDelayed(new Runnable() {
@@ -198,7 +315,7 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
         db.addToFavoriteCarWashingStations(Integer.parseInt(data4[0]), Integer.parseInt(data4[1]), data4[2], data4[3], Integer.parseInt(data4[4]), Integer.parseInt(data4[5]), Integer.parseInt(data4[6]));
 
         long p = db.addToMyOrders(Integer.parseInt(order1[0]), order1[1], order1[2], order1[3], order1[4], order1[5], order1[6]);
-        Log.d("SplashScreenActivity", p + "");
+        Log.d(TAG, "SplashScreenActivity: " + "Insert Position - " + p + "");
         db.addToMyOrders(Integer.parseInt(order2[0]), order2[1], order2[2], order2[3], order2[4], order2[5], order2[6]);
         db.addToMyOrders(Integer.parseInt(order3[0]), order3[1], order3[2], order3[3], order3[4], order3[5], order3[6]);
         db.addToMyOrders(Integer.parseInt(order4[0]), order4[1], order4[2], order4[3], order4[4], order4[5], order4[6]);

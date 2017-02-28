@@ -34,6 +34,7 @@ public class CWStationsDatabase {
      */
     public static final String KEY_CITY_ID = "city_id";
     public static final String KEY_CITY_NAME = "city_name";
+    public static final String KEY_CITY_UPDATED = "city_updated";
 
     /**
      * #2
@@ -42,6 +43,7 @@ public class CWStationsDatabase {
      */
     public static final String KEY_CAR_TYPE_ID = "car_type_id";
     public static final String KEY_CAR_TYPE_NAME = "car_type_name";
+    public static final String KEY_CAR_TYPE_UPDATED = "car_type_updated";
 
     /**
      * #3
@@ -52,7 +54,9 @@ public class CWStationsDatabase {
     public static final String KEY_USER_CREATED_DATE = "user_created_date";
     public static final String KEY_USER_NAME = "user_name";
     public static final String KEY_USER_CITY_ID = "user_city_id";
+    public static final String KEY_USER_CITY_NAME = "user_city_name";
     public static final String KEY_USER_CAR_TYPE_ID = "user_car_type_id";
+    public static final String KEY_USER_CAR_TYPE_NAME = "user_car_type_name";
     public static final String KEY_USER_PHONE_NUMBER = "user_phone_number";
 
     /**
@@ -136,14 +140,16 @@ public class CWStationsDatabase {
             db.execSQL("CREATE TABLE " + DATABASE_TABLE_1_ALL_CITIES + " (" +
                     ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     KEY_CITY_ID + " INTEGER, " +
-                    KEY_CITY_NAME + " TEXT NOT NULL);"
+                    KEY_CITY_NAME + " TEXT NOT NULL, " +
+                    KEY_CITY_UPDATED + " TEXT NOT NULL);"
             );
 
             // ALL CAR TYPES table
             db.execSQL("CREATE TABLE " + DATABASE_TABLE_2_ALL_CAR_TYPES + " (" +
                     ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     KEY_CAR_TYPE_ID + " INTEGER, " +
-                    KEY_CAR_TYPE_NAME + " TEXT NOT NULL);"
+                    KEY_CAR_TYPE_NAME + " TEXT NOT NULL, " +
+                    KEY_CAR_TYPE_UPDATED + " TEXT NOT NULL);"
             );
 
             // USER ACCOUNT INFO table
@@ -153,7 +159,9 @@ public class CWStationsDatabase {
                     KEY_USER_CREATED_DATE + " TEXT NOT NULL, " +
                     KEY_USER_NAME + " TEXT NOT NULL, " +
                     KEY_USER_CITY_ID + " INTEGER, " +
+                    KEY_USER_CITY_NAME + " TEXT NOT NULL, " +
                     KEY_USER_CAR_TYPE_ID + " INTEGER, " +
+                    KEY_USER_CAR_TYPE_NAME + " TEXT NOT NULL, " +
                     KEY_USER_PHONE_NUMBER + " TEXT NOT NULL);"
             );
 
@@ -245,33 +253,37 @@ public class CWStationsDatabase {
     /**
      * adds 1 city to DATABASE_TABLE_1_ALL_CITIES
      */
-    public long addToAllCities(int cityId, String cityName) {
+    public long addToAllCities(int cityId, String cityName, String date) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_CITY_ID, cityId);
         cv.put(KEY_CITY_NAME, cityName);
+        cv.put(KEY_CITY_UPDATED, date);
         return database.insert(DATABASE_TABLE_1_ALL_CITIES, null, cv);
     }
 
     /**
      * adds 1 car to DATABASE_TABLE_2_ALL_CAR_TYPES
      */
-    public long addToAllCarTypes(int carTypeId, String carTypeName) {
+    public long addToAllCarTypes(int carTypeId, String carTypeName, String date) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_CAR_TYPE_ID, carTypeId);
         cv.put(KEY_CAR_TYPE_NAME, carTypeName);
+        cv.put(KEY_CAR_TYPE_UPDATED, date);
         return database.insert(DATABASE_TABLE_2_ALL_CAR_TYPES, null, cv);
     }
 
     /**
      * adds user account information to DATABASE_TABLE_3_USER_ACCOUNT_INFO
      */
-    public long addUserInformation(int userId, String userCreatedDate, String userName, int userCityId, int userCarTypeId, String userPhoneNumber) {
+    public long addUserInformation(int userId, String userCreatedDate, String userName, int userCityId, String userCityName, int userCarTypeId, String userCarTypeName, String userPhoneNumber) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_USER_ID, userId);
         cv.put(KEY_USER_CREATED_DATE, userCreatedDate);
         cv.put(KEY_USER_NAME, userName);
         cv.put(KEY_USER_CITY_ID, userCityId);
+        cv.put(KEY_USER_CITY_NAME, userCityName);
         cv.put(KEY_USER_CAR_TYPE_ID, userCarTypeId);
+        cv.put(KEY_USER_CAR_TYPE_NAME, userCarTypeName);
         cv.put(KEY_USER_PHONE_NUMBER, userPhoneNumber);
         return database.insert(DATABASE_TABLE_3_USER_ACCOUNT_INFO, null, cv);
     }
@@ -349,7 +361,7 @@ public class CWStationsDatabase {
      * returns Cursor pointing to all CITIES
      */
     public Cursor getAllCities() {
-        String[] columns = new String[]{ROW_ID, KEY_CITY_ID, KEY_CITY_NAME};
+        String[] columns = new String[]{ROW_ID, KEY_CITY_ID, KEY_CITY_NAME, KEY_CITY_UPDATED};
         return database.query(DATABASE_TABLE_1_ALL_CITIES, columns, null, null, null, null, null);
     }
 
@@ -357,7 +369,7 @@ public class CWStationsDatabase {
      * returns Cursor pointing to all CAR TYPES
      */
     public Cursor getAllCarTypes() {
-        String[] columns = new String[]{ROW_ID, KEY_CAR_TYPE_ID, KEY_CAR_TYPE_NAME};
+        String[] columns = new String[]{ROW_ID, KEY_CAR_TYPE_ID, KEY_CAR_TYPE_NAME, KEY_CAR_TYPE_UPDATED};
         return database.query(DATABASE_TABLE_2_ALL_CAR_TYPES, columns, null, null, null, null, null);
     }
 
@@ -365,7 +377,7 @@ public class CWStationsDatabase {
      * returns Cursor pointing USER INFORMATION
      */
     public Cursor getUserInformation() {
-        String[] columns = new String[]{ROW_ID, KEY_USER_ID, KEY_USER_CREATED_DATE, KEY_USER_NAME, KEY_USER_CITY_ID, KEY_USER_CAR_TYPE_ID, KEY_USER_PHONE_NUMBER};
+        String[] columns = new String[]{ROW_ID, KEY_USER_ID, KEY_USER_CREATED_DATE, KEY_USER_NAME, KEY_USER_CITY_ID, KEY_USER_CITY_NAME, KEY_USER_CAR_TYPE_ID, KEY_USER_CAR_TYPE_NAME, KEY_USER_PHONE_NUMBER};
         return database.query(DATABASE_TABLE_3_USER_ACCOUNT_INFO, columns, null, null, null, null, null);
     }
 

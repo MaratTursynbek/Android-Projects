@@ -34,7 +34,11 @@ public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRe
             super(itemView);
             item = itemView;
             icon = (ImageView) itemView.findViewById(R.id.carTypeImageView);
-            name = (TextView) itemView.findViewById(R.id.carTypeTextView);
+            name = (TextView) itemView.findViewById(R.id.createAccountCarTypeTextView);
+        }
+
+        interface ItemClickListener {
+            void onItemClick(int position);
         }
     }
 

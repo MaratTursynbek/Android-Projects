@@ -22,7 +22,7 @@
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <EditText
-            android:id="@+id/userNameEditText"
+            android:id="@+id/createAccountUserNameEditText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentTop="true"
@@ -35,10 +35,10 @@
             android:textSize="14sp" />
 
         <com.marat.apps.android.pro3.Models.PhoneNumberEditText
-            android:id="@+id/newPhoneNumberEditText"
+            android:id="@+id/createAccountPhoneNumberEditText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/userNameEditText"
+            android:layout_below="@+id/createAccountUserNameEditText"
             android:layout_marginTop="10dp"
             android:background="@android:drawable/editbox_background_normal"
             android:digits="0123456789+"
@@ -48,10 +48,10 @@
             android:textSize="14sp" />
 
         <EditText
-            android:id="@+id/newPasswordEditText"
+            android:id="@+id/createAccountPasswordEditText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/newPhoneNumberEditText"
+            android:layout_below="@+id/createAccountPhoneNumberEditText"
             android:layout_marginTop="10dp"
             android:background="@android:drawable/editbox_background_normal"
             android:hint="@string/hint_password"
@@ -60,10 +60,10 @@
             android:textSize="14sp" />
 
         <EditText
-            android:id="@+id/newPasswordEditText2"
+            android:id="@+id/createAccountPasswordEditText2"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@+id/newPasswordEditText"
+            android:layout_below="@+id/createAccountPasswordEditText"
             android:layout_marginTop="10dp"
             android:background="@android:drawable/editbox_background_normal"
             android:hint="@string/hint_confirm_password"
@@ -72,10 +72,10 @@
             android:textSize="14sp" />
 
         <LinearLayout
-            android:id="@+id/cityAndCarLayout"
+            android:id="@+id/createAccountCityAndCarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/newPasswordEditText2"
+            android:layout_below="@id/createAccountPasswordEditText2"
             android:layout_marginTop="20dp"
             android:orientation="horizontal"
             android:weightSum="2">
@@ -86,21 +86,21 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/cityTypeTextView"
+                    android:id="@+id/createAccountCityTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/userCityEditText"
-                    android:layout_alignStart="@+id/userCityEditText"
+                    android:layout_alignLeft="@+id/createAccountCityEditText"
+                    android:layout_alignStart="@+id/createAccountCityEditText"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
                     android:text="@string/text_choose_city"
                     android:textColor="@android:color/white" />
 
                 <EditText
-                    android:id="@+id/userCityEditText"
+                    android:id="@+id/createAccountCityEditText"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_below="@+id/cityTypeTextView"
+                    android:layout_below="@+id/createAccountCityTextView"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="6dp"
@@ -120,21 +120,21 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/carTypeTextView"
+                    android:id="@+id/createAccountCarTypeTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/userCarEditText"
-                    android:layout_alignStart="@+id/userCarEditText"
+                    android:layout_alignLeft="@+id/createAccountCarTypeEditText"
+                    android:layout_alignStart="@+id/createAccountCarTypeEditText"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
                     android:text="@string/text_choose_car_type"
                     android:textColor="@android:color/white" />
 
                 <EditText
-                    android:id="@+id/userCarEditText"
+                    android:id="@+id/createAccountCarTypeEditText"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_below="@+id/carTypeTextView"
+                    android:layout_below="@+id/createAccountCarTypeTextView"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="6dp"
@@ -151,10 +151,10 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/logInButton"
+            android:id="@+id/createAccountButton"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_below="@+id/cityAndCarLayout"
+            android:layout_below="@+id/createAccountCityAndCarLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"

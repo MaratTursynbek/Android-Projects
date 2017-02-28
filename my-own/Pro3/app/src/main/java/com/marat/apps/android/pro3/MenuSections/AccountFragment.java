@@ -2,15 +2,22 @@ package com.marat.apps.android.pro3.MenuSections;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
+import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
+import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
 import com.marat.apps.android.pro3.R;
 
 import org.json.JSONException;
@@ -18,75 +25,128 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements RequestResponseListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private static final String TAG = "myTag";
+    private static final String TAG = "logtag";
 
-    private String userURL = "https://propropro.herokuapp.com/api/v1/users/4";
-    private String token;
+    private String GET_USER_URL = "https://propropro.herokuapp.com/api/v1/users/";
+    private int userId;
+
+    private CWStationsDatabase db;
+    private Cursor cursor;
+
+    private TextView userNameTextView;
+    private TextView userPhoneNumberTextView;
+    private TextView userCarTypeTextView;
+    private TextView userCityTextView;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
+        View v = inflater.inflate(R.layout.fragment_account, container, false);
+
+        userNameTextView = (TextView) v.findViewById(R.id.fhNameTextView);
+        userPhoneNumberTextView = (TextView) v.findViewById(R.id.fhPhoneNumberTextView);
+        userCarTypeTextView = (TextView) v.findViewById(R.id.fhCarTypeTextView);
+        userCityTextView = (TextView) v.findViewById(R.id.fhCityTypeTextView);
+        refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeToRefreshLayout);
+        refreshLayout.setOnRefreshListener(this);
 
         OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
         listener.onTitleChanged(getString(R.string.title_main_fragment_account));
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-        token = sharedPreferences.getString("ACCESS_TOKEN", "");
-        getUser();
-
         return v;
     }
 
-    public void getUser() {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .header("Authorization", "Token token=\"" + token + "\"")
-                .url(userURL)
-                .build();
+    @Override
+    public void onResume() {
+        super.onResume();
+        setUserInformationOnLayout();
+    }
 
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
+    private void setUserInformationOnLayout() {
+        db = new CWStationsDatabase(getContext());
+        db.open();
+        cursor = db.getUserInformation();
+        cursor.moveToFirst();
+        userId = cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ID));
+        userNameTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_NAME)));
+        userPhoneNumberTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_PHONE_NUMBER)));
+        userCarTypeTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_CAR_TYPE_NAME)));
+        userCityTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_CITY_NAME)));
+        db.close();
+    }
 
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "Exception caught: ", e);
-                alertUserAboutError(1);
+    private void getUserInfoFromServer() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("ACCESS_TOKEN", "");
+
+        UniversalGetRequest getRequest = new UniversalGetRequest(getContext());
+        getRequest.delegate = this;
+        if (getRequest.isNetworkAvailable()) {
+            getRequest.getUsingToken(GET_USER_URL + userId, "Authorization", "Token token=\"" + token + "\"");
+        } else {
+            Toast.makeText(getContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onFailure(IOException e) {
+        showErrorToast(getString(R.string.error_could_not_load_data));
+        Log.d(TAG, "AccountFragment: " + "onFailure");
+        e.printStackTrace();
+    }
+
+    @Override
+    public void onResponse(Response response) {
+        String responseMessage = response.message();
+        Log.d(TAG, "AccountFragment: " + "GetUserResponse: " + responseMessage);
+
+        if (getString(R.string.server_response_user_info_received).equals(responseMessage)) {
+            try {
+                String res = response.body().string();
+                Log.d(TAG, "AccountFragment: " + "GetUserResponse: " + res);
+                JSONObject result = new JSONObject(res);
+                JSONObject userObject = result.getJSONObject("user");
+                saveNewUserData(userObject);
+            } catch (IOException | JSONException e) {
+                showErrorToast(getString(R.string.error_could_not_load_data));
+                e.printStackTrace();
             }
+        } else {
+            showErrorToast(getString(R.string.error_could_not_load_data));
+        }
+    }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                String userInfo = null;
-
-                try {
-                    userInfo = response.body().string();
-                    Log.v(TAG, "User Info: " + userInfo);
-                    parseJSON(userInfo);
-                } catch (IOException | JSONException e) {
-                    Log.e(TAG, "Exception caught: ", e);
+    private void saveNewUserData(JSONObject userObject) throws JSONException {
+        StoreToDatabaseHelper helper = new StoreToDatabaseHelper(getContext());
+        boolean successful = helper.saveNewUserData(userObject);
+        if (successful) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setUserInformationOnLayout();
+                    Log.d(TAG, "AccountFragment: " + "information updated");
                 }
+            });
+        }
+    }
+
+    private void showErrorToast(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    private void parseJSON(String input) throws JSONException {
-        JSONObject data = new JSONObject(input);
-        JSONObject user = data.getJSONObject("user");
-    }
-
-    private void alertUserAboutError(int id) {
-        if (id == 1) {
-            Toast.makeText(getContext(), "Unable to load data", Toast.LENGTH_SHORT).show();
-        } else if (id == 2) {
-            Toast.makeText(getContext(), "No user found", Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    public void onRefresh() {
+        Log.d(TAG, "AccountFragment: " + "onRefresh");
+        getUserInfoFromServer();
+        refreshLayout.setRefreshing(false);
     }
 }

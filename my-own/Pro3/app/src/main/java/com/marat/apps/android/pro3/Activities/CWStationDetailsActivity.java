@@ -17,17 +17,17 @@ import com.marat.apps.android.pro3.Adapters.CarTypesRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Interfaces.RegistrationSuccessfullyFinishedListener;
 import com.marat.apps.android.pro3.Interfaces.RegistrationTimeChosenListener;
-import com.marat.apps.android.pro3.Dialogs.TimetableDialogFragment;
+import com.marat.apps.android.pro3.Dialogs.DialogFragmentTimetable;
 import com.marat.apps.android.pro3.R;
 
-public class CWStationDetailsActivity extends AppCompatActivity implements RegistrationTimeChosenListener, RegistrationSuccessfullyFinishedListener {
+public class CWStationDetailsActivity extends AppCompatActivity implements RegistrationTimeChosenListener, RegistrationSuccessfullyFinishedListener, View.OnClickListener {
 
     private RecyclerView carTypesRecyclerView;
     private EditText chosenServiceEditText;
     private TextView totalPriceTextView;
     private Button chooseTimeButton;
 
-    private TimetableDialogFragment dialog;
+    private DialogFragmentTimetable dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +51,17 @@ public class CWStationDetailsActivity extends AppCompatActivity implements Regis
         CarTypesRecyclerViewAdapter adapter = new CarTypesRecyclerViewAdapter(this);
         carTypesRecyclerView.setAdapter(adapter);
 
-        chooseTimeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog = new TimetableDialogFragment();
+        chooseTimeButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.chooseTimeButton:
+                dialog = new DialogFragmentTimetable();
                 dialog.show(getSupportFragmentManager(), "dialog");
-            }
-        });
+                break;
+        }
     }
 
     private void setCarWashStationData(long rowId, String origin) {
@@ -81,10 +85,6 @@ public class CWStationDetailsActivity extends AppCompatActivity implements Regis
             onBackPressed();
         }
         return true;
-    }
-
-    public void turnPage(View v) {
-        dialog.turnPage(v);
     }
 
     @Override

@@ -6,14 +6,14 @@
     tools:context="com.marat.apps.android.pro3.Activities.CWStationDetailsActivity">
 
     <RelativeLayout
-        android:id="@+id/boxNumberTextViewLayout"
+        android:id="@+id/dialogBoxNumberTextViewLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:paddingTop="2dp">
 
         <TextView
-            android:id="@+id/boxNumberTextView"
+            android:id="@+id/dialogBoxNumberTextView"
             android:layout_width="100dp"
             android:layout_height="45dp"
             android:layout_alignParentTop="true"
@@ -25,51 +25,49 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/toLeftArrowImageView"
+            android:id="@+id/dialogToLeftArrowImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/boxNumberTextView"
+            android:layout_alignBottom="@+id/dialogBoxNumberTextView"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
-            android:layout_toLeftOf="@+id/boxNumberTextView"
-            android:layout_toStartOf="@+id/boxNumberTextView"
-            android:onClick="turnPage"
+            android:layout_toLeftOf="@+id/dialogBoxNumberTextView"
+            android:layout_toStartOf="@+id/dialogBoxNumberTextView"
             android:src="@drawable/ic_keyboard_arrow_left_white_36dp" />
 
         <ImageView
-            android:id="@+id/toRightArrowImageView"
+            android:id="@+id/dialogToRightArrowImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/boxNumberTextView"
+            android:layout_alignBottom="@+id/dialogBoxNumberTextView"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:layout_toEndOf="@+id/boxNumberTextView"
-            android:layout_toRightOf="@+id/boxNumberTextView"
-            android:onClick="turnPage"
+            android:layout_toEndOf="@+id/dialogBoxNumberTextView"
+            android:layout_toRightOf="@+id/dialogBoxNumberTextView"
             android:src="@drawable/ic_keyboard_arrow_right_white_36dp" />
 
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/todayTomorrowTextsLayout"
+        android:id="@+id/dialogTodayTomorrowTextsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/boxNumberTextViewLayout"
+        android:layout_below="@+id/dialogBoxNumberTextViewLayout"
         android:background="@drawable/bg_timetable_buttons_2"
         android:gravity="center"
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:id="@+id/todayTextViewLayout"
+            android:id="@+id/dialogTodayTextViewLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
 
             <TextView
-                android:id="@+id/todayTimeTextView"
+                android:id="@+id/dialogTodayTimeTextView"
                 android:layout_width="80dp"
                 android:layout_height="22dp"
                 android:layout_marginBottom="12dp"
@@ -81,14 +79,14 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/tomorrowTextViewLayout"
+            android:id="@+id/dialogTomorrowTextViewLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
 
             <TextView
-                android:id="@+id/tomorrowTimeTextView"
+                android:id="@+id/dialogTomorrowTimeTextView"
                 android:layout_width="70dp"
                 android:layout_height="22dp"
                 android:layout_marginBottom="12dp"
@@ -102,21 +100,21 @@
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/container"
+        android:id="@+id/dialogTimeTableContainer"
         android:layout_width="match_parent"
         android:layout_height="420dp"
-        android:layout_below="@+id/todayTomorrowTextsLayout"
+        android:layout_below="@+id/dialogTodayTomorrowTextsLayout"
         android:layout_centerHorizontal="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/container"
+        android:layout_below="@+id/dialogTimeTableContainer"
         android:background="@drawable/bg_timetable_buttons"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/cancelRegistrationTextView"
+            android:id="@+id/dialogCancelRegistrationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -129,7 +127,7 @@
             android:textColor="@color/colorPrimary" />
 
         <TextView
-            android:id="@+id/registerTextView"
+            android:id="@+id/dialogRegisterTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

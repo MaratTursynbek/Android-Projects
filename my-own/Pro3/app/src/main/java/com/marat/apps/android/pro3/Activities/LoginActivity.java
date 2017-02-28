@@ -1,9 +1,7 @@
 package com.marat.apps.android.pro3.Activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
 import com.marat.apps.android.pro3.Models.PhoneTextWatcher;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
@@ -32,7 +31,9 @@ import java.io.IOException;
 
 import okhttp3.Response;
 
-public class LoginActivity extends AppCompatActivity implements RequestResponseListener {
+public class LoginActivity extends AppCompatActivity implements RequestResponseListener, TextView.OnEditorActionListener, View.OnTouchListener{
+
+    private static final String TAG = "logtag";
 
     private static final String USER_AUTHORIZATION_URL = "https://propropro.herokuapp.com/api/v1/sessions";
     private String formattedPhoneNumber;
@@ -42,44 +43,48 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
     private EditText passwordEditText;
     private ProgressDialog dialog;
 
+    private boolean isSuccessful = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        loginActivityLayout = findViewById(R.id.loginActivityLayout);
-        phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.LogInPhoneNumberEditText);
-        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
+        loginActivityLayout = findViewById(R.id.logInActivityLayout);
+        phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.logInPhoneNumberEditText);
+        passwordEditText = (EditText) findViewById(R.id.logInPasswordEditText);
 
         phoneNumberEditText.addTextChangedListener(new PhoneTextWatcher(phoneNumberEditText));
-        phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        phoneNumberEditText.setOnEditorActionListener(this);
+        passwordEditText.setOnEditorActionListener(this);
+        loginActivityLayout.setOnTouchListener(this);
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        boolean isHandled = false;
+        switch (v.getId()) {
+            case R.id.logInPhoneNumberEditText:
                 if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     phoneNumberEditText.clearFocus();
                     passwordEditText.requestFocus();
-                    return true;
+                    isHandled = true;
                 }
-                return false;
-            }
-        });
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                break;
+            case R.id.logInPasswordEditText:
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     logInUser(v);
-                    return true;
+                    isHandled = true;
                 }
-                return false;
-            }
-        });
-        loginActivityLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                return true;
-            }
-        });
+                break;
+        }
+        return isHandled;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        hideKeyboard();
+        return true;
     }
 
     public void logInUser(View v) {
@@ -106,8 +111,8 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
         String phone = phoneNumberEditText.getText().toString();
         formattedPhoneNumber = phone.substring(1, 4) + phone.substring(6, 9) + phone.substring(10, 12) + phone.substring(13);
         return "{\"user\":{"
-                + "\"phone_number\":"    +   "\""   +     formattedPhoneNumber                       + "\""      + ","
-                + "\"password\":"        +   "\""   +     passwordEditText.getText().toString()      + "\""
+                + "\"phone_number\":"     +   "\""   +   formattedPhoneNumber                     + "\""    + ","
+                + "\"password\":"         +   "\""   +   passwordEditText.getText().toString()    + "\""
                 + "}}";
     }
 
@@ -121,19 +126,16 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
     @Override
     public void onResponse(Response response) {
         dialog.dismiss();
-        boolean isSuccessful = false;
         String responseMessage = response.message();
-        Log.d("LoginActivity", responseMessage);
+        Log.d(TAG, "LoginActivity: " + responseMessage);
 
         if (getString(R.string.server_response_login_successful).equals(responseMessage)) {
             try {
                 String res = response.body().string();
-                Log.d("LoginActivity", res);
-                JSONObject user = new JSONObject(res);
-                String userId = user.getString("id");
-                String token = user.getString("token");
-                saveUserData(userId, token);
-                isSuccessful = true;
+                Log.d(TAG, "LoginActivity: " + res);
+                JSONObject responseJSON = new JSONObject(res);
+                JSONObject userObject = responseJSON.getJSONObject("user");
+                saveUserData(userObject);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
@@ -177,14 +179,9 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
         dialog.show();
     }
 
-    public void saveUserData(String userId, String token) {
-        SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("username", formattedPhoneNumber);
-        editor.putString("password", passwordEditText.getText().toString());
-        editor.putString("user_id", userId);
-        editor.putString("ACCESS_TOKEN", token);
-        editor.apply();
+    public void saveUserData(JSONObject userObject) throws JSONException {
+        StoreToDatabaseHelper helper = new StoreToDatabaseHelper(this);
+        isSuccessful = helper.saveUserLogInData(userObject, passwordEditText.getText().toString());
     }
 
     private void showSnackErrorMessage(String message, View v) {

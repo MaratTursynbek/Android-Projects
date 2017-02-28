@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.MenuCityPickerAdapter;
+import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.MenuSections.AboutProjectFragment;
 import com.marat.apps.android.pro3.MenuSections.AllCarWashersFragment;
@@ -32,12 +34,21 @@ import com.marat.apps.android.pro3.MenuSections.ContactsFragment;
 import com.marat.apps.android.pro3.MenuSections.FavoriteFragment;
 import com.marat.apps.android.pro3.MenuSections.AccountFragment;
 import com.marat.apps.android.pro3.MenuSections.MyOrdersFragment;
+import com.marat.apps.android.pro3.Models.City;
 import com.marat.apps.android.pro3.R;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnToolbarTitleChangeListener {
 
+    private static final String TAG = "logtag";
+
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private AccountFragment accountFragment;
+    private AllCarWashersFragment allCarWashersFragment;
+    private FavoriteFragment favoriteFragment;
+    private MyOrdersFragment myOrdersFragment;
 
     private NavigationView navigationView;
     private TextView cityPickerTextView;
@@ -46,14 +57,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private boolean isPickerShown = false;
 
-    private String cities[] = {"Астана", "Алматы", "Шымкент", "Орал", "Қызылорда", "Атырау", "Ақтөбе", "Көкшетау", "Қостанай", "Қарағанды", "Семей", "Өскемен", "Тараз", "Ақтау", "Павлодар", "Петропавл"};
-    private String userCity = cities[0];
+    private ArrayList<City> cities = new ArrayList<>();
+    private int currentCityID = 0;
 
-    private int checkedItem;
+    private int checkedFragmentID;
 
     @Override
     public void onBackPressed() {
-        Log.v("MainActivity", "onBackPressed");
+        Log.v(TAG, "MainActivity: " + "onBackPressed");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -62,10 +73,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private BroadcastReceiver finishActivityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("finish_main_activity".equals(intent.getAction())) {
+                LocalBroadcastManager.getInstance(MainActivity.this).unregisterReceiver(finishActivityReceiver);
+                finish();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v("MainActivity", "onCreate");
+        Log.d(TAG, "MainActivity: " + "onCreate");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -90,30 +111,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        citiesListView = (ListView) findViewById(R.id.citiesListView);
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        cityPickerTextView = (TextView) headerView.findViewById(R.id.cityPicker);
+        pickerArrow = (ImageView) headerView.findViewById(R.id.pickerArrow);
+
+        setUpStartingPage();
+        downloadCitiesAndUserInfo();
+        setUpCitiesMenuList();
+    }
+
+    private void setUpStartingPage() {
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
 
         String startPage = getIntent().getExtras().getString("startPage");
 
         if ("AllCarWashers".equals(startPage)) {
-            AllCarWashersFragment allCarWashersFragment = new AllCarWashersFragment();
+            allCarWashersFragment = new AllCarWashersFragment();
             fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
-            checkedItem = R.id.nav_car_washers;
+            checkedFragmentID = R.id.nav_car_washers;
         } else if ("Favorites".equals(startPage)) {
-            FavoriteFragment favoriteFragment = new FavoriteFragment();
+            favoriteFragment = new FavoriteFragment();
             fragmentTransaction.add(R.id.fragment_container, favoriteFragment);
-            checkedItem = R.id.nav_favorites;
+            checkedFragmentID = R.id.nav_favorites;
         } else if ("MyOrders".equals(startPage)) {
-            MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
+            myOrdersFragment = new MyOrdersFragment();
             fragmentTransaction.add(R.id.fragment_container, myOrdersFragment);
-            checkedItem = R.id.nav_my_orders;
+            checkedFragmentID = R.id.nav_my_orders;
         }
-
         fragmentTransaction.commit();
+    }
 
-        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        cityPickerTextView = (TextView) headerView.findViewById(R.id.cityPicker);
-        cityPickerTextView.setText(cities[0]);
+    private void downloadCitiesAndUserInfo() {
+        CWStationsDatabase db = new CWStationsDatabase(this);
+        db.open();
+        Cursor cursorCities = db.getAllCities();
+        Cursor cursorUser = db.getUserInformation();
+
+        cursorUser.moveToFirst();
+        int userCityID = cursorUser.getInt(cursorUser.getColumnIndex(CWStationsDatabase.KEY_USER_CITY_ID));
+
+        for (cursorCities.moveToFirst(); !cursorCities.isAfterLast(); cursorCities.moveToNext()) {
+            City city = new City();
+            city.setRowID(cursorCities.getLong(cursorCities.getColumnIndex(CWStationsDatabase.ROW_ID)));
+            city.setCityID(cursorCities.getInt(cursorCities.getColumnIndex(CWStationsDatabase.KEY_CITY_ID)));
+            city.setCityName(cursorCities.getString(cursorCities.getColumnIndex(CWStationsDatabase.KEY_CITY_NAME)));
+            cities.add(city);
+            if (city.getCityID() == userCityID) {
+                currentCityID = city.getCityID();
+                cityPickerTextView.setText(city.getCityName());
+            }
+        }
+        db.close();
+    }
+
+    private void setUpCitiesMenuList() {
         cityPickerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,20 +175,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         cityPickerTextView.bringToFront();
 
-        pickerArrow = (ImageView) headerView.findViewById(R.id.pickerArrow);
         pickerArrow.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
 
-        citiesListView = (ListView) findViewById(R.id.citiesListView);
         citiesListView.setVisibility(View.INVISIBLE);
 
-        final MenuCityPickerAdapter adapter = new MenuCityPickerAdapter(this, cities, userCity);
+        final MenuCityPickerAdapter adapter = new MenuCityPickerAdapter(this, cities, currentCityID);
         citiesListView.setAdapter(adapter);
         citiesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                userCity = cities[i];
-                cityPickerTextView.setText(userCity);
-                adapter.updateCurrentCity(userCity);
+                currentCityID = cities.get(i).getCityID();
+                cityPickerTextView.setText(cities.get(i).getCityName());
+                adapter.updateCurrentCity(currentCityID);
             }
         });
     }
@@ -161,6 +212,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public void onRefresh() {
+        Log.d(TAG, "MainActivity: " + "onCreate");
+        switch (checkedFragmentID) {
+            case R.id.nav_home:
+                break;
+            case R.id.nav_car_washers:
+                //
+                break;
+            case R.id.nav_favorites:
+                //
+                break;
+            case R.id.nav_my_orders:
+                //
+                break;
+        }
+    }
+
     @Override
     public void onTitleChanged(String title) {
         if (title != null) {
@@ -172,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         navigationView.inflateMenu(R.menu.activity_main_drawer);
-        navigationView.setCheckedItem(checkedItem);
+        navigationView.setCheckedItem(checkedFragmentID);
         return true;
     }
 
@@ -185,34 +253,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction = fragmentManager.beginTransaction();
 
         if (id == R.id.nav_home) {
-            AccountFragment accountFragment = new AccountFragment();
+            accountFragment = new AccountFragment();
             fragmentTransaction.replace(R.id.fragment_container, accountFragment);
-            checkedItem = R.id.nav_home;
+            checkedFragmentID = R.id.nav_home;
 
         } else if (id == R.id.nav_car_washers) {
-            AllCarWashersFragment allCarWashersFragment = new AllCarWashersFragment();
+            allCarWashersFragment = new AllCarWashersFragment();
             fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
-            checkedItem = R.id.nav_car_washers;
+            checkedFragmentID = R.id.nav_car_washers;
 
         } else if (id == R.id.nav_favorites) {
-            FavoriteFragment favoriteFragment = new FavoriteFragment();
+            favoriteFragment = new FavoriteFragment();
             fragmentTransaction.replace(R.id.fragment_container, favoriteFragment);
-            checkedItem = R.id.nav_favorites;
+            checkedFragmentID = R.id.nav_favorites;
 
         } else if (id == R.id.nav_my_orders) {
-            MyOrdersFragment myOrdersFragment = new MyOrdersFragment();
+            myOrdersFragment = new MyOrdersFragment();
             fragmentTransaction.replace(R.id.fragment_container, myOrdersFragment);
-            checkedItem = R.id.nav_my_orders;
+            checkedFragmentID = R.id.nav_my_orders;
 
         } else if (id == R.id.nav_contacts) {
             ContactsFragment contactsFragment = new ContactsFragment();
             fragmentTransaction.replace(R.id.fragment_container, contactsFragment);
-            checkedItem = R.id.nav_contacts;
+            checkedFragmentID = R.id.nav_contacts;
 
         } else if (id == R.id.nav_about) {
             AboutProjectFragment aboutProjectFragment = new AboutProjectFragment();
             fragmentTransaction.replace(R.id.fragment_container, aboutProjectFragment);
-            checkedItem = R.id.nav_about;
+            checkedFragmentID = R.id.nav_about;
 
         } else if (id == R.id.nav_log_out) {
             SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
@@ -232,13 +300,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private BroadcastReceiver finishActivityReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if ("finish_main_activity".equals(intent.getAction())) {
-                LocalBroadcastManager.getInstance(MainActivity.this).unregisterReceiver(finishActivityReceiver);
-                finish();
-            }
-        }
-    };
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "MainActivity: " + "onStart");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "MainActivity: " + "onRestart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "MainActivity: " + "onResume");
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.d(TAG, "MainActivity: " + "onPostResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "MainActivity: " + "onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "MainActivity: " + "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG, "MainActivity: " + "onDestroy");
+    }
 }
