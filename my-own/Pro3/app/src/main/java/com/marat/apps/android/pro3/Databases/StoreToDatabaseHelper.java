@@ -24,6 +24,10 @@ public class StoreToDatabaseHelper {
         editor.putString("ACCESS_TOKEN", userObject.getString("token"));
         editor.apply();
 
+        // car washing stations json object
+        JSONArray allCarWashers = userObject.getJSONArray("city_carwashes");
+        JSONArray favoriteCarWashers = userObject.getJSONArray("favorite_carwashes");
+
         //saving user data to internal SQLite database
         CWStationsDatabase db = new CWStationsDatabase(context);
         db.open();
@@ -38,6 +42,30 @@ public class StoreToDatabaseHelper {
                 userObject.getString("car_type_name"),
                 userObject.getString("phone_number")
         );
+        db.deleteAllStations();
+        for (int i = 0; i < allCarWashers.length(); i++) {
+            JSONObject carWash = allCarWashers.getJSONObject(i);
+            db.addToAllCarWashingStations(
+                    carWash.getInt("id"),
+                    carWash.getString("name"),
+                    carWash.getString("address"),
+                    carWash.getJSONArray("example").getJSONObject(0).getInt("price"),
+                    100,
+                    200
+            );
+        }/*
+        db.deleteFavoriteStations();
+        for (int i = 0; i < favoriteCarWashers.length(); i++) {
+            JSONObject carWash = favoriteCarWashers.getJSONObject(i);
+            db.addToFavoriteCarWashingStations(
+                    carWash.getInt("id"),
+                    carWash.getString("name"),
+                    carWash.getString("address"),
+                    carWash.getJSONObject("example").getInt("price"),
+                    100,
+                    200
+            );
+        }*/
         db.close();
 
         return true;

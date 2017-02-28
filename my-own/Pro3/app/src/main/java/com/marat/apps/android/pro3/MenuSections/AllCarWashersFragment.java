@@ -1,6 +1,7 @@
 package com.marat.apps.android.pro3.MenuSections;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,7 +34,7 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
 
     private static final String TAG = "logtag";
 
-    private static final String CITIES_AND_CAR_TYPES_URL = "https://propropro.herokuapp.com/api/v1/sessions";
+    private static final String CITIES_AND_CAR_TYPES_URL = "https://propropro.herokuapp.com/api/v1/carwashes";
 
     private Context context;
     private Cursor data;
@@ -80,13 +81,15 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
             emptyText.setVisibility(View.INVISIBLE);
             setAdapterToRecyclerView();
         }
-
         db.close();
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("ACCESS_TOKEN", "");
 
         UniversalGetRequest getRequest = new UniversalGetRequest(getContext());
         getRequest.delegate = this;
         if (getRequest.isNetworkAvailable()) {
-            getRequest.get(CITIES_AND_CAR_TYPES_URL);
+            getRequest.getUsingToken(CITIES_AND_CAR_TYPES_URL, "Authorization", "Token token=\"" + token + "\"");
         } else {
             Toast.makeText(getContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
         }
@@ -109,16 +112,13 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
         String responseMessage = response.message();
         Log.d(TAG, "AllCarWashersFragment: " + "response message - " + responseMessage);
 
-        String res = "body empty";
         try {
-            res = response.body().string();
+            String res = response.body().string();
+            Log.d(TAG, "AllCarWashersFragment: " + "response body - " + res);
             JSONObject result = new JSONObject(res);
-            JSONArray cities = result.getJSONArray("cities");           // get cities array
-            JSONArray carTypes = result.getJSONArray("car_types");      // get car_types array
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "AllCarWashersFragment: " + "response body - " + res);
     }
 
     @Override

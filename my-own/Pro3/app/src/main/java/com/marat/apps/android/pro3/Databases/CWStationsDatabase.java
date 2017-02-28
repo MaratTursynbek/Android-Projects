@@ -75,7 +75,6 @@ public class CWStationsDatabase {
      * ALL and FAVORITE car washing stations in user's city
      */
     public static final String KEY_CAR_WASH_ID = "car_wash_id";
-    public static final String KEY_CAR_WASH_FAVORITE = "car_wash_favorite_or_not";
     public static final String KEY_CAR_WASH_NAME = "car_wash_name";
     public static final String KEY_CAR_WASH_ADDRESS = "car_wash_address";
     public static final String KEY_CAR_WASH_EXAMPLE_PRICE = "car_wash_example_price";
@@ -187,7 +186,6 @@ public class CWStationsDatabase {
             db.execSQL("CREATE TABLE " + DATABASE_TABLE_6_ALL_STATIONS + " (" +
                     ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     KEY_CAR_WASH_ID + " INTEGER, " +
-                    KEY_CAR_WASH_FAVORITE + " INTEGER, " +
                     KEY_CAR_WASH_NAME + " TEXT NOT NULL, " +
                     KEY_CAR_WASH_ADDRESS + " TEXT NOT NULL, " +
                     KEY_CAR_WASH_EXAMPLE_PRICE + " INTEGER, " +
@@ -199,7 +197,6 @@ public class CWStationsDatabase {
             db.execSQL("CREATE TABLE " + DATABASE_TABLE_7_FAVORITES_STATIONS + " (" +
                     ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     KEY_CAR_WASH_ID + " INTEGER, " +
-                    KEY_CAR_WASH_FAVORITE + " INTEGER, " +
                     KEY_CAR_WASH_NAME + " TEXT NOT NULL, " +
                     KEY_CAR_WASH_ADDRESS + " TEXT NOT NULL, " +
                     KEY_CAR_WASH_EXAMPLE_PRICE + " INTEGER, " +
@@ -315,10 +312,9 @@ public class CWStationsDatabase {
     /**
      * adds 1 car washing station to DATABASE_TABLE_6_ALL_STATIONS
      */
-    public long addToAllCarWashingStations(int carWashId, int favorite, String name, String address, int price, int longitude, int latitude) {
+    public long addToAllCarWashingStations(int carWashId, String name, String address, int price, int longitude, int latitude) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_CAR_WASH_ID, carWashId);
-        cv.put(KEY_CAR_WASH_FAVORITE, favorite);
         cv.put(KEY_CAR_WASH_NAME, name);
         cv.put(KEY_CAR_WASH_ADDRESS, address);
         cv.put(KEY_CAR_WASH_EXAMPLE_PRICE, price);
@@ -330,10 +326,9 @@ public class CWStationsDatabase {
     /**
      * adds 1 car washing station to DATABASE_TABLE_7_FAVORITES_STATIONS
      */
-    public long addToFavoriteCarWashingStations(int carWashId, int favorite, String name, String address, int price, int longitude, int latitude) {
+    public long addToFavoriteCarWashingStations(int carWashId, String name, String address, int price, int longitude, int latitude) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_CAR_WASH_ID, carWashId);
-        cv.put(KEY_CAR_WASH_FAVORITE, favorite);
         cv.put(KEY_CAR_WASH_NAME, name);
         cv.put(KEY_CAR_WASH_ADDRESS, address);
         cv.put(KEY_CAR_WASH_EXAMPLE_PRICE, price);
@@ -401,7 +396,7 @@ public class CWStationsDatabase {
      * returns Cursor pointing to ALL car washing stations
      */
     public Cursor getAllStations() {
-        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_FAVORITE, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
+        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
         return database.query(DATABASE_TABLE_6_ALL_STATIONS, columns, null, null, null, null, null);
     }
 
@@ -409,7 +404,7 @@ public class CWStationsDatabase {
      * returns Cursor pointing to FAVORITE car washing stations
      */
     public Cursor getFavoriteStations() {
-        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_FAVORITE, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
+        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
         return database.query(DATABASE_TABLE_7_FAVORITES_STATIONS, columns, null, null, null, null, null);
     }
 
@@ -425,7 +420,7 @@ public class CWStationsDatabase {
      * returns Cursor pointing to the chosen Car Wash Station
      */
     public Cursor getStationAt(long rowId) {
-        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_FAVORITE, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
+        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
         return database.query(DATABASE_TABLE_6_ALL_STATIONS, columns, ROW_ID + "=" + rowId, null, null, null, null);
     }
 
@@ -433,7 +428,7 @@ public class CWStationsDatabase {
      * returns Cursor pointing to the chosen Car Wash Station
      */
     public Cursor getFavoriteStationAt(long rowId) {
-        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_FAVORITE, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
+        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
         return database.query(DATABASE_TABLE_7_FAVORITES_STATIONS, columns, ROW_ID + "=" + rowId, null, null, null, null);
     }
 

@@ -97,6 +97,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         showErrorToast(getString(R.string.error_could_not_load_data));
         Log.d(TAG, "AccountFragment: " + "onFailure");
         e.printStackTrace();
+        stopRefreshImage();
     }
 
     @Override
@@ -118,6 +119,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         } else {
             showErrorToast(getString(R.string.error_could_not_load_data));
         }
+        stopRefreshImage();
     }
 
     private void saveNewUserData(JSONObject userObject) throws JSONException {
@@ -134,6 +136,15 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         }
     }
 
+    private void stopRefreshImage() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     private void showErrorToast(final String message) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -147,6 +158,5 @@ public class AccountFragment extends Fragment implements RequestResponseListener
     public void onRefresh() {
         Log.d(TAG, "AccountFragment: " + "onRefresh");
         getUserInfoFromServer();
-        refreshLayout.setRefreshing(false);
     }
 }

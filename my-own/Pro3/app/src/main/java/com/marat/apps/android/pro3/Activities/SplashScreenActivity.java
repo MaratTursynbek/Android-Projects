@@ -158,8 +158,11 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
                 } else {
                     Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  "data is OK");
                 }
+                Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  "before data save");
                 saveUserData(userObject);
+                Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  "after data save");
                 goToNextActivity();
+                Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  "after go to next activity");
                 return;
             } catch (IOException | JSONException e) {
                 showErrorToast(getString(R.string.error_could_not_load_data));
@@ -299,7 +302,7 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
         });
     }
 
-    private void initializeDatabase() {
+    private void initializeDatabase() {/*
         CWStationsDatabase db = new CWStationsDatabase(this);
         db.open();
         db.deleteAllStations();
@@ -323,6 +326,6 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
         db.addToMyOrders(Integer.parseInt(order6[0]), order6[1], order6[2], order6[3], order6[4], order6[5], order6[6]);
         db.addToMyOrders(Integer.parseInt(order7[0]), order7[1], order7[2], order7[3], order7[4], order7[5], order7[6]);
 
-        db.close();
+        db.close();*/
     }
 }
