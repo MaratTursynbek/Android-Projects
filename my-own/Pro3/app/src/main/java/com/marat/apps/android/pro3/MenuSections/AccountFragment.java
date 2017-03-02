@@ -51,7 +51,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         userPhoneNumberTextView = (TextView) v.findViewById(R.id.fhPhoneNumberTextView);
         userCarTypeTextView = (TextView) v.findViewById(R.id.fhCarTypeTextView);
         userCityTextView = (TextView) v.findViewById(R.id.fhCityTypeTextView);
-        refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeToRefreshLayout);
+        refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.fhSwipeToRefreshLayout);
         refreshLayout.setOnRefreshListener(this);
 
         OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
@@ -86,7 +86,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         UniversalGetRequest getRequest = new UniversalGetRequest(getContext());
         getRequest.delegate = this;
         if (getRequest.isNetworkAvailable()) {
-            getRequest.getUsingToken(GET_USER_URL + userId, "Authorization", "Token token=\"" + token + "\"");
+            getRequest.getUserInfo(GET_USER_URL + userId, "Token token=\"" + token + "\"");
         } else {
             Toast.makeText(getContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
         }

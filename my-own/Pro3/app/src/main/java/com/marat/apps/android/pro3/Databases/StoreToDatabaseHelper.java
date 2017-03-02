@@ -15,85 +15,6 @@ public class StoreToDatabaseHelper {
         this.context = context;
     }
 
-    public boolean saveUserLogInData(JSONObject userObject, String password) throws JSONException {
-        //saving user credentials into shared preferences
-        SharedPreferences sharedPreferences = context.getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("phone_number", userObject.getString("phone_number"));
-        editor.putString("password", password);
-        editor.putString("ACCESS_TOKEN", userObject.getString("token"));
-        editor.apply();
-
-        // car washing stations json object
-        JSONArray allCarWashers = userObject.getJSONArray("city_carwashes");
-        JSONArray favoriteCarWashers = userObject.getJSONArray("favorite_carwashes");
-
-        //saving user data to internal SQLite database
-        CWStationsDatabase db = new CWStationsDatabase(context);
-        db.open();
-        db.deleteUserInformation();
-        db.addUserInformation(
-                userObject.getInt("id"),
-                userObject.getString("created_at"),
-                userObject.getString("name"),
-                userObject.getInt("city_id"),
-                userObject.getString("city_name"),
-                userObject.getInt("car_type_id"),
-                userObject.getString("car_type_name"),
-                userObject.getString("phone_number")
-        );
-        db.deleteAllStations();
-        for (int i = 0; i < allCarWashers.length(); i++) {
-            JSONObject carWash = allCarWashers.getJSONObject(i);
-            db.addToAllCarWashingStations(
-                    carWash.getInt("id"),
-                    carWash.getString("name"),
-                    carWash.getString("address"),
-                    carWash.getJSONArray("example").getJSONObject(0).getInt("price"),
-                    100,
-                    200
-            );
-        }/*
-        db.deleteFavoriteStations();
-        for (int i = 0; i < favoriteCarWashers.length(); i++) {
-            JSONObject carWash = favoriteCarWashers.getJSONObject(i);
-            db.addToFavoriteCarWashingStations(
-                    carWash.getInt("id"),
-                    carWash.getString("name"),
-                    carWash.getString("address"),
-                    carWash.getJSONObject("example").getInt("price"),
-                    100,
-                    200
-            );
-        }*/
-        db.close();
-
-        return true;
-    }
-
-    public boolean saveNewUserData(JSONObject userObject) throws JSONException {
-        JSONObject cityObject = userObject.getJSONObject("city");
-        JSONObject carTypeObject = userObject.getJSONObject("car_type");
-
-        //saving user data to internal SQLite database
-        CWStationsDatabase db = new CWStationsDatabase(context);
-        db.open();
-        db.deleteUserInformation();
-        db.addUserInformation(
-                userObject.getInt("id"),
-                userObject.getString("created_at"),
-                userObject.getString("name"),
-                cityObject.getInt("id"),
-                cityObject.getString("name"),
-                carTypeObject.getInt("id"),
-                carTypeObject.getString("name"),
-                userObject.getString("phone_number")
-        );
-        db.close();
-
-        return true;
-    }
-
     public boolean saveCitiesAndCarTypes(JSONArray cities, JSONArray carTypes, String todaysData) {
         CWStationsDatabase db = new CWStationsDatabase(context);
         db.open();
@@ -132,5 +53,115 @@ public class StoreToDatabaseHelper {
         db.close();
 
         return isSuccessful;
+    }
+
+    public boolean saveUserLogInData(JSONObject userObject, String password) throws JSONException {
+        //saving user credentials into shared preferences
+        SharedPreferences sharedPreferences = context.getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("phone_number", userObject.getString("phone_number"));
+        editor.putString("password", password);
+        editor.putString("ACCESS_TOKEN", userObject.getString("token"));
+        editor.apply();
+
+        //saving user data to internal SQLite database
+        CWStationsDatabase db = new CWStationsDatabase(context);
+        db.open();
+        db.deleteUserInformation();
+        db.addUserInformation(
+                userObject.getInt("id"),
+                userObject.getString("created_at"),
+                userObject.getString("name"),
+                userObject.getInt("city_id"),
+                userObject.getString("city_name"),
+                userObject.getInt("car_type_id"),
+                userObject.getString("car_type_name"),
+                userObject.getString("phone_number")
+        );
+        db.close();
+
+        // car washing stations json object
+        JSONArray allCarWashers = userObject.getJSONArray("city_carwashes");
+        JSONArray favoriteCarWashers = userObject.getJSONArray("favorite_carwashes");
+
+        if (allCarWashers.length() > 0) {
+            saveAllCarWashers(allCarWashers);
+        }
+        if (favoriteCarWashers.length() > 0) {
+            saveFavoriteCarWashers(favoriteCarWashers);
+        }
+
+        return true;
+    }
+
+    public boolean saveAllCarWashers(JSONArray allCarWashers) throws JSONException {
+        CWStationsDatabase db = new CWStationsDatabase(context);
+        db.open();
+        db.deleteAllStations();
+        for (int i = 0; i < allCarWashers.length(); i++) {
+            JSONObject carWash = allCarWashers.getJSONObject(i);
+            int price = 0;
+            if (carWash.getJSONArray("example").length() > 0) {
+                price = carWash.getJSONArray("example").getJSONObject(0).getInt("price");
+            }
+            db.addToAllCarWashingStations(
+                    carWash.getInt("id"),
+                    carWash.getString("name"),
+                    carWash.getString("address"),
+                    price,
+                    100,
+                    200
+            );
+        }
+        db.close();
+        return true;
+    }
+
+    public boolean saveFavoriteCarWashers(JSONArray favoriteCarWashers) throws JSONException {
+        CWStationsDatabase db = new CWStationsDatabase(context);
+        db.open();
+        db.deleteFavoriteStations();
+        for (int i = 0; i < favoriteCarWashers.length(); i++) {
+            JSONObject carWash = favoriteCarWashers.getJSONObject(i);
+            int price = 0;
+            if (carWash.getJSONArray("example").length() > 0) {
+                price = carWash.getJSONArray("example").getJSONObject(0).getInt("price");
+            }
+            db.addToFavoriteCarWashingStations(
+                    carWash.getInt("id"),
+                    carWash.getString("name"),
+                    carWash.getString("address"),
+                    price,
+                    100,
+                    200,
+                    carWash.getInt("carwash_city_id"),
+                    carWash.getString("carwash_city_name")
+            );
+        }
+        db.close();
+        return true;
+    }
+
+    public boolean saveNewUserData(JSONObject userObject) throws JSONException {
+        JSONObject cityObject = userObject.getJSONObject("city");
+        JSONObject carTypeObject = userObject.getJSONObject("car_type");
+
+        //saving user data to internal SQLite database
+        CWStationsDatabase db = new CWStationsDatabase(context);
+        db.open();
+        db.deleteUserInformation();
+        db.addUserInformation(
+                userObject.getInt("id"),
+                userObject.getString("created_at"),
+                userObject.getString("name"),
+                cityObject.getInt("id"),
+                cityObject.getString("name"),
+                carTypeObject.getInt("id"),
+                carTypeObject.getString("name"),
+                userObject.getString("phone_number")
+        );
+        db.close();
+
+        return true;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,19 +13,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.marat.apps.android.pro3.Adapters.WashingStationsRecyclerViewAdapter;
+import com.marat.apps.android.pro3.Adapters.CarWashersAllRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.R;
 
-public class FavoriteFragment extends Fragment {
+import java.util.ArrayList;
+
+public class FavoriteFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Context context;
-    private Cursor data;
+    private Cursor cursor;
     private CWStationsDatabase db;
 
     private RecyclerView recyclerView;
     private TextView emptyText;
+    private CarWashersAllRecyclerViewAdapter adapter;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,18 +46,34 @@ public class FavoriteFragment extends Fragment {
         recyclerView.setItemAnimator(itemAnimator);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
+
+        refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.carWashersSwipeToRefreshLayout);
+        refreshLayout.setOnRefreshListener(this);
+
+        db = new CWStationsDatabase(getContext());
+
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        setupDataAndViews();
+    }
 
-        db = new CWStationsDatabase(context);
+    private void setupDataAndViews() {
+        ArrayList<Integer> cityIds = new ArrayList<>();
+
         db.open();
-        data = db.getFavoriteStations();
+        Cursor cityCursor = db.getAllCities();
+        for (cityCursor.moveToFirst(); !cityCursor.isAfterLast(); cityCursor.moveToNext()) {
+            cityIds.add(cityCursor.getInt(cityCursor.getColumnIndex(CWStationsDatabase.KEY_CITY_ID)));
+        }
+        cityCursor.close();
 
-        if (data.getCount() <= 0) {
+        cursor = db.getFavoriteStations(cityIds);
+
+        if (cursor.getCount() <= 0) {
             recyclerView.setVisibility(View.INVISIBLE);
             emptyText.setVisibility(View.VISIBLE);
         } else {
@@ -60,12 +81,29 @@ public class FavoriteFragment extends Fragment {
             emptyText.setVisibility(View.INVISIBLE);
             setAdapterToRecyclerView();
         }
-
         db.close();
     }
 
     private void setAdapterToRecyclerView() {
-        WashingStationsRecyclerViewAdapter adapter = new WashingStationsRecyclerViewAdapter(data, context, db, "FavoriteStations");
-        recyclerView.setAdapter(adapter);
+        if (adapter == null) {
+            adapter = new CarWashersAllRecyclerViewAdapter(cursor, getContext(), db, "FavoriteStations");
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.updateCursor(cursor);
+        }
+    }
+
+    private void stopRefreshImage() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    @Override
+    public void onRefresh() {
+        stopRefreshImage();
     }
 }

@@ -35,10 +35,22 @@ public class UniversalGetRequest {
         executeCall();
     }
 
-    public void getUsingToken(String url, String action, String header) {
+    public void getUserInfo(String url, String token) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .header(action, header)
+                .header("Authorization", token)
+                .url(url)
+                .build();
+
+        call = client.newCall(request);
+        executeCall();
+    }
+
+    public void getCarWashersForCityId(String url, String token, int cityId) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .addHeader("City", cityId + "")
                 .url(url)
                 .build();
 

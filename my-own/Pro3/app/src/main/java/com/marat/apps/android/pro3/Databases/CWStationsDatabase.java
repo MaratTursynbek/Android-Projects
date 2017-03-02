@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * SQLite Database for Pro3 KZ
  * <p>
@@ -80,6 +82,8 @@ public class CWStationsDatabase {
     public static final String KEY_CAR_WASH_EXAMPLE_PRICE = "car_wash_example_price";
     public static final String KEY_CAR_WASH_LONGITUDE = "car_wash_longitude";
     public static final String KEY_CAR_WASH_LATITUDE = "car_wash_latitude";
+    public static final String KEY_CAR_WASH_CITY_ID = "car_wash_city_id";
+    public static final String KEY_CAR_WASH_CITY_NAME = "car_wash_city_name";
 
     /**
      * #8
@@ -100,7 +104,7 @@ public class CWStationsDatabase {
     private static final String DATABASE_TABLE_4_ONLINE_SERVICES = "table_online_services";
     private static final String DATABASE_TABLE_5_OFFLINE_SERVICES = "table_offline_services";
     private static final String DATABASE_TABLE_6_ALL_STATIONS = "table_all_car_washing_stations";
-    private static final String DATABASE_TABLE_7_FAVORITES_STATIONS = "table_favorite_car_washing_stations";
+    private static final String DATABASE_TABLE_7_FAVORITE_STATIONS = "table_favorite_car_washing_stations";
     private static final String DATABASE_TABLE_8_USER_ORDERS = "table_user_orders";
 
     /**
@@ -193,15 +197,17 @@ public class CWStationsDatabase {
                     KEY_CAR_WASH_LATITUDE + " INTEGER);"
             );
 
-            // FAVORITES STATIONS table
-            db.execSQL("CREATE TABLE " + DATABASE_TABLE_7_FAVORITES_STATIONS + " (" +
+            // FAVORITE STATIONS table
+            db.execSQL("CREATE TABLE " + DATABASE_TABLE_7_FAVORITE_STATIONS + " (" +
                     ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     KEY_CAR_WASH_ID + " INTEGER, " +
                     KEY_CAR_WASH_NAME + " TEXT NOT NULL, " +
                     KEY_CAR_WASH_ADDRESS + " TEXT NOT NULL, " +
                     KEY_CAR_WASH_EXAMPLE_PRICE + " INTEGER, " +
                     KEY_CAR_WASH_LONGITUDE + " INTEGER, " +
-                    KEY_CAR_WASH_LATITUDE + " INTEGER);"
+                    KEY_CAR_WASH_LATITUDE + " INTEGER, " +
+                    KEY_CAR_WASH_CITY_ID + " INTEGER, " +
+                    KEY_CAR_WASH_CITY_NAME + " TEXT NOT NULL);"
             );
 
             // USER ORDERS table
@@ -225,7 +231,7 @@ public class CWStationsDatabase {
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_4_ONLINE_SERVICES);
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_5_OFFLINE_SERVICES);
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_6_ALL_STATIONS);
-            db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_7_FAVORITES_STATIONS);
+            db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_7_FAVORITE_STATIONS);
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_8_USER_ORDERS);
             onCreate(db);
         }
@@ -324,9 +330,9 @@ public class CWStationsDatabase {
     }
 
     /**
-     * adds 1 car washing station to DATABASE_TABLE_7_FAVORITES_STATIONS
+     * adds 1 car washing station to DATABASE_TABLE_7_FAVORITE_STATIONS
      */
-    public long addToFavoriteCarWashingStations(int carWashId, String name, String address, int price, int longitude, int latitude) {
+    public long addToFavoriteCarWashingStations(int carWashId, String name, String address, int price, int longitude, int latitude, int carWashCityId, String carWashCityName) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_CAR_WASH_ID, carWashId);
         cv.put(KEY_CAR_WASH_NAME, name);
@@ -334,7 +340,9 @@ public class CWStationsDatabase {
         cv.put(KEY_CAR_WASH_EXAMPLE_PRICE, price);
         cv.put(KEY_CAR_WASH_LONGITUDE, longitude);
         cv.put(KEY_CAR_WASH_LATITUDE, latitude);
-        return database.insert(DATABASE_TABLE_7_FAVORITES_STATIONS, null, cv);
+        cv.put(KEY_CAR_WASH_CITY_ID, carWashCityId);
+        cv.put(KEY_CAR_WASH_CITY_NAME, carWashCityName);
+        return database.insert(DATABASE_TABLE_7_FAVORITE_STATIONS, null, cv);
     }
 
     /**
@@ -403,9 +411,21 @@ public class CWStationsDatabase {
     /**
      * returns Cursor pointing to FAVORITE car washing stations
      */
-    public Cursor getFavoriteStations() {
+    public Cursor getFavoriteStations1() {
+        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE, KEY_CAR_WASH_CITY_ID, KEY_CAR_WASH_CITY_NAME};
+        return database.query(DATABASE_TABLE_7_FAVORITE_STATIONS, columns, null, null, KEY_CAR_WASH_CITY_ID, null, null);
+    }
+
+    public Cursor getFavoriteStations(ArrayList<Integer> cityId) {
         String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
-        return database.query(DATABASE_TABLE_7_FAVORITES_STATIONS, columns, null, null, null, null, null);
+        String query = "";
+        for (int i = 0; i < cityId.size(); i++) {
+            query = query + "select * from " + DATABASE_TABLE_7_FAVORITE_STATIONS + " where " + KEY_CAR_WASH_CITY_ID + " =  " + cityId.get(i);
+            if ( (i+1) <cityId.size()) {
+                query = query + " union all ";
+            }
+        }
+        return database.rawQuery(query, null);
     }
 
     /**
@@ -429,7 +449,7 @@ public class CWStationsDatabase {
      */
     public Cursor getFavoriteStationAt(long rowId) {
         String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
-        return database.query(DATABASE_TABLE_7_FAVORITES_STATIONS, columns, ROW_ID + "=" + rowId, null, null, null, null);
+        return database.query(DATABASE_TABLE_7_FAVORITE_STATIONS, columns, ROW_ID + "=" + rowId, null, null, null, null);
     }
 
     /**
@@ -507,12 +527,12 @@ public class CWStationsDatabase {
     }
 
     /**
-     * deletes and returns number of deleted rows in DATABASE_TABLE_7_FAVORITES_STATIONS
+     * deletes and returns number of deleted rows in DATABASE_TABLE_7_FAVORITE_STATIONS
      */
     public int deleteFavoriteStations() {
-        Cursor c = database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + DATABASE_TABLE_7_FAVORITES_STATIONS + "'", null);
+        Cursor c = database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + DATABASE_TABLE_7_FAVORITE_STATIONS + "'", null);
         if (c.getCount() > 0) {
-            return database.delete(DATABASE_TABLE_7_FAVORITES_STATIONS, "1", null);
+            return database.delete(DATABASE_TABLE_7_FAVORITE_STATIONS, "1", null);
         }
         return 0;
     }
