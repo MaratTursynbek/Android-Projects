@@ -23,7 +23,6 @@ import com.marat.apps.android.pro3.R;
 public class CWStationDetailsActivity extends AppCompatActivity implements RegistrationTimeChosenListener, RegistrationSuccessfullyFinishedListener, View.OnClickListener {
 
     private RecyclerView carTypesRecyclerView;
-    private EditText chosenServiceEditText;
     private TextView totalPriceTextView;
     private Button chooseTimeButton;
 
@@ -37,8 +36,7 @@ public class CWStationDetailsActivity extends AppCompatActivity implements Regis
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        carTypesRecyclerView = (RecyclerView) findViewById(R.id.carTypesRecyclerView);
-        chosenServiceEditText = (EditText) findViewById(R.id.chosenServiceEditText);
+        carTypesRecyclerView = (RecyclerView) findViewById(R.id.CWSDetailsCarTypesRecyclerView);
         totalPriceTextView = (TextView) findViewById(R.id.totalPriceTextView);
         chooseTimeButton = (Button) findViewById(R.id.chooseTimeButton);
 

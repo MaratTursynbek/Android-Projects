@@ -56,7 +56,7 @@ public class StoreToDatabaseHelper {
     }
 
     public boolean saveUserLogInData(JSONObject userObject, String password) throws JSONException {
-        //saving user credentials into shared preferences
+        // saving user credentials into shared preferences
         SharedPreferences sharedPreferences = context.getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("phone_number", userObject.getString("phone_number"));
@@ -64,7 +64,7 @@ public class StoreToDatabaseHelper {
         editor.putString("ACCESS_TOKEN", userObject.getString("token"));
         editor.apply();
 
-        //saving user data to internal SQLite database
+        // saving user data to internal SQLite database
         CWStationsDatabase db = new CWStationsDatabase(context);
         db.open();
         db.deleteUserInformation();
@@ -85,7 +85,7 @@ public class StoreToDatabaseHelper {
         JSONArray favoriteCarWashers = userObject.getJSONArray("favorite_carwashes");
 
         if (allCarWashers.length() > 0) {
-            saveAllCarWashers(allCarWashers);
+            saveAllCarWashers(allCarWashers, userObject.getInt("city_id"));
         }
         if (favoriteCarWashers.length() > 0) {
             saveFavoriteCarWashers(favoriteCarWashers);
@@ -94,7 +94,7 @@ public class StoreToDatabaseHelper {
         return true;
     }
 
-    public boolean saveAllCarWashers(JSONArray allCarWashers) throws JSONException {
+    public boolean saveAllCarWashers(JSONArray allCarWashers, int cityId) throws JSONException {
         CWStationsDatabase db = new CWStationsDatabase(context);
         db.open();
         db.deleteAllStations();
@@ -114,6 +114,12 @@ public class StoreToDatabaseHelper {
             );
         }
         db.close();
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("downloaded_city_id", cityId);
+        editor.apply();
+
         return true;
     }
 

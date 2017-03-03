@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean isPickerShown = false, currentCityChanged = false;
 
     private ArrayList<City> cities = new ArrayList<>();
-    private int currentCityId = 0, userCityId;
+    private int currentCityId = 0;
     private String currentCityName;
 
     private int checkedFragmentId;
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, "MainActivity: " + "start Page is - " + startPage);
 
         if ("AllCarWashers".equals(startPage)) {
-            allCarWashersFragment = AllCarWashersFragment.newInstance(currentCityId, userCityId, currentCityName);
+            allCarWashersFragment = AllCarWashersFragment.newInstance(currentCityId, currentCityName);
             fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
             checkedFragmentId = R.id.nav_car_washers;
         } else if ("Favorites".equals(startPage)) {
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Cursor cursorUser = db.getUserInformation();
 
         cursorUser.moveToFirst();
-        userCityId = cursorUser.getInt(cursorUser.getColumnIndex(CWStationsDatabase.KEY_USER_CITY_ID));
+        int downloadedCityId = cursorUser.getInt(cursorUser.getColumnIndex(CWStationsDatabase.KEY_USER_CITY_ID));
 
         for (cursorCities.moveToFirst(); !cursorCities.isAfterLast(); cursorCities.moveToNext()) {
             City city = new City();
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             city.setCityID(cursorCities.getInt(cursorCities.getColumnIndex(CWStationsDatabase.KEY_CITY_ID)));
             city.setCityName(cursorCities.getString(cursorCities.getColumnIndex(CWStationsDatabase.KEY_CITY_NAME)));
             cities.add(city);
-            if (city.getCityID() == userCityId) {
+            if (city.getCityID() == downloadedCityId) {
                 currentCityId = city.getCityID();
                 currentCityName = city.getCityName();
                 cityPickerTextView.setText(currentCityName);
@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             checkedFragmentId = R.id.nav_home;
 
         } else if (id == R.id.nav_car_washers) {
-            allCarWashersFragment = AllCarWashersFragment.newInstance(currentCityId, userCityId, currentCityName);
+            allCarWashersFragment = AllCarWashersFragment.newInstance(currentCityId, currentCityName);
             fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
             checkedFragmentId = R.id.nav_car_washers;
 

@@ -1,6 +1,7 @@
 package com.marat.apps.android.pro3.MenuSections;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,43 +9,60 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.marat.apps.android.pro3.Adapters.CarWashersAllRecyclerViewAdapter;
+import com.marat.apps.android.pro3.Adapters.CarWashersFavoriteRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
+import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
+import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
 import com.marat.apps.android.pro3.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class FavoriteFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+import okhttp3.Response;
 
-    private Context context;
+public class FavoriteFragment extends Fragment implements RequestResponseListener, SwipeRefreshLayout.OnRefreshListener {
+
+    private static final String TAG = "logtag";
+
+    private static final String FAVORITE_CAR_WASHERS_URL = "https://propropro.herokuapp.com/api/v1/favorites/";
+
     private Cursor cursor;
     private CWStationsDatabase db;
 
+    private UniversalGetRequest getRequest;
+
     private RecyclerView recyclerView;
     private TextView emptyText;
-    private CarWashersAllRecyclerViewAdapter adapter;
     private SwipeRefreshLayout refreshLayout;
+
+    private int userId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_car_washers, container, false);
-        context = getContext();
 
         OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
         listener.onTitleChanged(getString(R.string.title_main_fragment_favorite_stations));
 
         recyclerView = (RecyclerView) v.findViewById(R.id.carWashersRecyclerView);
-        emptyText = (TextView) v.findViewById(R.id.emptyTextView);
+        emptyText = (TextView) v.findViewById(R.id.carWashersEmptyTextView);
 
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
         refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.carWashersSwipeToRefreshLayout);
@@ -52,24 +70,32 @@ public class FavoriteFragment extends Fragment implements SwipeRefreshLayout.OnR
 
         db = new CWStationsDatabase(getContext());
 
-        return v;
-    }
+        getRequest = new UniversalGetRequest(getContext());
+        getRequest.delegate = this;
 
-    @Override
-    public void onResume() {
-        super.onResume();
         setupDataAndViews();
+
+        return v;
     }
 
     private void setupDataAndViews() {
         ArrayList<Integer> cityIds = new ArrayList<>();
 
         db.open();
+        Cursor userCursor = db.getUserInformation();
+        userCursor.moveToFirst();
+        int userCityId = userCursor.getInt(userCursor.getColumnIndex(CWStationsDatabase.KEY_USER_CITY_ID));
+        cityIds.add(userCityId);
         Cursor cityCursor = db.getAllCities();
         for (cityCursor.moveToFirst(); !cityCursor.isAfterLast(); cityCursor.moveToNext()) {
-            cityIds.add(cityCursor.getInt(cityCursor.getColumnIndex(CWStationsDatabase.KEY_CITY_ID)));
+            int cityId = cityCursor.getInt(cityCursor.getColumnIndex(CWStationsDatabase.KEY_CITY_ID));
+            if (cityId != userCityId) {
+                cityIds.add(cityId);
+            }
         }
+        userId = userCursor.getInt(userCursor.getColumnIndex(CWStationsDatabase.KEY_USER_ID));
         cityCursor.close();
+        userCursor.close();
 
         cursor = db.getFavoriteStations(cityIds);
 
@@ -85,12 +111,70 @@ public class FavoriteFragment extends Fragment implements SwipeRefreshLayout.OnR
     }
 
     private void setAdapterToRecyclerView() {
-        if (adapter == null) {
-            adapter = new CarWashersAllRecyclerViewAdapter(cursor, getContext(), db, "FavoriteStations");
-            recyclerView.setAdapter(adapter);
+        CarWashersFavoriteRecyclerViewAdapter adapter = new CarWashersFavoriteRecyclerViewAdapter(cursor, getContext(), db, "FavoriteStations");
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void getFavoriteCarWashesFromServer() {
+        refreshLayout.setRefreshing(true);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("ACCESS_TOKEN", "");
+
+        if (getRequest.isNetworkAvailable()) {
+            getRequest.getFavoriteCarWashersForUserId(FAVORITE_CAR_WASHERS_URL + userId, "Token token=\"" + token + "\"");
         } else {
-            adapter.updateCursor(cursor);
+            Toast.makeText(getContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onFailure(IOException e) {
+        showErrorToast(getString(R.string.error_could_not_load_data));
+        Log.d(TAG, "FavoriteCarWashersFragment: " + "onFailure");
+        e.printStackTrace();
+        stopRefreshImage();
+    }
+
+    @Override
+    public void onResponse(Response response) {
+        String responseMessage = response.message();
+        Log.d(TAG, "FavoriteCarWashersFragment: " + "response message - " + responseMessage);
+
+        if (getString(R.string.server_response_favorite_car_washers_received).equals(responseMessage)) {
+            try {
+                String res = response.body().string();
+                Log.d(TAG, "FavoriteCarWashersFragment: " + "response body - " + res);
+                JSONObject responseObject = new JSONObject(res);
+                JSONArray favoriteCarWashers = responseObject.getJSONArray("favorite_carwashes");
+                saveUpdatedFavoriteCarWashersList(favoriteCarWashers);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showErrorToast(getString(R.string.error_could_not_load_data));
+        }
+        stopRefreshImage();
+    }
+
+    private void saveUpdatedFavoriteCarWashersList(JSONArray favoriteCarWashers) throws JSONException {
+        StoreToDatabaseHelper helper = new StoreToDatabaseHelper(getContext());
+        helper.saveFavoriteCarWashers(favoriteCarWashers);
+    }
+
+    private void showErrorToast(final String message) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    public void onRefresh() {
+        Log.d(TAG, "FavoriteCarWashersFragment: " + "onRefresh");
+        getFavoriteCarWashesFromServer();
     }
 
     private void stopRefreshImage() {
@@ -98,12 +182,21 @@ public class FavoriteFragment extends Fragment implements SwipeRefreshLayout.OnR
             @Override
             public void run() {
                 refreshLayout.setRefreshing(false);
+                setupDataAndViews();
+                Log.d(TAG, "FavoriteCarWashersFragment: " + "information updated");
             }
         });
     }
 
     @Override
-    public void onRefresh() {
-        stopRefreshImage();
+    public void onPause() {
+        getRequest.cancelCall();
+        if (refreshLayout != null) {
+            refreshLayout.setRefreshing(false);
+            refreshLayout.destroyDrawingCache();
+            refreshLayout.clearAnimation();
+        }
+        super.onPause();
+        Log.d(TAG, "FavoriteCarWashersFragment: " + "onPause");
     }
 }

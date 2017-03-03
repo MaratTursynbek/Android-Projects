@@ -18,11 +18,13 @@ public class UniversalGetRequest {
 
     private Context context;
     private Call call;
+    private boolean callerAlive;
 
     public RequestResponseListener delegate = null;
 
     public UniversalGetRequest(Context c) {
         context = c;
+        callerAlive = true;
     }
 
     public void get(String url) {
@@ -58,18 +60,37 @@ public class UniversalGetRequest {
         executeCall();
     }
 
+    public void getFavoriteCarWashersForUserId(String url, String token) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .url(url)
+                .build();
+
+        call = client.newCall(request);
+        executeCall();
+    }
+
     private void executeCall() {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                delegate.onFailure(e);
+                if (callerAlive) {
+                    delegate.onFailure(e);
+                }
             }
 
             @Override
             public void onResponse(Call call, Response response) {
-                delegate.onResponse(response);
+                if (callerAlive) {
+                    delegate.onResponse(response);
+                }
             }
         });
+    }
+
+    public void cancelCall() {
+        callerAlive = false;
     }
 
     public boolean isNetworkAvailable() {

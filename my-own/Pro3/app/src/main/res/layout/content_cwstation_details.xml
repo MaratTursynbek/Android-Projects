@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/contentCWStationDetails"
+    android:id="@+id/CWSDetailsScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -17,7 +17,7 @@
         android:paddingBottom="@dimen/activity_vertical_margin">
 
         <TextView
-            android:id="@+id/chooseCarTextView"
+            android:id="@+id/CWSDetailsChooseCarTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/activity_vertical_margin"
@@ -27,94 +27,132 @@
             android:text="Выберите Машину:" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/carTypesRecyclerView"
+            android:id="@+id/CWSDetailsCarTypesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="115dp"
-            android:layout_below="@+id/chooseCarTextView" />
+            android:layout_below="@+id/CWSDetailsChooseCarTextView" />
 
         <TextView
-            android:id="@+id/chooseServiceTextView"
+            android:id="@+id/CWSDetailsChooseServiceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/carTypesRecyclerView"
-            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:layout_below="@+id/CWSDetailsCarTypesRecyclerView"
+            android:paddingBottom="8dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
             android:text="Сервисы:" />
 
-        <EditText
-            android:id="@+id/chosenServiceEditText"
-            android:layout_width="200dp"
+        <LinearLayout
+            android:id="@+id/CWSDetailsChooseServiceLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/chooseServiceTextView"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_toEndOf="@+id/chooseServiceTextView"
-            android:layout_toRightOf="@+id/chooseServiceTextView" />
+            android:layout_below="@+id/CWSDetailsChooseServiceTextView"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
 
-        <ImageView
-            android:id="@+id/addNewService"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/carTypesRecyclerView"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:src="@drawable/ic_add_circle_outline_black_48dp" />
+            <RelativeLayout
+                android:id="@+id/CWSDetailsService1Layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/servicesLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/chosenServiceEditText"
-            android:layout_alignLeft="@+id/chosenServiceEditText"
-            android:layout_alignRight="@+id/chosenServiceEditText"
-            android:layout_alignStart="@+id/chosenServiceEditText"
-            android:layout_below="@+id/chosenServiceEditText">
+                <TextView
+                    android:id="@+id/CWSDetailsService1TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:text="Кузов"
+                    android:textColor="@android:color/black" />
 
-        </RelativeLayout>
+                <RadioButton
+                    android:id="@+id/CWSDetailsService1RadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginRight="32dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/CWSDetailsService2Layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/CWSDetailsService2TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:text="Кузов + Салон"
+                    android:textColor="@android:color/black" />
+
+                <RadioButton
+                    android:id="@+id/CWSDetailsService2RadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginRight="32dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/CWSDetailsService3Layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/CWSDetailsService3TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:text="Кузов + Салон + Багажник"
+                    android:textColor="@android:color/black" />
+
+                <RadioButton
+                    android:id="@+id/CWSDetailsService3RadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginRight="32dp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/priceTextViewLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/servicesLayout"
+            android:layout_below="@+id/CWSDetailsChooseServiceLayout"
+            android:layout_marginTop="8dp"
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
 
             <TextView
-                android:id="@+id/durationTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ВРЕМЯ:"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/totalDurationTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/durationTextView"
-                android:layout_marginLeft="30dp"
-                android:layout_marginStart="30dp"
-                android:layout_toEndOf="@+id/durationTextView"
-                android:layout_toRightOf="@+id/durationTextView"
-                android:text="26 мин"
-                android:textColor="@android:color/black"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/totalTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/durationTextView"
-                android:layout_marginTop="16dp"
                 android:text="ИТОГО:"
                 android:textStyle="bold" />
 

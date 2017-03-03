@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Activities.CWStationDetailsActivity;
@@ -16,12 +18,11 @@ import com.marat.apps.android.pro3.R;
 
 public class CarWashersFavoriteRecyclerViewAdapter extends RecyclerView.Adapter<CarWashersFavoriteRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "logtag";
-
     private Cursor cursor;
     private Context context;
     private CWStationsDatabase db;
     private String origin = "";
+    private int currentCityId = -1;
 
     public CarWashersFavoriteRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database, String origin) {
         cursor = data;
@@ -37,6 +38,10 @@ public class CarWashersFavoriteRecyclerViewAdapter extends RecyclerView.Adapter<
         private TextView carWashPrice;
         private TextView carWashDistance;
         private ItemClickListener listener;
+        private View cardView;
+        private RelativeLayout parentLayout;
+        private View headerLayout;
+        private TextView header;
 
         ViewHolder(View itemView, ItemClickListener listener) {
             super(itemView);
@@ -44,8 +49,12 @@ public class CarWashersFavoriteRecyclerViewAdapter extends RecyclerView.Adapter<
             carWashAddress = (TextView) itemView.findViewById(R.id.carWashAddressTextView);
             carWashPrice = (TextView) itemView.findViewById(R.id.carWashPriceTextView);
             carWashDistance = (TextView) itemView.findViewById(R.id.carWashDistanceToTextView);
+            cardView = (View) itemView.findViewById(R.id.listItemCarWashCardView);
+            parentLayout = (RelativeLayout) itemView.findViewById(R.id.listItemCarWashParentLayout);
+            headerLayout = (View) itemView.findViewById(R.id.listItemCarWashHeaderLayout);
+            header = (TextView) itemView.findViewById(R.id.listItemCarWashHeaderTextView);
             this.listener = listener;
-            itemView.setOnClickListener(this);
+            cardView.setOnClickListener(this);
         }
 
         @Override
@@ -60,7 +69,7 @@ public class CarWashersFavoriteRecyclerViewAdapter extends RecyclerView.Adapter<
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.list_item_cw_station_card, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.list_item_cw_station_card_header, parent, false);
         return new ViewHolder(v, new ViewHolder.ItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -77,11 +86,25 @@ public class CarWashersFavoriteRecyclerViewAdapter extends RecyclerView.Adapter<
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        Log.d("logtag", "onBindViewHolder: " + position);
         db.open();
         cursor.moveToPosition(position);
         holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_NAME)));
         holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_ADDRESS)));
         holder.carWashPrice.setText("Кузов + Салон от " + cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_EXAMPLE_PRICE)) + " тг.");
+
+        int nextId = cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_CITY_ID));
+        Log.d("logtag", "currentId = " + currentCityId + " and nextId = " + nextId);
+
+        if ( (position == 0) || (currentCityId != cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_CITY_ID)))) {
+            Log.d("logtag", "header is shown");
+            holder.header.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_CITY_NAME)));
+            currentCityId = cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_CITY_ID));
+        } else {
+            Log.d("logtag", "header is deleted");
+            holder.parentLayout.removeView(holder.headerLayout);
+        }
+
         db.close();
     }
 
@@ -95,6 +118,8 @@ public class CarWashersFavoriteRecyclerViewAdapter extends RecyclerView.Adapter<
 
     public void updateCursor(Cursor newCursor) {
         cursor = newCursor;
+        //currentCityId = -1;
         notifyDataSetChanged();
+        Log.d("logtag", "notifyDataSetChanged");
     }
 }

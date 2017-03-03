@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,34 +42,37 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
     private Cursor cursor;
     private CWStationsDatabase db;
 
-    OnToolbarTitleChangeListener listener;
+    private UniversalGetRequest getRequest;
+
+    private OnToolbarTitleChangeListener listener;
 
     private RecyclerView recyclerView;
     private TextView emptyText;
     private CarWashersAllRecyclerViewAdapter adapter;
     private SwipeRefreshLayout refreshLayout;
+    private ProgressBar progressBar;
 
-    int currentCityId = 0;
+    private int currentCityId = 0, downloadedCityId;
 
-    public static AllCarWashersFragment newInstance(int currentCityId, int userCityId, String userCityName) {
+    public static AllCarWashersFragment newInstance(int currentCityId, String currentCityName) {
         AllCarWashersFragment fragment = new AllCarWashersFragment();
         Bundle args = new Bundle();
         args.putInt("current_city_id", currentCityId);
-        args.putInt("user_city_id", userCityId);
-        args.putString("user_city_name", userCityName);
+        args.putString("current_city_name", currentCityName);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "AllCarWashersFragment: " + "onCreateView");
         View v = inflater.inflate(R.layout.fragment_car_washers, container, false);
 
         listener = (OnToolbarTitleChangeListener) getActivity();
 
         recyclerView = (RecyclerView) v.findViewById(R.id.carWashersRecyclerView);
-        emptyText = (TextView) v.findViewById(R.id.emptyTextView);
+        emptyText = (TextView) v.findViewById(R.id.carWashersEmptyTextView);
+        progressBar = (ProgressBar) v.findViewById(R.id.carWashersProgressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
@@ -81,23 +84,32 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
 
         db = new CWStationsDatabase(getContext());
 
-        return v;
-    }
+        getRequest = new UniversalGetRequest(getContext());
+        getRequest.delegate = this;
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "AllCarWashersFragment: " + "onResume");
         currentCityId = getArguments().getInt("current_city_id");
-        int userCityId = getArguments().getInt("user_city_id");
-        listener.onTitleChanged(getString(R.string.title_main_fragment_all_stations_toolbar) + getArguments().getString("user_city_name"));
-        if (currentCityId == userCityId) {
+        setCityOnToolbar(getArguments().getString("current_city_name"));
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
+        downloadedCityId = sharedPreferences.getInt("downloaded_city_id", 0);
+
+        Log.d(TAG, "AllCarWashersFragment: " + " current_city_id = " + currentCityId + " downloaded_city_id = " + downloadedCityId);
+
+        if (currentCityId == downloadedCityId) {
             Log.d(TAG, "AllCarWashersFragment: " + "ids are equal");
             setupDataAndViews();
         } else {
             Log.d(TAG, "AllCarWashersFragment: " + "new data is downloading");
+            db.open();
+            db.deleteAllStations();
+            db.close();
+            recyclerView.setVisibility(View.INVISIBLE);
+            emptyText.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
             getAllCarWashesFromServer();
         }
+
+        return v;
     }
 
     private void setupDataAndViews() {
@@ -107,9 +119,11 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
         if (cursor.getCount() <= 0) {
             recyclerView.setVisibility(View.INVISIBLE);
             emptyText.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyText.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
             setAdapterToRecyclerView();
         }
         db.close();
@@ -125,19 +139,14 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
     }
 
     private void getAllCarWashesFromServer() {
-        refreshLayout.setRefreshing(true);
-        recyclerView.setVisibility(View.INVISIBLE);
-        emptyText.setVisibility(View.INVISIBLE);
-
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("ACCESS_TOKEN", "");
 
-        UniversalGetRequest getRequest = new UniversalGetRequest(getContext());
-        getRequest.delegate = this;
         if (getRequest.isNetworkAvailable()) {
             getRequest.getCarWashersForCityId(ALL_CAR_WASHERS_URL, "Token token=\"" + token + "\"", currentCityId);
         } else {
             Toast.makeText(getContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
+            stopRefreshImage();
         }
     }
 
@@ -155,12 +164,13 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
         Log.d(TAG, "AllCarWashersFragment: " + "response message - " + responseMessage);
 
         if (getString(R.string.server_response_all_car_washers_received).equals(responseMessage)) {
+            downloadedCityId = currentCityId;
             try {
                 String res = response.body().string();
                 Log.d(TAG, "AllCarWashersFragment: " + "response body - " + res);
                 JSONObject responseObject = new JSONObject(res);
                 JSONArray allCarWashers = responseObject.getJSONArray("city_carwashes");
-                saveUpdatedCarWashersList(allCarWashers);
+                saveUpdatedAllCarWashersList(allCarWashers);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
@@ -170,27 +180,22 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
         stopRefreshImage();
     }
 
-    private void saveUpdatedCarWashersList(JSONArray allCarWashers) throws JSONException {
+    private void saveUpdatedAllCarWashersList(JSONArray allCarWashers) throws JSONException {
         StoreToDatabaseHelper helper = new StoreToDatabaseHelper(getContext());
-        helper.saveAllCarWashers(allCarWashers);
+        helper.saveAllCarWashers(allCarWashers, currentCityId);
     }
 
     public void updateDataForCity(int cityId, String cityName) {
         Log.d(TAG, "AllCarWashersFragment: " + "updateDataForCity - " + cityId);
         currentCityId = cityId;
-        listener.onTitleChanged(getString(R.string.title_main_fragment_all_stations_toolbar) + cityName);
+        setCityOnToolbar(cityName);
+        db.open();
+        db.deleteAllStations();
+        db.close();
+        recyclerView.setVisibility(View.INVISIBLE);
+        emptyText.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         getAllCarWashesFromServer();
-    }
-
-    private void stopRefreshImage() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(false);
-                setupDataAndViews();
-                Log.d(TAG, "AllCarWashersFragment: " + "information updated");
-            }
-        });
     }
 
     private void showErrorToast(final String message) {
@@ -202,81 +207,37 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
         });
     }
 
+    private void setCityOnToolbar(final String cityName) {
+        listener.onTitleChanged(getString(R.string.title_main_fragment_all_stations_toolbar) + cityName);
+    }
+
     @Override
     public void onRefresh() {
         Log.d(TAG, "AllCarWashersFragment: " + "onRefresh");
         getAllCarWashesFromServer();
     }
 
-
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////// END /////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.d(TAG, "AllCarWashersFragment: " + "onAttach");
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d(TAG, "AllCarWashersFragment: " + "onCreate");
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "AllCarWashersFragment: " + "onActivityCreated");
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "AllCarWashersFragment: " + "onStart");
+    private void stopRefreshImage() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(false);
+                progressBar.setVisibility(View.INVISIBLE);
+                setupDataAndViews();
+                Log.d(TAG, "AllCarWashersFragment: " + "information updated");
+            }
+        });
     }
 
     @Override
     public void onPause() {
+        getRequest.cancelCall();
+        if (refreshLayout != null) {
+            refreshLayout.setRefreshing(false);
+            refreshLayout.destroyDrawingCache();
+            refreshLayout.clearAnimation();
+        }
         super.onPause();
         Log.d(TAG, "AllCarWashersFragment: " + "onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "AllCarWashersFragment: " + "onStop");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d(TAG, "AllCarWashersFragment: " + "onDestroyView");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "AllCarWashersFragment: " + "onDestroy");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d(TAG, "AllCarWashersFragment: " + "onDetach");
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.d(TAG, "AllCarWashersFragment: " + "onSaveInstanceState");
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        Log.d(TAG, "AllCarWashersFragment: " + "onSaveInstanceState");
     }
 }
