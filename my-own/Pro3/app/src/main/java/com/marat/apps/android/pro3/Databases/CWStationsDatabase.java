@@ -194,7 +194,9 @@ public class CWStationsDatabase {
                     KEY_CAR_WASH_ADDRESS + " TEXT NOT NULL, " +
                     KEY_CAR_WASH_EXAMPLE_PRICE + " INTEGER, " +
                     KEY_CAR_WASH_LONGITUDE + " INTEGER, " +
-                    KEY_CAR_WASH_LATITUDE + " INTEGER);"
+                    KEY_CAR_WASH_LATITUDE + " INTEGER, " +
+                    KEY_CAR_WASH_CITY_ID + " INTEGER, " +
+                    KEY_CAR_WASH_CITY_NAME + " TEXT NOT NULL);"
             );
 
             // FAVORITE STATIONS table
@@ -318,7 +320,7 @@ public class CWStationsDatabase {
     /**
      * adds 1 car washing station to DATABASE_TABLE_6_ALL_STATIONS
      */
-    public long addToAllCarWashingStations(int carWashId, String name, String address, int price, int longitude, int latitude) {
+    public long addToAllCarWashingStations(int carWashId, String name, String address, int price, int longitude, int latitude, int carWashCityId, String carWashCityName) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_CAR_WASH_ID, carWashId);
         cv.put(KEY_CAR_WASH_NAME, name);
@@ -326,6 +328,8 @@ public class CWStationsDatabase {
         cv.put(KEY_CAR_WASH_EXAMPLE_PRICE, price);
         cv.put(KEY_CAR_WASH_LONGITUDE, longitude);
         cv.put(KEY_CAR_WASH_LATITUDE, latitude);
+        cv.put(KEY_CAR_WASH_CITY_ID, carWashCityId);
+        cv.put(KEY_CAR_WASH_CITY_NAME, carWashCityName);
         return database.insert(DATABASE_TABLE_6_ALL_STATIONS, null, cv);
     }
 
@@ -404,28 +408,35 @@ public class CWStationsDatabase {
      * returns Cursor pointing to ALL car washing stations
      */
     public Cursor getAllStations() {
-        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
+        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE, KEY_CAR_WASH_CITY_ID, KEY_CAR_WASH_CITY_NAME};
         return database.query(DATABASE_TABLE_6_ALL_STATIONS, columns, null, null, null, null, null);
     }
 
     /**
      * returns Cursor pointing to FAVORITE car washing stations
      */
-    public Cursor getFavoriteStations1() {
+    public boolean userHasFavoriteStations() {
         String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE, KEY_CAR_WASH_CITY_ID, KEY_CAR_WASH_CITY_NAME};
-        return database.query(DATABASE_TABLE_7_FAVORITE_STATIONS, columns, null, null, KEY_CAR_WASH_CITY_ID, null, null);
+        Cursor c1 = database.query(DATABASE_TABLE_6_ALL_STATIONS, columns, null, null, null, null, null);
+        Cursor c2 = database.query(DATABASE_TABLE_7_FAVORITE_STATIONS, columns, null, null, null, null, null);
+        return ((c1.getCount() > 0) && (c2.getCount() > 0));
     }
 
-    public Cursor getFavoriteStations(ArrayList<Integer> cityId) {
-        String[] columns = new String[]{ROW_ID, KEY_CAR_WASH_ID, KEY_CAR_WASH_NAME, KEY_CAR_WASH_ADDRESS, KEY_CAR_WASH_EXAMPLE_PRICE, KEY_CAR_WASH_LONGITUDE, KEY_CAR_WASH_LATITUDE};
+    public Cursor getFavoriteStations1(ArrayList<Integer> cityId) {
         String query = "";
         for (int i = 0; i < cityId.size(); i++) {
             query = query + "select * from " + DATABASE_TABLE_7_FAVORITE_STATIONS + " where " + KEY_CAR_WASH_CITY_ID + " =  " + cityId.get(i);
-            if ( (i+1) <cityId.size()) {
+            if ((i + 1) < cityId.size()) {
                 query = query + " union all ";
             }
         }
         return database.rawQuery(query, null);
+    }
+
+    public Cursor getFavoriteStations() {
+        return database.rawQuery("select * from " + DATABASE_TABLE_7_FAVORITE_STATIONS + " where " + KEY_CAR_WASH_CITY_ID + "=1 " +
+                "union " +
+                "select * from " + DATABASE_TABLE_7_FAVORITE_STATIONS + " where " + KEY_CAR_WASH_CITY_ID + "!=1 " + "order by " + KEY_CAR_WASH_CITY_ID, null);
     }
 
     /**

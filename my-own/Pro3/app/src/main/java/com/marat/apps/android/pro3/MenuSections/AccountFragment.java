@@ -81,7 +81,9 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         cursor.moveToFirst();
         userId = cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ID));
         userNameTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_NAME)));
-        userPhoneNumberTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_PHONE_NUMBER)));
+        String phoneNumber = cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_PHONE_NUMBER));
+        phoneNumber = "(" + phoneNumber.substring(0, 3) + ") " + phoneNumber.substring(3, 6) + "-" + phoneNumber.substring(6, 8) + "-" + phoneNumber.substring(8);
+        userPhoneNumberTextView.setText(phoneNumber);
         userCarTypeTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_CAR_TYPE_NAME)));
         userCityTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_CITY_NAME)));
         db.close();
@@ -90,6 +92,9 @@ public class AccountFragment extends Fragment implements RequestResponseListener
     private void getUserInfoFromServer() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("ACCESS_TOKEN", "");
+
+        getRequest = new UniversalGetRequest(getContext());
+        getRequest.delegate = this;
 
         if (getRequest.isNetworkAvailable()) {
             getRequest.getUserInfo(GET_USER_URL + userId, "Token token=\"" + token + "\"");
@@ -129,10 +134,9 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         stopRefreshImage();
     }
 
-    private void saveNewUserData(JSONObject userObject) throws JSONException {
+    private void saveNewUserData(JSONObject userObject) {
         StoreToDatabaseHelper helper = new StoreToDatabaseHelper(getContext());
-        boolean successful = helper.saveNewUserData(userObject);
-        if (successful) {
+        if (helper.saveNewUserData(userObject)) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

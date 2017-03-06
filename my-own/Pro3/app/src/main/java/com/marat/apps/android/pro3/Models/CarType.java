@@ -5,6 +5,7 @@ public class CarType {
     private long rowID;
     private int carTypeID;
     private String carTypeName;
+    private int carTypeIconId;
 
     public long getRowID() {
         return rowID;
@@ -28,5 +29,13 @@ public class CarType {
 
     public void setCarTypeName(String carTypeName) {
         this.carTypeName = carTypeName;
+    }
+
+    public int getCarTypeIconId() {
+        return carTypeIconId;
+    }
+
+    public void setCarTypeIconId(int carTypeIconId) {
+        this.carTypeIconId = carTypeIconId;
     }
 }

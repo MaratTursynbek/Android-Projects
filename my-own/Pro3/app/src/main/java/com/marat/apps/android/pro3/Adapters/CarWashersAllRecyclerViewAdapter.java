@@ -23,11 +23,11 @@ public class CarWashersAllRecyclerViewAdapter extends RecyclerView.Adapter<CarWa
     private CWStationsDatabase db;
     private String origin = "";
 
-    public CarWashersAllRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database, String origin) {
+    public CarWashersAllRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database, String org) {
         cursor = data;
         context = c;
         db = database;
-        this.origin = origin;
+        origin = org;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

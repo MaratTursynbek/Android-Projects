@@ -54,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnFocusC
         phoneNumberEditText.setOnEditorActionListener(this);
         registerActivityLayout.setOnTouchListener(this);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(finishActivityReceiver, new IntentFilter("finish__register_activity"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(finishActivityReceiver, new IntentFilter("finish_register_activity"));
     }
 
     @Override

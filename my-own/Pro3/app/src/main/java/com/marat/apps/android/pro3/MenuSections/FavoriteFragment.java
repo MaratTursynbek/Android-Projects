@@ -84,6 +84,8 @@ public class FavoriteFragment extends Fragment implements RequestResponseListene
         db.open();
         Cursor userCursor = db.getUserInformation();
         userCursor.moveToFirst();
+        userId = userCursor.getInt(userCursor.getColumnIndex(CWStationsDatabase.KEY_USER_ID));
+        /*
         int userCityId = userCursor.getInt(userCursor.getColumnIndex(CWStationsDatabase.KEY_USER_CITY_ID));
         cityIds.add(userCityId);
         Cursor cityCursor = db.getAllCities();
@@ -97,11 +99,18 @@ public class FavoriteFragment extends Fragment implements RequestResponseListene
         cityCursor.close();
         userCursor.close();
 
-        cursor = db.getFavoriteStations(cityIds);
+        cursor = db.getFavoriteStations1(cityIds);
+        */
+        cursor = db.getFavoriteStations();
 
         if (cursor.getCount() <= 0) {
             recyclerView.setVisibility(View.INVISIBLE);
             emptyText.setVisibility(View.VISIBLE);
+            if (!db.userHasFavoriteStations()) {
+                emptyText.setText(getString(R.string.text_no_favorite_car_washers));
+            } else {
+                emptyText.setText(getString(R.string.text_no_car_washers));
+            }
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyText.setVisibility(View.INVISIBLE);
@@ -120,6 +129,9 @@ public class FavoriteFragment extends Fragment implements RequestResponseListene
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("ACCESS_TOKEN", "");
+
+        getRequest = new UniversalGetRequest(getContext());
+        getRequest.delegate = this;
 
         if (getRequest.isNetworkAvailable()) {
             getRequest.getFavoriteCarWashersForUserId(FAVORITE_CAR_WASHERS_URL + userId, "Token token=\"" + token + "\"");

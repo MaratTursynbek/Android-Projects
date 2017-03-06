@@ -90,10 +90,11 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
         currentCityId = getArguments().getInt("current_city_id");
         setCityOnToolbar(getArguments().getString("current_city_name"));
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
-        downloadedCityId = sharedPreferences.getInt("downloaded_city_id", 0);
-
-        Log.d(TAG, "AllCarWashersFragment: " + " current_city_id = " + currentCityId + " downloaded_city_id = " + downloadedCityId);
+        db.open();
+        cursor = db.getAllStations();
+        cursor.moveToFirst();
+        downloadedCityId = cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_CITY_ID));
+        db.close();
 
         if (currentCityId == downloadedCityId) {
             Log.d(TAG, "AllCarWashersFragment: " + "ids are equal");
@@ -142,6 +143,9 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("ACCESS_TOKEN", "");
 
+        getRequest = new UniversalGetRequest(getContext());
+        getRequest.delegate = this;
+
         if (getRequest.isNetworkAvailable()) {
             getRequest.getCarWashersForCityId(ALL_CAR_WASHERS_URL, "Token token=\"" + token + "\"", currentCityId);
         } else {
@@ -164,7 +168,6 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
         Log.d(TAG, "AllCarWashersFragment: " + "response message - " + responseMessage);
 
         if (getString(R.string.server_response_all_car_washers_received).equals(responseMessage)) {
-            downloadedCityId = currentCityId;
             try {
                 String res = response.body().string();
                 Log.d(TAG, "AllCarWashersFragment: " + "response body - " + res);
@@ -182,7 +185,7 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
 
     private void saveUpdatedAllCarWashersList(JSONArray allCarWashers) throws JSONException {
         StoreToDatabaseHelper helper = new StoreToDatabaseHelper(getContext());
-        helper.saveAllCarWashers(allCarWashers, currentCityId);
+        helper.saveAllCarWashers(allCarWashers);
     }
 
     public void updateDataForCity(int cityId, String cityName) {

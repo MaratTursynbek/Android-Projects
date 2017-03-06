@@ -70,7 +70,6 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
             getCitiesAndCarTypes();
         } else {
             intent1 = new Intent(this, MainActivity.class);
-            intent1.putExtra("startPage", "Favorites");
             loggedIn = true;
             logInUser();
         }
@@ -88,7 +87,7 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
                 goToNextActivity();
             }
         } else {
-            Log.d(TAG, "SplashScreenActivity: " + "GetCitiesAndCarTypes: " +  "data is OK");
+            Log.d(TAG, "SplashScreenActivity: " + "GetCitiesAndCarTypes: " + "data is OK");
             goToNextActivity();
         }
     }
@@ -106,8 +105,8 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
 
     private String createUserDataInJson() {
         return "{\"user\":{"
-                + "\"phone_number\":"    +   "\""   + phoneNumber    + "\""     + ","
-                + "\"password\":"        +   "\""   + password       + "\""
+                + "\"phone_number\":" + "\"" + phoneNumber + "\"" + ","
+                + "\"password\":" + "\"" + password + "\""
                 + "}}";
     }
 
@@ -135,12 +134,12 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
 
     private void logInResponse(Response response) {
         String responseMessage = response.message();
-        Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  responseMessage);
+        Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " + responseMessage);
 
         if (getString(R.string.server_response_login_successful).equals(responseMessage)) {
             try {
                 String res = response.body().string();
-                Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  res);
+                Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " + res);
 
                 JSONObject result = new JSONObject(res);
                 JSONObject userObject = result.getJSONObject("user");
@@ -148,17 +147,13 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
                 JSONArray carTypes = result.getJSONArray("car_types");        // get car_types array
 
                 if (citiesAndCarTypesDataIsOld()) {
-                    Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " + "data is to be updated");
                     saveCitiesAndCarTypes(cities, carTypes);                  // save two arrays to DB
-                } else {
-                    Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  "data is OK");
                 }
-                Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  "before data save");
                 saveUserData(userObject);
-                Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  "after data save");
-                goToNextActivity();
-                Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " +  "after go to next activity");
-                return;
+                if (isSuccessful) {
+                    goToNextActivity();
+                    return;
+                }
             } catch (IOException | JSONException e) {
                 showErrorToast(getString(R.string.error_could_not_load_data));
                 e.printStackTrace();
@@ -174,12 +169,12 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
 
     private void citiesAndCarTypesResponse(Response response) {
         String responseMessage = response.message();
-        Log.d(TAG, "SplashScreenActivity: " + "citiesAndCarTypesResponse: " +  responseMessage);
+        Log.d(TAG, "SplashScreenActivity: " + "citiesAndCarTypesResponse: " + responseMessage);
 
         if (getString(R.string.server_response_cities_received).equals(responseMessage)) {
             try {
                 String res = response.body().string();
-                Log.d(TAG, "SplashScreenActivity: " + "citiesAndCarTypesResponse: " +  res);
+                Log.d(TAG, "SplashScreenActivity: " + "citiesAndCarTypesResponse: " + res);
                 JSONObject result = new JSONObject(res);
                 JSONArray cities = result.getJSONArray("cities");             // get cities array
                 JSONArray carTypes = result.getJSONArray("car_types");        // get car_types array
@@ -204,7 +199,7 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
     /**
      * saves User Data received from server to SQLite.
      */
-    public void saveUserData(JSONObject userObject) throws JSONException {
+    public void saveUserData(JSONObject userObject) {
         StoreToDatabaseHelper helper = new StoreToDatabaseHelper(this);
         isSuccessful = helper.saveUserLogInData(userObject, password);
     }
@@ -214,8 +209,8 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
      */
     private boolean citiesAndCarTypesDataIsOld() {
         Calendar c = Calendar.getInstance();
-        todaysData = c.get(Calendar.YEAR)      + "-" +   (c.get(Calendar.MONTH) + 1)    + "-" +    c.get(Calendar.DAY_OF_MONTH)   + " " +
-                c.get(Calendar.HOUR_OF_DAY)    + ":" +    c.get(Calendar.MINUTE)        + ":" +    c.get(Calendar.SECOND);
+        todaysData = c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " +
+                c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
 
         CWStationsDatabase db = new CWStationsDatabase(this);
         db.open();
@@ -257,6 +252,14 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
     }
 
     private void goToNextActivity() {
+        CWStationsDatabase db = new CWStationsDatabase(this);
+        db.open();
+        if (db.userHasFavoriteStations()) {
+            intent1.putExtra("startPage", "Favorites");
+        } else {
+            intent1.putExtra("startPage", "AllCarWashers");
+        }
+
         endTime = System.currentTimeMillis();
 
         Log.d(TAG, "SplashScreenActivity: " + "start time = " + startTime + "");

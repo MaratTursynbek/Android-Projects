@@ -3,38 +3,48 @@ package com.marat.apps.android.pro3.Adapters;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.marat.apps.android.pro3.Models.CarType;
 import com.marat.apps.android.pro3.R;
+
+import java.util.ArrayList;
 
 public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRecyclerViewAdapter.ViewHolder> {
 
     private int selectedCar = 0;
-    private ViewHolder selectedViewHolder;
 
-    private int[] carIcons = new int[]{R.drawable.ic_cars_small, R.drawable.ic_cars_sedan, R.drawable.ic_cars_limo, R.drawable.ic_cars_suv, R.drawable.ic_cars_minivan};
-    private String[] carNames = new String[]{"Малолитражка", "Седан", "Премиум", "Внедорожник", "Минивэн"};
+    private ArrayList<CarType> carTypes;
 
     private Context context;
 
-    public CarTypesRecyclerViewAdapter(Context c) {
+    public CarTypesRecyclerViewAdapter(Context c, ArrayList<CarType> data, int userCarTypeId) {
         context = c;
+        carTypes = data;
+        selectedCar = userCarTypeId;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView icon;
         private TextView name;
-        private View item;
+        private ItemClickListener listener;
 
-        ViewHolder(View itemView) {
+        ViewHolder(View itemView, ItemClickListener listener) {
             super(itemView);
-            item = itemView;
             icon = (ImageView) itemView.findViewById(R.id.carTypeImageView);
             name = (TextView) itemView.findViewById(R.id.createAccountCarTypeTextView);
+            this.listener = listener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onItemClick(getAdapterPosition());
         }
 
         interface ItemClickListener {
@@ -45,40 +55,31 @@ public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRe
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.list_item_car_types_card, parent, false);
-        return new ViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        final int pos = position;
-        holder.icon.setImageResource(carIcons[pos]);
-        holder.name.setText(carNames[pos]);
-        if (selectedCar == pos) {
-            setSelected(holder, pos);
-        }
-        holder.item.setOnClickListener(new View.OnClickListener() {
+        return new ViewHolder(v, new ViewHolder.ItemClickListener() {
             @Override
-            public void onClick(View v) {
-                setUnselected();
-                setSelected(holder, pos);
+            public void onItemClick(int position) {
+                selectedCar = carTypes.get(position).getCarTypeID();
+                notifyDataSetChanged();
             }
         });
     }
 
     @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        Log.d("logtag", "onBindViewHolder" + position);
+        holder.icon.setImageResource(carTypes.get(position).getCarTypeIconId());
+        holder.name.setText(carTypes.get(position).getCarTypeName());
+        if (selectedCar == carTypes.get(position).getCarTypeID()) {
+            holder.name.setBackgroundResource(R.drawable.bg_chosen_car_type_text);
+            holder.name.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+        } else {
+            holder.name.setBackgroundResource(0);
+            holder.name.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+        }
+    }
+
+    @Override
     public int getItemCount() {
-        return carNames.length;
-    }
-
-    private void setUnselected() {
-        selectedViewHolder.name.setTextColor(ContextCompat.getColor(context, android.R.color.black));
-        selectedViewHolder.name.setBackgroundResource(0);
-    }
-
-    private void setSelected(ViewHolder holder, int i) {
-        holder.name.setBackgroundResource(R.drawable.bg_chosen_car_type_text);
-        holder.name.setTextColor(ContextCompat.getColor(context, android.R.color.white));
-        selectedCar = i;
-        selectedViewHolder = holder;
+        return carTypes.size();
     }
 }

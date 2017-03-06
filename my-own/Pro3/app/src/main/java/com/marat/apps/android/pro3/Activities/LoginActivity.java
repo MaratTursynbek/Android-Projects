@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
 import com.marat.apps.android.pro3.Models.PhoneTextWatcher;
@@ -31,7 +32,7 @@ import java.io.IOException;
 
 import okhttp3.Response;
 
-public class LoginActivity extends AppCompatActivity implements RequestResponseListener, TextView.OnEditorActionListener, View.OnTouchListener{
+public class LoginActivity extends AppCompatActivity implements RequestResponseListener, TextView.OnEditorActionListener, View.OnTouchListener {
 
     private static final String TAG = "logtag";
 
@@ -111,8 +112,8 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
         String phone = phoneNumberEditText.getText().toString();
         formattedPhoneNumber = phone.substring(1, 4) + phone.substring(6, 9) + phone.substring(10, 12) + phone.substring(13);
         return "{\"user\":{"
-                + "\"phone_number\":"     +   "\""   +   formattedPhoneNumber                     + "\""    + ","
-                + "\"password\":"         +   "\""   +   passwordEditText.getText().toString()    + "\""
+                + "\"phone_number\":" + "\"" + formattedPhoneNumber + "\"" + ","
+                + "\"password\":" + "\"" + passwordEditText.getText().toString() + "\""
                 + "}}";
     }
 
@@ -144,7 +145,13 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
                 Intent finishIntent = new Intent("finish_register_activity");
                 LocalBroadcastManager.getInstance(LoginActivity.this).sendBroadcast(finishIntent);
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("startPage", "Favorites");
+                CWStationsDatabase db = new CWStationsDatabase(this);
+                db.open();
+                if (db.userHasFavoriteStations()) {
+                    intent.putExtra("startPage", "Favorites");
+                } else {
+                    intent.putExtra("startPage", "AllCarWashers");
+                }
                 startActivity(intent);
                 finish();
             }

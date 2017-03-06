@@ -33,6 +33,7 @@
     <string name="text_choose_city">Ваш Город:</string>
     <string name="text_choose_car_type">Тип Вашего Авто:</string>
     <string name="text_no_car_washers">Не удалось загрузить список автомоек</string>
+    <string name="text_no_favorite_car_washers">Список избранных автомоек пуст</string>
     <string name="text_no_my_orders">Не удалось загрузить список ваших заказов</string>
     <string name="text_word_or">или</string>
 
