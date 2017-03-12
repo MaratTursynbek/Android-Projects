@@ -71,6 +71,18 @@ public class UniversalGetRequest {
         executeCall();
     }
 
+    public void getCarWash(String url, String token, int userId) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .addHeader("User", userId + "")
+                .url(url)
+                .build();
+
+        call = client.newCall(request);
+        executeCall();
+    }
+
     private void executeCall() {
         call.enqueue(new Callback() {
             @Override

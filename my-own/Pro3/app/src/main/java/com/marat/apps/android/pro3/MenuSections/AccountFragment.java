@@ -32,7 +32,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
 
     private static final String TAG = "logtag";
 
-    private String GET_USER_URL = "https://propropro.herokuapp.com/api/v1/users/";
+    private static final String GET_USER_URL = "https://propropro.herokuapp.com/api/v1/users/";
     private int userId;
 
     private CWStationsDatabase db;
@@ -100,6 +100,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
             getRequest.getUserInfo(GET_USER_URL + userId, "Token token=\"" + token + "\"");
         } else {
             Toast.makeText(getContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
+            stopRefreshImage();
         }
     }
 
@@ -115,7 +116,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
     public void onResponse(Response response) {
         Log.d(TAG, "AccountFragment: " + "onResponse");
         String responseMessage = response.message();
-        Log.d(TAG, "AccountFragment: " + "GetUserResponse: " + responseMessage);
+        Log.d(TAG, "AccountFragment: " + "GetUserMessage: " + responseMessage);
 
         if (getString(R.string.server_response_user_info_received).equals(responseMessage)) {
             try {

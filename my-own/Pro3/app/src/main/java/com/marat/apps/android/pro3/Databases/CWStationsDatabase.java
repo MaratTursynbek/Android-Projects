@@ -64,7 +64,7 @@ public class CWStationsDatabase {
     /**
      * #4 and #5
      * table columns of:
-     * online SERVICES for all washing stations
+     * ONLINE AND OFFLINE SERVICES for all washing stations
      */
     public static final String KEY_SERVICE_ID = "online_service_id";
     public static final String KEY_SERVICE_NAME = "online_service_name";

@@ -72,8 +72,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="11dp"
                 android:layout_toLeftOf="@+id/carWashDistanceToTextView"
-
                 android:layout_toStartOf="@+id/carWashDistanceToTextView"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="Кузов + Салон от 2500 тг."
                 android:textSize="14sp" />
 
