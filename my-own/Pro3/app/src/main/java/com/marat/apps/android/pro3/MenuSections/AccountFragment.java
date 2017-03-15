@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -16,7 +15,7 @@ import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
-import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
+import com.marat.apps.android.pro3.Interfaces.ToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
 import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
 import com.marat.apps.android.pro3.R;
@@ -58,7 +57,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.fhSwipeToRefreshLayout);
         refreshLayout.setOnRefreshListener(this);
 
-        OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
+        ToolbarTitleChangeListener listener = (ToolbarTitleChangeListener) getActivity();
         listener.onTitleChanged(getString(R.string.title_main_fragment_account));
 
         getRequest = new UniversalGetRequest(getContext());

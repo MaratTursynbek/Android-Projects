@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.marat.apps.android.pro3.Adapters.CarWashersFavoriteRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
-import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
+import com.marat.apps.android.pro3.Interfaces.ToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
 import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
 import com.marat.apps.android.pro3.R;
@@ -54,7 +54,7 @@ public class FavoriteFragment extends Fragment implements RequestResponseListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_car_washers, container, false);
 
-        OnToolbarTitleChangeListener listener = (OnToolbarTitleChangeListener) getActivity();
+        ToolbarTitleChangeListener listener = (ToolbarTitleChangeListener) getActivity();
         listener.onTitleChanged(getString(R.string.title_main_fragment_favorite_stations));
 
         recyclerView = (RecyclerView) v.findViewById(R.id.carWashersRecyclerView);

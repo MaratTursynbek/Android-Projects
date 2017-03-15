@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.DialogCityPickerAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
-import com.marat.apps.android.pro3.Interfaces.CityChosenListener;
+import com.marat.apps.android.pro3.Interfaces.DialogCityChosenListener;
 import com.marat.apps.android.pro3.Models.City;
 import com.marat.apps.android.pro3.R;
 
@@ -26,7 +26,7 @@ public class CityPickerDialog extends DialogFragment {
 
     private ArrayList<City> cities;
     private int chosenCity;
-    private CityChosenListener delegate;
+    private DialogCityChosenListener delegate;
 
     RelativeLayout titleLayout, buttonsLayout;
 
@@ -121,6 +121,6 @@ public class CityPickerDialog extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        delegate = (CityChosenListener) context;
+        delegate = (DialogCityChosenListener) context;
     }
 }

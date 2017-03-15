@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.MenuCityPickerAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
-import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
+import com.marat.apps.android.pro3.Interfaces.ToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.MenuSections.AboutProjectFragment;
 import com.marat.apps.android.pro3.MenuSections.AllCarWashersFragment;
 import com.marat.apps.android.pro3.MenuSections.ContactsFragment;
@@ -40,7 +40,7 @@ import com.marat.apps.android.pro3.R;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnToolbarTitleChangeListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ToolbarTitleChangeListener {
 
     private static final String TAG = "logtag";
 

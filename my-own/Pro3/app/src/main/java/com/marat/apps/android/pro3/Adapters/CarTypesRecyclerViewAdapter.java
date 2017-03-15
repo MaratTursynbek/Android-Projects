@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.marat.apps.android.pro3.Interfaces.ServiceCarTypeChosenListener;
 import com.marat.apps.android.pro3.Models.CarType;
 import com.marat.apps.android.pro3.R;
 
@@ -17,14 +18,17 @@ import java.util.ArrayList;
 
 public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRecyclerViewAdapter.ViewHolder> {
 
-    public int selectedCar = 0;
+    private Context context;
+
+    private ServiceCarTypeChosenListener delegate;
 
     private ArrayList<CarType> carTypes;
 
-    private Context context;
+    public int selectedCar = 0;
 
-    public CarTypesRecyclerViewAdapter(Context c, ArrayList<CarType> data, int userCarTypeId) {
+    public CarTypesRecyclerViewAdapter(Context c, ServiceCarTypeChosenListener listener, ArrayList<CarType> data, int userCarTypeId) {
         context = c;
+        delegate = listener;
         carTypes = data;
         selectedCar = userCarTypeId;
     }
@@ -59,6 +63,7 @@ public class CarTypesRecyclerViewAdapter extends RecyclerView.Adapter<CarTypesRe
             @Override
             public void onItemClick(int position) {
                 selectedCar = carTypes.get(position).getCarTypeID();
+                delegate.onCarTypeChosen();
                 notifyDataSetChanged();
             }
         });

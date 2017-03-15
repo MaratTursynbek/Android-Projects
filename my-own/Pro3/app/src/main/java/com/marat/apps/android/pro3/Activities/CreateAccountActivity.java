@@ -21,8 +21,8 @@ import android.widget.Toast;
 import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Dialogs.CarTypePickerDialog;
 import com.marat.apps.android.pro3.Dialogs.CityPickerDialog;
-import com.marat.apps.android.pro3.Interfaces.CarTypeChosenListener;
-import com.marat.apps.android.pro3.Interfaces.CityChosenListener;
+import com.marat.apps.android.pro3.Interfaces.DialogCarTypeChosenListener;
+import com.marat.apps.android.pro3.Interfaces.DialogCityChosenListener;
 import com.marat.apps.android.pro3.Models.CarType;
 import com.marat.apps.android.pro3.Models.City;
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
@@ -37,7 +37,7 @@ import java.io.IOException;
 
 import okhttp3.Response;
 
-public class CreateAccountActivity extends AppCompatActivity implements RequestResponseListener, CityChosenListener, CarTypeChosenListener, TextView.OnEditorActionListener, View.OnClickListener {
+public class CreateAccountActivity extends AppCompatActivity implements RequestResponseListener, DialogCityChosenListener, DialogCarTypeChosenListener, TextView.OnEditorActionListener, View.OnClickListener {
 
     private static final String TAG = "logtag";
 

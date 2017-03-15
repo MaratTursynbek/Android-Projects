@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.DialogCarTypePickerAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
-import com.marat.apps.android.pro3.Interfaces.CarTypeChosenListener;
+import com.marat.apps.android.pro3.Interfaces.DialogCarTypeChosenListener;
 import com.marat.apps.android.pro3.Models.CarType;
 import com.marat.apps.android.pro3.R;
 
@@ -26,7 +26,7 @@ public class CarTypePickerDialog extends DialogFragment {
 
     private ArrayList<CarType> carTypes;
     private int chosenCarType;
-    private CarTypeChosenListener delegate;
+    private DialogCarTypeChosenListener delegate;
 
     RelativeLayout titleLayout, buttonsLayout;
 
@@ -121,6 +121,6 @@ public class CarTypePickerDialog extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        delegate = (CarTypeChosenListener) context;
+        delegate = (DialogCarTypeChosenListener) context;
     }
 }

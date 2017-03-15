@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.marat.apps.android.pro3.Adapters.CarWashersAllRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
 import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
-import com.marat.apps.android.pro3.Interfaces.OnToolbarTitleChangeListener;
+import com.marat.apps.android.pro3.Interfaces.ToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
 import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
 import com.marat.apps.android.pro3.R;
@@ -44,7 +44,7 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
 
     private UniversalGetRequest getRequest;
 
-    private OnToolbarTitleChangeListener listener;
+    private ToolbarTitleChangeListener listener;
 
     private RecyclerView recyclerView;
     private TextView emptyText;
@@ -67,7 +67,7 @@ public class AllCarWashersFragment extends Fragment implements RequestResponseLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_car_washers, container, false);
 
-        listener = (OnToolbarTitleChangeListener) getActivity();
+        listener = (ToolbarTitleChangeListener) getActivity();
 
         recyclerView = (RecyclerView) v.findViewById(R.id.carWashersRecyclerView);
         emptyText = (TextView) v.findViewById(R.id.carWashersEmptyTextView);

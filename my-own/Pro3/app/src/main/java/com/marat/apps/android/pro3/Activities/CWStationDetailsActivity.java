@@ -24,6 +24,7 @@ import com.marat.apps.android.pro3.Interfaces.RegistrationSuccessfullyFinishedLi
 import com.marat.apps.android.pro3.Interfaces.RegistrationTimeChosenListener;
 import com.marat.apps.android.pro3.Dialogs.DialogFragmentTimetable;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
+import com.marat.apps.android.pro3.Interfaces.ServiceCarTypeChosenListener;
 import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
 import com.marat.apps.android.pro3.Models.CarType;
 import com.marat.apps.android.pro3.Models.CarWashServices;
@@ -42,7 +43,7 @@ import java.util.Comparator;
 import okhttp3.Response;
 
 public class CWStationDetailsActivity extends AppCompatActivity implements
-        RegistrationTimeChosenListener, RegistrationSuccessfullyFinishedListener, RequestResponseListener {
+        RegistrationTimeChosenListener, RegistrationSuccessfullyFinishedListener, RequestResponseListener, ServiceCarTypeChosenListener {
 
     private static final String TAG = "logtag";
 
@@ -56,16 +57,15 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
 
     private DialogFragmentTimetable dialog;
 
+    private ArrayList<CarWashServices> listOfCarWashServices = new ArrayList<>();
     private ArrayList<CarType> listOfCarTypes = new ArrayList<>();
     private CarType userCarType;
     private CarTypesRecyclerViewAdapter adapter;
 
     private UniversalGetRequest getRequest;
 
-    private int userId, userCarTypeId, carWashId;
+    private int userId, userCarTypeId, carWashId, chosenService = -1;
     private String carWashAddress, carWashPhoneNumber;
-
-    private ArrayList<CarWashServices> listOfCarWashServices = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,7 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         layoutManager.scrollToPosition(listOfCarTypes.indexOf(userCarType));
         carTypesRecyclerView.setLayoutManager(layoutManager);
-        adapter = new CarTypesRecyclerViewAdapter(this, listOfCarTypes, userCarTypeId);
+        adapter = new CarTypesRecyclerViewAdapter(this, this, listOfCarTypes, userCarTypeId);
         carTypesRecyclerView.setAdapter(adapter);
     }
 
@@ -210,19 +210,22 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
                 service1RadioButton.setChecked(true);
                 service2RadioButton.setChecked(false);
                 service3RadioButton.setChecked(false);
-                totalPriceTextView.setText(getCheckedServicePrice(0));
+                chosenService = 0;
+                totalPriceTextView.setText(getCheckedServicePrice());
                 break;
             case R.id.CWSDetailsService2Layout:
                 service1RadioButton.setChecked(false);
                 service2RadioButton.setChecked(true);
                 service3RadioButton.setChecked(false);
-                totalPriceTextView.setText(getCheckedServicePrice(1));
+                chosenService = 1;
+                totalPriceTextView.setText(getCheckedServicePrice());
                 break;
             case R.id.CWSDetailsService3Layout:
                 service1RadioButton.setChecked(false);
                 service2RadioButton.setChecked(false);
                 service3RadioButton.setChecked(true);
-                totalPriceTextView.setText(getCheckedServicePrice(2));
+                chosenService = 2;
+                totalPriceTextView.setText(getCheckedServicePrice());
                 break;
             case R.id.CWSDetailsShowOnMapTextView:
                 Intent intent = new Intent(this, LocationOnMapActivity.class);
@@ -231,8 +234,8 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
         }
     }
 
-    private String getCheckedServicePrice(int position) {
-        ArrayList<Service> listOfServices = listOfCarWashServices.get(position).getServices();
+    public String getCheckedServicePrice() {
+        ArrayList<Service> listOfServices = listOfCarWashServices.get(chosenService).getServices();
         String price = "";
         for (int i = 0; i < listOfServices.size(); i++) {
             if (listOfServices.get(i).getCarTypeId() == adapter.selectedCar) {
@@ -241,6 +244,13 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
             }
         }
         return price;
+    }
+
+    @Override
+    public void onCarTypeChosen() {
+        if (chosenService != -1){
+            totalPriceTextView.setText(getCheckedServicePrice());
+        }
     }
 
     @Override
@@ -336,7 +346,12 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
                 service1TextView.setText(listOfCarWashServices.get(0).getServiceName());
                 service2TextView.setText(listOfCarWashServices.get(1).getServiceName());
                 service3TextView.setText(listOfCarWashServices.get(2).getServiceName());
-                carWashPhoneNumberTextView.setText(carWashPhoneNumber);
+                carWashPhoneNumberTextView.setText(
+                        "(" + carWashPhoneNumber.substring(0, 3) + ") " +
+                                carWashPhoneNumber.substring(3, 6) + "-" +
+                                carWashPhoneNumber.substring(6, 8) + "-" +
+                                carWashPhoneNumber.substring(8)
+                );
                 carWashAddressTextView.setText(carWashAddress);
             }
         });
