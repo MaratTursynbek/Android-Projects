@@ -83,6 +83,17 @@ public class UniversalGetRequest {
         executeCall();
     }
 
+    public void getTimetableOfCarWash(String url, String token) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .url(url)
+                .build();
+
+        call = client.newCall(request);
+        executeCall();
+    }
+
     private void executeCall() {
         call.enqueue(new Callback() {
             @Override

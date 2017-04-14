@@ -66,6 +66,7 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
 
     private int userId, userCarTypeId, carWashId, chosenService = -1;
     private String carWashAddress, carWashPhoneNumber;
+    private boolean activityOpenedNow = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,6 +193,10 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
             cardView2.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.GONE);
+            if (activityOpenedNow) {
+                onClick(findViewById(R.id.CWSDetailsService2Layout));
+                activityOpenedNow = false;
+            }
         } else if (visible == 3) {
             cardView1.setVisibility(View.INVISIBLE);
             cardView2.setVisibility(View.INVISIBLE);
@@ -203,7 +208,14 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.CWSDetailsChooseTimeButton:
-                dialog = new DialogFragmentTimetable();
+                if (chosenService == -1) {
+                    Toast.makeText(this, "Сначала Выберите Услугу", Toast.LENGTH_SHORT).show();
+                    break;
+                } else if (chosenService == 0) {
+                    dialog = DialogFragmentTimetable.newInstance(carWashId, 30);
+                } else {
+                    dialog = DialogFragmentTimetable.newInstance(carWashId, 60);
+                }
                 dialog.show(getSupportFragmentManager(), "dialog");
                 break;
             case R.id.CWSDetailsService1Layout:
@@ -248,7 +260,7 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
 
     @Override
     public void onCarTypeChosen() {
-        if (chosenService != -1){
+        if (chosenService != -1) {
             totalPriceTextView.setText(getCheckedServicePrice());
         }
     }
@@ -347,7 +359,7 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
                 service2TextView.setText(listOfCarWashServices.get(1).getServiceName());
                 service3TextView.setText(listOfCarWashServices.get(2).getServiceName());
                 carWashPhoneNumberTextView.setText(
-                        "(" + carWashPhoneNumber.substring(0, 3) + ") " +
+                        "+7 (" + carWashPhoneNumber.substring(0, 3) + ") " +
                                 carWashPhoneNumber.substring(3, 6) + "-" +
                                 carWashPhoneNumber.substring(6, 8) + "-" +
                                 carWashPhoneNumber.substring(8)
@@ -360,6 +372,7 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
     @Override
     public void registrationTimeIsChosen(boolean validOrNot, int boxId) {
         dialog.updateRegistrationValidity(validOrNot, boxId);
+        Log.d(TAG, "CWStationDetailsActivty: " + "registrationTimeIsChosen");
     }
 
     @Override

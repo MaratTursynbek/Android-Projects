@@ -14,10 +14,4 @@
         android:clipToPadding="false"
         android:listSelector="@android:color/transparent" />
 
-    <ProgressBar
-        android:id="@+id/timetableLoadingProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content" />
-
 </RelativeLayout>

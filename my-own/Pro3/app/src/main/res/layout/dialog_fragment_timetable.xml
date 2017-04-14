@@ -5,140 +5,154 @@
     android:layout_height="match_parent"
     tools:context="com.marat.apps.android.pro3.Activities.CWStationDetailsActivity">
 
-    <RelativeLayout
-        android:id="@+id/dialogBoxNumberTextViewLayout"
-        android:layout_width="match_parent"
+    <ProgressBar
+        android:id="@+id/dialogLoadingProgressBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:paddingTop="2dp">
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/dialogBoxNumberTextView"
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
+    <RelativeLayout
+        android:id="@+id/dialogChooseTimeContainerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/dialogBoxNumberTextViewLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:id="@+id/dialogBoxNumberTextView"
+                android:layout_width="100dp"
+                android:layout_height="45dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="Box 1"
+                android:textColor="@android:color/white"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/dialogToLeftArrowImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/dialogBoxNumberTextView"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@+id/dialogBoxNumberTextView"
+                android:layout_toStartOf="@+id/dialogBoxNumberTextView"
+                android:src="@drawable/ic_keyboard_arrow_left_white_36dp" />
+
+            <ImageView
+                android:id="@+id/dialogToRightArrowImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/dialogBoxNumberTextView"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@+id/dialogBoxNumberTextView"
+                android:layout_toRightOf="@+id/dialogBoxNumberTextView"
+                android:src="@drawable/ic_keyboard_arrow_right_white_36dp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/dialogTodayTomorrowTextsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dialogBoxNumberTextViewLayout"
+            android:background="@drawable/bg_timetable_buttons_2"
             android:gravity="center"
-            android:text="Box 1"
-            android:textColor="@android:color/white"
-            android:textSize="19sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/dialogToLeftArrowImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/dialogBoxNumberTextView"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_toLeftOf="@+id/dialogBoxNumberTextView"
-            android:layout_toStartOf="@+id/dialogBoxNumberTextView"
-            android:src="@drawable/ic_keyboard_arrow_left_white_36dp" />
+            <RelativeLayout
+                android:id="@+id/dialogTodayTextViewLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
 
-        <ImageView
-            android:id="@+id/dialogToRightArrowImageView"
-            android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/dialogTodayTimeTextView"
+                    android:layout_width="80dp"
+                    android:layout_height="22dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="Сегодня"
+                    android:textColor="@color/colorPrimary" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/dialogTomorrowTextViewLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/dialogTomorrowTimeTextView"
+                    android:layout_width="70dp"
+                    android:layout_height="22dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="Завтра"
+                    android:textColor="@color/colorPrimary" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/dialogTimeTableContainer"
+            android:layout_width="match_parent"
+            android:layout_height="420dp"
+            android:layout_below="@+id/dialogTodayTomorrowTextsLayout"
+            android:layout_centerHorizontal="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/dialogBoxNumberTextView"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@+id/dialogBoxNumberTextView"
-            android:layout_toRightOf="@+id/dialogBoxNumberTextView"
-            android:src="@drawable/ic_keyboard_arrow_right_white_36dp" />
+            android:layout_below="@+id/dialogTimeTableContainer"
+            android:background="@drawable/bg_timetable_buttons"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dialogCancelRegistrationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                android:text="Отмена"
+                android:textColor="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/dialogRegisterTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                android:text="Зарегистрироваться"
+                android:textColor="@color/colorPrimary" />
+
+        </LinearLayout>
 
     </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/dialogTodayTomorrowTextsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dialogBoxNumberTextViewLayout"
-        android:background="@drawable/bg_timetable_buttons_2"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <RelativeLayout
-            android:id="@+id/dialogTodayTextViewLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/dialogTodayTimeTextView"
-                android:layout_width="80dp"
-                android:layout_height="22dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
-                android:text="Сегодня"
-                android:textColor="@color/colorPrimary" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/dialogTomorrowTextViewLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/dialogTomorrowTimeTextView"
-                android:layout_width="70dp"
-                android:layout_height="22dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
-                android:text="Завтра"
-                android:textColor="@color/colorPrimary" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/dialogTimeTableContainer"
-        android:layout_width="match_parent"
-        android:layout_height="420dp"
-        android:layout_below="@+id/dialogTodayTomorrowTextsLayout"
-        android:layout_centerHorizontal="true" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dialogTimeTableContainer"
-        android:background="@drawable/bg_timetable_buttons"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/dialogCancelRegistrationTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:gravity="center"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
-            android:text="Отмена"
-            android:textColor="@color/colorPrimary" />
-
-        <TextView
-            android:id="@+id/dialogRegisterTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:gravity="center"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
-            android:text="Зарегистрироваться"
-            android:textColor="@color/colorPrimary" />
-
-    </LinearLayout>
 
 </RelativeLayout>

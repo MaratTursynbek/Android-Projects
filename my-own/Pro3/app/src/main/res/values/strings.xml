@@ -57,6 +57,7 @@
     <string name="server_response_user_info_received">OK\u0020</string>
     <string name="server_response_all_car_washers_received">OK\u0020</string>
     <string name="server_response_favorite_car_washers_received">OK\u0020</string>
+    <string name="server_response_car_wash_timetable_received">OK\u0020</string>
     <string name="server_response_user_created">Created\u0020</string>
     <string name="server_response_login_successful">Created\u0020</string>
     <string name="server_response_login_failed">Unauthorized\u0020</string>
