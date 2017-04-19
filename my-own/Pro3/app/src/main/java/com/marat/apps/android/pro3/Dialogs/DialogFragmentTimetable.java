@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,6 +62,11 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
     private boolean registrationTimeIsValid = false;
     private int duration, chosenBoxId;
     private ArrayList<Box> boxes = new ArrayList<>();
+
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSSS");
+
+    private Calendar orderStartTime, slotStartTime;
+    private Calendar orderEndTime, slotEndTime;
 
     public static DialogFragmentTimetable newInstance(int carWashId, int duration) {
         DialogFragmentTimetable dialogFragmentTimetable = new DialogFragmentTimetable();
@@ -227,7 +233,6 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         JSONArray schedulesObjects = carWashObject.getJSONObject("week").getJSONArray("schedules");
         String time = (schedulesObjects.getJSONObject(0).getString(weekDay));
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSSS");
         Calendar c = Calendar.getInstance();
         Calendar cStart = (Calendar) c.clone();
         cStart.set(Calendar.HOUR_OF_DAY, Integer.valueOf(time.substring(0, 2)));
@@ -235,7 +240,7 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         cStart.set(Calendar.SECOND, 0);
         cStart.set(Calendar.MILLISECOND, 0);
 
-        if (cStart.compareTo(c) == -1) {
+        if (c.compareTo(cStart) > 0) {
             if (duration == 30) {
                 if (c.get(Calendar.MINUTE) < 30) {
                     c.set(Calendar.MINUTE, 30);
@@ -265,19 +270,47 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         JSONArray boxesObjects = carWashObject.getJSONObject("tomorrow").getJSONArray("boxes");
 
         for (int i = 0; i < boxesObjects.length(); i++) {
-            Calendar temp = (Calendar) c.clone();
+            slotStartTime = (Calendar) c.clone();
             ArrayList<TimetableRow> timetableRows = new ArrayList<>();
             JSONArray onlineOrders = boxesObjects.getJSONObject(i).getJSONArray("orders");
             JSONArray offlineOrders = boxesObjects.getJSONObject(i).getJSONArray("offorders");
-            for (int j = 0; temp.compareTo(cEnd) == -1; j++) {
-                TimetableRow timetableRow = new TimetableRow();
-                timetableRow.setTime(temp.get(Calendar.HOUR_OF_DAY) + ":" + String.format("%02d", temp.get(Calendar.MINUTE)));
+            int on = 0;
+            int off = 0;
+
+            String startTime1 = "2017-04-19 19:00:00.000000";
+            String endTime1 = "2017-04-19 19:30:00.000000";
+
+            String startTime2 = "2017-04-19 20:00:00.000000";
+            String endTime2 = "2017-04-19 20:40:00.000000";
+
+            TimetableRow timetableRow;
+
+            while (slotStartTime.compareTo(cEnd) < 0) {
+                timetableRow = new TimetableRow();
+                timetableRow.setTime(slotStartTime.get(Calendar.HOUR_OF_DAY) + ":" + String.format("%02d", slotStartTime.get(Calendar.MINUTE)));
                 timetableRow.setAvailable(true);
+
+                if (!slotIsAvailable(startTime1, endTime1)) {
+                    timetableRow.setAvailable(false);
+                }
+                if (slotStartTime.compareTo(orderEndTime) > 0) {
+                    // get next order from array and
+                    // set it to startTime1 and endTime1 Calendar objects
+                }
+
+                if (!slotIsAvailable(startTime2, endTime2)) {
+                    timetableRow.setAvailable(false);
+                }
+                if (slotStartTime.compareTo(orderEndTime) > 0) {
+                    // get next order from array and
+                    // set it to startTime2 and endTime2 Calendar objects
+                }
+
                 timetableRows.add(timetableRow);
                 if (duration == 30) {
-                    temp.add(Calendar.MINUTE, 30);
+                    slotStartTime.add(Calendar.MINUTE, 30);
                 } else {
-                    temp.add(Calendar.HOUR_OF_DAY, 1);
+                    slotStartTime.add(Calendar.HOUR_OF_DAY, 1);
                 }
             }
             Box box = new Box();
@@ -287,6 +320,38 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         }
 
         Log.d(TAG, "ChooseTimeDialog: " + "processing of data is completed");
+    }
+
+    private boolean slotIsAvailable(String startTime, String endTime) {
+        orderStartTime = Calendar.getInstance();
+        orderEndTime = Calendar.getInstance();
+
+        try {
+            orderStartTime.setTime(format.parse(startTime));
+            orderStartTime.set(Calendar.MILLISECOND, 0);
+            orderEndTime.setTime(format.parse(endTime));
+            orderEndTime.set(Calendar.MILLISECOND, 0);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        slotEndTime = (Calendar) slotStartTime.clone();
+        if (duration == 30) {
+            slotEndTime.add(Calendar.MINUTE, 30);
+        } else {
+            slotEndTime.add(Calendar.HOUR_OF_DAY, 1);
+        }
+
+        if (orderStartTime.compareTo(slotStartTime) >= 0 && orderStartTime.compareTo(slotEndTime) < 0) {
+            return false;
+        } else if (orderEndTime.compareTo(slotStartTime) > 0 && orderEndTime.compareTo(slotEndTime) <= 0) {
+            return false;
+        } else if (slotStartTime.compareTo(orderStartTime) > 0 && slotEndTime.compareTo(orderEndTime) <= 0) {
+            return false;
+        }
+
+        return true;
     }
 
     private void showErrorToast(final String message) {

@@ -104,7 +104,7 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
         getCarWashData();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        layoutManager.scrollToPosition(listOfCarTypes.indexOf(userCarType));
+        layoutManager.scrollToPositionWithOffset(listOfCarTypes.indexOf(userCarType), 70);
         carTypesRecyclerView.setLayoutManager(layoutManager);
         adapter = new CarTypesRecyclerViewAdapter(this, this, listOfCarTypes, userCarTypeId);
         carTypesRecyclerView.setAdapter(adapter);
