@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.marat.apps.android.pro3.Activities.CWStationDetailsActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.marat.apps.android.pro3.Activities.CWStationDetailsActivity">
 
     <ProgressBar
         android:id="@+id/dialogLoadingProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/dialogChooseTimeContainerLayout"
@@ -34,7 +34,7 @@
                 android:text="Box 1"
                 android:textColor="@android:color/white"
                 android:textSize="19sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <ImageView
                 android:id="@+id/dialogToLeftArrowImageView"
@@ -46,7 +46,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_toLeftOf="@+id/dialogBoxNumberTextView"
                 android:layout_toStartOf="@+id/dialogBoxNumberTextView"
-                android:src="@drawable/ic_keyboard_arrow_left_white_36dp" />
+                android:src="@drawable/ic_keyboard_arrow_left_white_36dp"/>
 
             <ImageView
                 android:id="@+id/dialogToRightArrowImageView"
@@ -58,7 +58,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_toEndOf="@+id/dialogBoxNumberTextView"
                 android:layout_toRightOf="@+id/dialogBoxNumberTextView"
-                android:src="@drawable/ic_keyboard_arrow_right_white_36dp" />
+                android:src="@drawable/ic_keyboard_arrow_right_white_36dp"/>
 
         </RelativeLayout>
 
@@ -86,7 +86,7 @@
                     android:layout_marginTop="15dp"
                     android:gravity="center"
                     android:text="Сегодня"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/colorPrimary"/>
 
             </RelativeLayout>
 
@@ -105,23 +105,38 @@
                     android:layout_marginTop="15dp"
                     android:gravity="center"
                     android:text="Завтра"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/colorPrimary"/>
 
             </RelativeLayout>
 
         </LinearLayout>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/dialogTimeTableContainer"
+        <RelativeLayout
+            android:id="@+id/dialogTimeTableContainerLayout"
             android:layout_width="match_parent"
             android:layout_height="420dp"
             android:layout_below="@+id/dialogTodayTomorrowTextsLayout"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/dialogTimeTableContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/dialogTimeTableEmptyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/error_could_not_load_data"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/dialogTimeTableContainer"
+            android:layout_below="@+id/dialogTimeTableContainerLayout"
             android:background="@drawable/bg_timetable_buttons"
             android:orientation="horizontal">
 
@@ -136,7 +151,7 @@
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
                 android:text="Отмена"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"/>
 
             <TextView
                 android:id="@+id/dialogRegisterTextView"
@@ -149,7 +164,7 @@
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
                 android:text="Зарегистрироваться"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"/>
 
         </LinearLayout>
 

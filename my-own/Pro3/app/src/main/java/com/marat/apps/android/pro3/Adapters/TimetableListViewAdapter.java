@@ -1,7 +1,6 @@
 package com.marat.apps.android.pro3.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +18,13 @@ public class TimetableListViewAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<TimetableRow> timetable;
     private int[] chosenSlots;
-    private int duration;
 
-    private int startTime;
+    private int startTimePosition;
 
-    public TimetableListViewAdapter(Context c, ArrayList<TimetableRow> data, int d) {
+    public TimetableListViewAdapter(Context c, ArrayList<TimetableRow> data) {
         context = c;
         timetable = data;
         chosenSlots = new int[timetable.size()];
-        duration = d;
     }
 
     public void clearSlots() {
@@ -37,8 +34,12 @@ public class TimetableListViewAdapter extends BaseAdapter {
         }
     }
 
-    public boolean setStartTime(int pos) {
-        startTime = pos;
+    public String getStartTime() {
+        return timetable.get(startTimePosition).getTime();
+    }
+
+    public boolean setStartTimePosition(int pos) {
+        startTimePosition = pos;
         Arrays.fill(chosenSlots, 0);
         calculateDuration();
         notifyDataSetChanged();
@@ -53,8 +54,8 @@ public class TimetableListViewAdapter extends BaseAdapter {
             slotsNeeded++;
         }
 
-        if (timetable.size() >= startTime + slotsNeeded) {
-            for (int i = startTime; i < startTime + slotsNeeded; i++) {
+        if (timetable.size() >= startTimePosition + slotsNeeded) {
+            for (int i = startTimePosition; i < startTimePosition + slotsNeeded; i++) {
                 if (timetable.get(i).isAvailable()) {
                     chosenSlots[i] = 1;
                 } else {
@@ -62,14 +63,14 @@ public class TimetableListViewAdapter extends BaseAdapter {
                 }
             }
         } else {
-            for (int i = startTime; i < timetable.size(); i++) {
+            for (int i = startTimePosition; i < timetable.size(); i++) {
                 chosenSlots[i] = 2;
             }
         }
     }
 
     private boolean checkChosenTimeSlots() {
-        for (int i = startTime; i < chosenSlots.length; i++) {
+        for (int i = startTimePosition; i < chosenSlots.length; i++) {
             if (chosenSlots[i] == 2) {
                 return false;
             }

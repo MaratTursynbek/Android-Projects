@@ -44,6 +44,8 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
     private EditText passwordEditText;
     private ProgressDialog dialog;
 
+    private UniversalPostRequest postRequest;
+
     private boolean isSuccessful = false;
 
     @Override
@@ -59,6 +61,9 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
         phoneNumberEditText.setOnEditorActionListener(this);
         passwordEditText.setOnEditorActionListener(this);
         loginActivityLayout.setOnTouchListener(this);
+
+        postRequest = new UniversalPostRequest(this);
+        postRequest.delegate = this;
     }
 
     @Override
@@ -89,8 +94,6 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
     }
 
     public void logInUser(View v) {
-        UniversalPostRequest postRequest = new UniversalPostRequest(this);
-        postRequest.delegate = this;
         if (postRequest.isNetworkAvailable()) {
             if (phoneNumberIsFullyEntered()) {
                 if (passwordIsEntered()) {
@@ -111,10 +114,12 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
     private String createUserDataInJson() {
         String phone = phoneNumberEditText.getText().toString();
         formattedPhoneNumber = phone.substring(1, 4) + phone.substring(6, 9) + phone.substring(10, 12) + phone.substring(13);
-        return "{\"user\":{"
-                + "\"phone_number\":" + "\"" + formattedPhoneNumber + "\"" + ","
-                + "\"password\":" + "\"" + passwordEditText.getText().toString() + "\""
-                + "}}";
+        return "{\"user\":{" +
+
+                    "\"phone_number\":"      +    "\""    +      formattedPhoneNumber                     +    "\""    +    ","    +
+                    "\"password\":"          +    "\""    +      passwordEditText.getText().toString()    +    "\""    +
+
+                "}}";
     }
 
     @Override
@@ -210,5 +215,12 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
         Intent intent2 = new Intent(this, RestorePasswordActivity.class);
         startActivity(intent2);
         finish();
+    }
+
+    @Override
+    protected void onPause() {
+        postRequest.cancelCall();
+        dialog.dismiss();
+        super.onPause();
     }
 }

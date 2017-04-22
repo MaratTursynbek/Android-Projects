@@ -64,7 +64,7 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
 
     private UniversalGetRequest getRequest;
 
-    private int userId, userCarTypeId, carWashId, chosenService = -1;
+    private int userId, userCarTypeId, carWashId, chosenService = -1, chosenServicePriceId;
     private String carWashAddress, carWashPhoneNumber;
     private boolean activityOpenedNow = true;
 
@@ -171,9 +171,6 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
         SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("ACCESS_TOKEN", "");
 
-        getRequest = new UniversalGetRequest(this);
-        getRequest.delegate = this;
-
         if (getRequest.isNetworkAvailable()) {
             getRequest.getCarWash(GET_CAR_WASH_URL + carWashId, "Token token=\"" + token + "\"", userId);
         } else {
@@ -212,9 +209,9 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
                     Toast.makeText(this, "Сначала Выберите Услугу", Toast.LENGTH_SHORT).show();
                     break;
                 } else if (chosenService == 0) {
-                    dialog = DialogFragmentTimetable.newInstance(carWashId, 30);
+                    dialog = DialogFragmentTimetable.newInstance(carWashId, chosenServicePriceId, 30);
                 } else {
-                    dialog = DialogFragmentTimetable.newInstance(carWashId, 60);
+                    dialog = DialogFragmentTimetable.newInstance(carWashId, chosenServicePriceId, 60);
                 }
                 dialog.show(getSupportFragmentManager(), "dialog");
                 break;
@@ -252,6 +249,7 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
         for (int i = 0; i < listOfServices.size(); i++) {
             if (listOfServices.get(i).getCarTypeId() == adapter.selectedCar) {
                 price = listOfServices.get(i).getServicePrice() + " тг";
+                chosenServicePriceId = listOfServices.get(i).getServicePriceId();
                 break;
             }
         }
@@ -370,8 +368,8 @@ public class CWStationDetailsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void registrationTimeIsChosen(boolean validOrNot, int boxId) {
-        dialog.updateRegistrationValidity(validOrNot, boxId);
+    public void registrationTimeIsChosen(boolean validOrNot, int boxId, String time) {
+        dialog.updateRegistrationValidity(validOrNot, boxId, time);
         Log.d(TAG, "CWStationDetailsActivty: " + "registrationTimeIsChosen");
     }
 

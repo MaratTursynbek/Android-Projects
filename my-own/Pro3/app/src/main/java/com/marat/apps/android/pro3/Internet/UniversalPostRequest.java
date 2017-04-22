@@ -19,11 +19,16 @@ import okhttp3.Response;
 public class UniversalPostRequest {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
     private Context context;
+    private Call call;
+    private boolean callerAlive;
+
     public RequestResponseListener delegate = null;
 
     public UniversalPostRequest(Context c) {
         context = c;
+        callerAlive = true;
     }
 
     public void post(String url, String json) {
@@ -34,18 +39,43 @@ public class UniversalPostRequest {
                 .post(body)
                 .build();
 
-        Call call = client.newCall(request);
+        call = client.newCall(request);
+        executeCall();
+    }
+
+    public void bookTimeSlot(String url, String json, String token) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .url(url)
+                .post(body)
+                .build();
+
+        call = client.newCall(request);
+        executeCall();
+    }
+
+    private void executeCall() {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                delegate.onFailure(e);
+                if (callerAlive) {
+                    delegate.onFailure(e);
+                }
             }
 
             @Override
             public void onResponse(Call call, Response response) {
-                delegate.onResponse(response);
+                if (callerAlive) {
+                    delegate.onResponse(response);
+                }
             }
         });
+    }
+
+    public void cancelCall() {
+        callerAlive = false;
     }
 
     public boolean isNetworkAvailable() {
