@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cwdSwipeToRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.marat.apps.android.pro3.Activities.CarWashDetailsActivity"
+    tools:showIn="@layout/activity_car_wash_details">
+
+    <ScrollView
+        android:id="@+id/cwdContainerScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <ProgressBar
+                android:id="@+id/cwdProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/cwdErrorTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:text="@string/error_could_not_load_data"
+                android:visibility="invisible"/>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cwdCardView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                app:cardElevation="5dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/cwdChooseCarTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/activity_cwd_vertical_margin"
+                        android:text="Выберите Машину:"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/cwdCarTypesRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:layout_below="@+id/cwdChooseCarTextView"
+                        android:background="@color/colorCarTypeCard"/>
+
+                    <TextView
+                        android:id="@+id/cwdChooseServiceTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/cwdCarTypesRecyclerView"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="@dimen/activity_cwd_horizontal_margin"
+                        android:paddingRight="@dimen/activity_cwd_horizontal_margin"
+                        android:paddingTop="@dimen/activity_cwd_vertical_margin"
+                        android:text="Сервисы:"/>
+
+                    <LinearLayout
+                        android:id="@+id/cwdChooseServiceLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/cwdChooseServiceTextView"
+                        android:orientation="vertical"
+                        android:paddingLeft="@dimen/activity_cwd_horizontal_margin"
+                        android:paddingRight="@dimen/activity_cwd_horizontal_margin">
+
+                        <RelativeLayout
+                            android:id="@+id/cwdService1Layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:onClick="onClick">
+
+                            <RadioButton
+                                android:id="@+id/cwdService1RadioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="32dp"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginRight="32dp"
+                                android:layout_marginStart="16dp"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"/>
+
+                            <TextView
+                                android:id="@+id/cwdService1TextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="32dp"
+                                android:layout_marginRight="32dp"
+                                android:layout_toEndOf="@+id/cwdService1RadioButton"
+                                android:layout_toRightOf="@+id/cwdService1RadioButton"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="Кузов"
+                                android:textColor="@android:color/black"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/cwdService2Layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:onClick="onClick">
+
+                            <RadioButton
+                                android:id="@+id/cwdService2RadioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="32dp"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginRight="32dp"
+                                android:layout_marginStart="16dp"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"/>
+
+                            <TextView
+                                android:id="@+id/cwdService2TextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="32dp"
+                                android:layout_marginRight="32dp"
+                                android:layout_toEndOf="@+id/cwdService2RadioButton"
+                                android:layout_toRightOf="@+id/cwdService2RadioButton"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="Кузов + Салон"
+                                android:textColor="@android:color/black"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/cwdService3Layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:onClick="onClick">
+
+                            <RadioButton
+                                android:id="@+id/cwdService3RadioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="32dp"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginRight="32dp"
+                                android:layout_marginStart="16dp"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"/>
+
+                            <TextView
+                                android:id="@+id/cwdService3TextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="32dp"
+                                android:layout_marginRight="32dp"
+                                android:layout_toEndOf="@+id/cwdService3RadioButton"
+                                android:layout_toRightOf="@+id/cwdService3RadioButton"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="Кузов + Салон + Багажник"
+                                android:textColor="@android:color/black"/>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/cwdPriceTextViewLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/cwdChooseServiceLayout"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:padding="@dimen/activity_cwd_horizontal_margin">
+
+                        <TextView
+                            android:id="@+id/cwdTotalTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="22dp"
+                            android:layout_marginStart="22dp"
+                            android:text="ИТОГО:"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/cwdPriceTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignLeft="@+id/cwdTotalTextView"
+                            android:layout_alignStart="@+id/cwdTotalTextView"
+                            android:layout_below="@+id/cwdTotalTextView"
+                            android:layout_marginTop="10dp"
+                            android:text="0 тг"
+                            android:textColor="@android:color/black"
+                            android:textSize="17sp"
+                            android:textStyle="bold"/>
+
+                        <Button
+                            android:id="@+id/cwdChooseTimeButton"
+                            android:layout_width="190dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/cwdPriceTextView"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignTop="@+id/cwdTotalTextView"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginRight="20dp"
+                            android:background="@color/colorButtonBackground"
+                            android:onClick="onClick"
+                            android:text="Выбрать Время"
+                            android:textColor="@android:color/white"/>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cwdCardView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cwdCardView1"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                app:cardElevation="5dp">
+
+                <RelativeLayout
+                    android:id="@+id/cwdCarWashInfoLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cwdChooseTimeButton"
+                    android:padding="@dimen/activity_cwd_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/cwdPhoneImageView"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/ic_phone_black_36dp"/>
+
+                    <TextView
+                        android:id="@+id/cwdPhoneNumberTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_alignBottom="@+id/cwdPhoneImageView"
+                        android:layout_alignTop="@+id/cwdPhoneImageView"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/cwdPhoneImageView"
+                        android:layout_toRightOf="@+id/cwdPhoneImageView"
+                        android:autoLink="phone"
+                        android:gravity="center"
+                        android:text="(701) 888-47-14"/>
+
+                    <ImageView
+                        android:id="@+id/cwdLocationImageView"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignLeft="@+id/cwdPhoneImageView"
+                        android:layout_alignStart="@+id/cwdPhoneImageView"
+                        android:layout_below="@+id/cwdPhoneImageView"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/ic_place_black_36dp"/>
+
+                    <TextView
+                        android:id="@+id/cwdCarWashAddressTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/cwdLocationImageView"
+                        android:layout_alignTop="@+id/cwdLocationImageView"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/cwdLocationImageView"
+                        android:layout_toRightOf="@+id/cwdLocationImageView"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:onClick="showAddressOnMap"
+                        android:text="Адрес автомойки"
+                        android:textColor="@android:color/black"/>
+
+                    <TextView
+                        android:id="@+id/cwdShowOnMapTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/cwdCarWashAddressTextView"
+                        android:layout_alignStart="@+id/cwdCarWashAddressTextView"
+                        android:layout_below="@+id/cwdCarWashAddressTextView"
+                        android:layout_marginTop="5dp"
+                        android:onClick="onClick"
+                        android:text="@string/text_show_in_map"
+                        android:textColor="@android:color/black"/>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</android.support.v4.widget.SwipeRefreshLayout>

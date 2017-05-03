@@ -19,7 +19,7 @@ public class TimetableListViewAdapter extends BaseAdapter {
     private ArrayList<TimetableRow> timetable;
     private int[] chosenSlots;
 
-    private int startTimePosition;
+    private int timeSlotPosition = -1;
 
     public TimetableListViewAdapter(Context c, ArrayList<TimetableRow> data) {
         context = c;
@@ -27,55 +27,25 @@ public class TimetableListViewAdapter extends BaseAdapter {
         chosenSlots = new int[timetable.size()];
     }
 
-    public void clearSlots() {
-        if (chosenSlots != null) {
-            Arrays.fill(chosenSlots, 0);
-            notifyDataSetChanged();
-        }
+    public String getChosenTimeSlot() {
+        return timetable.get(timeSlotPosition).getTime();
     }
 
-    public String getStartTime() {
-        return timetable.get(startTimePosition).getTime();
-    }
-
-    public boolean setStartTimePosition(int pos) {
-        startTimePosition = pos;
+    public boolean setAndCheckTimeSlot(int pos) {
         Arrays.fill(chosenSlots, 0);
-        calculateDuration();
-        notifyDataSetChanged();
-        return checkChosenTimeSlots();
-    }
-
-    private void calculateDuration() {
-        int remaining = 0;
-        int slotsNeeded = 1;
-
-        if (remaining > 0) {
-            slotsNeeded++;
+        if (timeSlotPosition == pos) {
+            timeSlotPosition = -1;
+            notifyDataSetChanged();
+            return false;
         }
-
-        if (timetable.size() >= startTimePosition + slotsNeeded) {
-            for (int i = startTimePosition; i < startTimePosition + slotsNeeded; i++) {
-                if (timetable.get(i).isAvailable()) {
-                    chosenSlots[i] = 1;
-                } else {
-                    chosenSlots[i] = 2;
-                }
-            }
+        timeSlotPosition = pos;
+        if (timetable.get(timeSlotPosition).isAvailable()) {
+            chosenSlots[timeSlotPosition] = 1;
         } else {
-            for (int i = startTimePosition; i < timetable.size(); i++) {
-                chosenSlots[i] = 2;
-            }
+            chosenSlots[timeSlotPosition] = 2;
         }
-    }
-
-    private boolean checkChosenTimeSlots() {
-        for (int i = startTimePosition; i < chosenSlots.length; i++) {
-            if (chosenSlots[i] == 2) {
-                return false;
-            }
-        }
-        return true;
+        notifyDataSetChanged();
+        return timetable.get(timeSlotPosition).isAvailable();
     }
 
     @Override

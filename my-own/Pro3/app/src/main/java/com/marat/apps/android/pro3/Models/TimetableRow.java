@@ -1,12 +1,10 @@
 package com.marat.apps.android.pro3.Models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-public class TimetableRow implements Parcelable {
+public class TimetableRow {
 
     private String time;
-    private boolean available;
+    private int boxId;
+    private boolean available = false;
 
     public String getTime() {
         return time;
@@ -16,42 +14,16 @@ public class TimetableRow implements Parcelable {
         this.time = time;
     }
 
+    public int getBoxId() {
+        return boxId;
+    }
+
+    public void setBoxId(int boxId) {
+        this.boxId = boxId;
+        available = true;
+    }
+
     public boolean isAvailable() {
         return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public TimetableRow() {
-    }
-
-    private TimetableRow(Parcel in) {
-        time = in.readString();
-        available = in.readByte() != 0;
-    }
-
-    public static final Creator<TimetableRow> CREATOR = new Creator<TimetableRow>() {
-        @Override
-        public TimetableRow createFromParcel(Parcel in) {
-            return new TimetableRow(in);
-        }
-
-        @Override
-        public TimetableRow[] newArray(int size) {
-            return new TimetableRow[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(time);
-        dest.writeByte((byte) (available ? 1 : 0));
     }
 }

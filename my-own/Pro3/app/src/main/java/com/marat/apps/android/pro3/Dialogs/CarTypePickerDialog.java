@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.DialogCarTypePickerAdapter;
-import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Databases.CarWashesDatabase;
 import com.marat.apps.android.pro3.Interfaces.DialogCarTypeChosenListener;
 import com.marat.apps.android.pro3.Models.CarType;
 import com.marat.apps.android.pro3.R;
@@ -52,15 +52,15 @@ public class CarTypePickerDialog extends DialogFragment {
 
         carTypes = new ArrayList<>();
 
-        CWStationsDatabase db = new CWStationsDatabase(getActivity());
+        CarWashesDatabase db = new CarWashesDatabase(getActivity());
         db.open();
         Cursor cursor = db.getAllCarTypes();
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             CarType carType = new CarType();
-            carType.setRowID(cursor.getLong(cursor.getColumnIndex(CWStationsDatabase.ROW_ID)));
-            carType.setCarTypeID(cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_TYPE_ID)));
-            carType.setCarTypeName(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_TYPE_NAME)));
+            carType.setRowID(cursor.getLong(cursor.getColumnIndex(CarWashesDatabase.ROW_ID)));
+            carType.setCarTypeID(cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_TYPE_ID)));
+            carType.setCarTypeName(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_TYPE_NAME)));
             carTypes.add(carType);
         }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
@@ -15,7 +16,7 @@
         android:layout_centerInParent="true"
         android:text="@string/app_name"
         android:textColor="@android:color/white"
-        android:textSize="25sp" />
+        android:textSize="25sp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,7 +33,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Astana"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <ImageView
             android:id="@+id/pickerArrow"
@@ -42,7 +43,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp" />
+            android:layout_marginRight="30dp"/>
 
     </RelativeLayout>
 

@@ -10,16 +10,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Activities.OrderDetailsActivity;
-import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Databases.CarWashesDatabase;
 import com.marat.apps.android.pro3.R;
 
 public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecyclerViewAdapter.ViewHolder> {
 
     private Cursor cursor;
     private Context context;
-    private CWStationsDatabase db;
+    private CarWashesDatabase db;
 
-    public OrdersRecyclerViewAdapter(Cursor data, Context c, CWStationsDatabase database) {
+    public OrdersRecyclerViewAdapter(Cursor data, Context c, CarWashesDatabase database) {
         cursor = data;
         context = c;
         db = database;
@@ -65,7 +65,7 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
                 db.open();
                 cursor.moveToPosition(position);
                 Intent intent = new Intent(context, OrderDetailsActivity.class);
-                intent.putExtra("row_id", cursor.getLong(cursor.getColumnIndex(CWStationsDatabase.ROW_ID)));
+                intent.putExtra("row_id", cursor.getLong(cursor.getColumnIndex(CarWashesDatabase.ROW_ID)));
                 db.close();
                 context.startActivity(intent);
             }
@@ -76,12 +76,12 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
     public void onBindViewHolder(ViewHolder holder, int position) {
         db.open();
         cursor.moveToPosition(position);
-        holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_NAME)));
-        holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CAR_WASH_ADDRESS)));
-        holder.orderServices.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_SERVICES)));
-        holder.orderDate.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_DATE)));
-        holder.orderPrice.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_PRICE)) + " тг.");
-        holder.orderStatus.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ORDER_STATUS)));
+        holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_NAME)));
+        holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_ADDRESS)));
+        holder.orderServices.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_USER_ORDER_SERVICES)));
+        holder.orderDate.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_USER_ORDER_DATE)));
+        holder.orderPrice.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_USER_ORDER_PRICE)) + " тг.");
+        holder.orderStatus.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_USER_ORDER_STATUS)));
 
         if ("Активный".equals(holder.orderStatus.getText().toString())) {
             holder.orderStatus.setBackgroundResource(R.drawable.bg_order_status_active);
@@ -99,4 +99,8 @@ public class OrdersRecyclerViewAdapter extends RecyclerView.Adapter<OrdersRecycl
         return count;
     }
 
+    public void updateCursor(Cursor newCursor) {
+        cursor = newCursor;
+        notifyDataSetChanged();
+    }
 }

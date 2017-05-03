@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_order_details"
@@ -20,7 +21,7 @@
         android:layout_alignBaseline="@+id/odStationNameTextView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="Название: " />
+        android:text="Название: "/>
 
     <TextView
         android:id="@+id/odStationNameTextView"
@@ -34,7 +35,7 @@
         android:text="ECA Car Wash"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/odStationAddressTextView1"
@@ -42,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/odStationNameTextView"
         android:layout_marginTop="20dp"
-        android:text="Адрес: " />
+        android:text="Адрес: "/>
 
     <TextView
         android:id="@+id/odStationAddressTextView"
@@ -53,7 +54,7 @@
         android:layout_alignStart="@+id/odStationNameTextView"
         android:ellipsize="end"
         android:text="ТЦ Хан-Шатыр, ул. Туран 50, 0 этаж"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/odOrderDateTextView1"
@@ -61,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/odStationAddressTextView"
         android:layout_marginTop="20dp"
-        android:text="Когда: " />
+        android:text="Когда: "/>
 
     <TextView
         android:id="@+id/odOrderDateTextView"
@@ -73,7 +74,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="02.02.2017"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/odCarTypeTextView1"
@@ -81,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/odOrderDateTextView"
         android:layout_marginTop="20dp"
-        android:text="Машина: " />
+        android:text="Машина: "/>
 
     <TextView
         android:id="@+id/odCarTypeTextView"
@@ -93,7 +94,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Седан"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/odOrderServicesTextView1"
@@ -101,7 +102,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/odCarTypeTextView"
         android:layout_marginTop="20dp"
-        android:text="Услуги: " />
+        android:text="Услуги: "/>
 
     <TextView
         android:id="@+id/odOrderServicesTextView"
@@ -112,7 +113,7 @@
         android:layout_alignStart="@+id/odStationNameTextView"
         android:ellipsize="end"
         android:text="Кузов + Салон + Багажник"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/odPriceTextView1"
@@ -120,7 +121,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/odOrderServicesTextView"
         android:layout_marginTop="20dp"
-        android:text="Цена: " />
+        android:text="Цена: "/>
 
     <TextView
         android:id="@+id/odPriceTextView"
@@ -132,7 +133,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="3500 тг."
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/odStatusTextView1"
@@ -140,7 +141,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/odPriceTextView"
         android:layout_marginTop="20dp"
-        android:text="Статус: " />
+        android:text="Статус: "/>
 
     <TextView
         android:id="@+id/odStatusTextView"
@@ -152,7 +153,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Активный"
-        android:textColor="@android:color/holo_green_dark" />
+        android:textColor="@android:color/holo_green_dark"/>
 
     <Button
         android:id="@+id/odCancelOrderButton"
@@ -162,8 +163,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:background="@color/colorCancelButton"
-        android:onClick="cancelOrder"
         android:text="Отменить Заказ"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"/>
 
 </RelativeLayout>

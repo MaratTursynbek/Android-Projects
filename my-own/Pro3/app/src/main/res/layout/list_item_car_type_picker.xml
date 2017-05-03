@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingBottom="10dp"
@@ -14,7 +15,7 @@
         android:layout_alignLeft="@+id/dialogCarTypePickerRadioButton"
         android:layout_alignRight="@+id/dialogCarTypePickerRadioButton"
         android:layout_alignStart="@+id/dialogCarTypePickerRadioButton"
-        android:layout_alignTop="@+id/dialogCarTypePickerRadioButton" />
+        android:layout_alignTop="@+id/dialogCarTypePickerRadioButton"/>
 
     <RadioButton
         android:id="@+id/dialogCarTypePickerRadioButton"
@@ -24,7 +25,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"/>
 
     <TextView
         android:id="@+id/dialogCarTypePickerTextView"
@@ -37,6 +38,6 @@
         android:layout_toRightOf="@+id/dialogCarTypePickerRadioButton"
         android:text="Седан"
         android:textColor="@android:color/black"
-        android:textSize="17sp" />
+        android:textSize="17sp"/>
 
 </RelativeLayout>

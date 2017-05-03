@@ -17,12 +17,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Databases.CarWashesDatabase;
 import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
 import com.marat.apps.android.pro3.Models.PhoneTextWatcher;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
-import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
+import com.marat.apps.android.pro3.Internet.PostRequest;
 import com.marat.apps.android.pro3.R;
 
 import org.json.JSONException;
@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
     private EditText passwordEditText;
     private ProgressDialog dialog;
 
-    private UniversalPostRequest postRequest;
+    private PostRequest postRequest;
 
     private boolean isSuccessful = false;
 
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
         passwordEditText.setOnEditorActionListener(this);
         loginActivityLayout.setOnTouchListener(this);
 
-        postRequest = new UniversalPostRequest(this);
+        postRequest = new PostRequest(this);
         postRequest.delegate = this;
     }
 
@@ -135,7 +135,7 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
         String responseMessage = response.message();
         Log.d(TAG, "LoginActivity: " + responseMessage);
 
-        if (getString(R.string.server_response_login_successful).equals(responseMessage)) {
+        if (getString(R.string.server_response_created).equals(responseMessage)) {
             try {
                 String res = response.body().string();
                 Log.d(TAG, "LoginActivity: " + res);
@@ -150,17 +150,17 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
                 Intent finishIntent = new Intent("finish_register_activity");
                 LocalBroadcastManager.getInstance(LoginActivity.this).sendBroadcast(finishIntent);
                 Intent intent = new Intent(this, MainActivity.class);
-                CWStationsDatabase db = new CWStationsDatabase(this);
+                CarWashesDatabase db = new CarWashesDatabase(this);
                 db.open();
                 if (db.userHasFavoriteStations()) {
-                    intent.putExtra("startPage", "Favorites");
+                    intent.putExtra("start_page", "favorite_car_washes");
                 } else {
-                    intent.putExtra("startPage", "AllCarWashers");
+                    intent.putExtra("start_page", "all_car_washes");
                 }
                 startActivity(intent);
                 finish();
             }
-        } else if (getString(R.string.server_response_login_failed).equals(responseMessage)) {
+        } else if (getString(R.string.server_response_unauthorized).equals(responseMessage)) {
             showErrorToast(getString(R.string.error_wrong_phone_or_pass));
         } else {
             showErrorToast(getString(R.string.error_could_not_load_data));

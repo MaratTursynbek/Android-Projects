@@ -17,7 +17,7 @@
             android:icon="@drawable/ic_stars_black_36dp"
             android:title="@string/title_main_fragment_favorite_stations" />
         <item
-            android:id="@+id/nav_my_orders"
+            android:id="@+id/nav_user_orders"
             android:icon="@drawable/ic_attach_money_black_36dp"
             android:title="@string/title_main_fragment_user_orders" />
     </group>

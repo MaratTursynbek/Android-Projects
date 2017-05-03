@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/carWashersSwipeToRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -15,7 +16,7 @@
             android:clipToPadding="false"
             android:paddingBottom="50dp"
             android:paddingTop="10dp"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"/>
 
         <TextView
             android:id="@+id/carWashersEmptyTextView"
@@ -23,14 +24,14 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/text_no_car_washers" />
+            android:text="@string/error_could_not_load_data"/>
 
         <ProgressBar
             android:id="@+id/carWashersProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

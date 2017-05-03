@@ -46,6 +46,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnFocusC
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(finishActivityReceiver, new IntentFilter("finish_register_activity"));
+
         registerActivityLayout = findViewById(R.id.registerActivityLayout);
         phoneNumberEditText = (PhoneNumberEditText) findViewById(R.id.registerPhoneNumberEditText);
 
@@ -53,8 +55,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnFocusC
         phoneNumberEditText.setOnFocusChangeListener(this);
         phoneNumberEditText.setOnEditorActionListener(this);
         registerActivityLayout.setOnTouchListener(this);
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(finishActivityReceiver, new IntentFilter("finish_register_activity"));
     }
 
     @Override

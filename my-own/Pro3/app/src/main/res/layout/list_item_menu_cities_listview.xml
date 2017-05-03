@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rowListItemLayout"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -17,6 +18,6 @@
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:text="Shymkent"
-        android:textSize="14sp" />
+        android:textSize="14sp"/>
 
 </RelativeLayout>

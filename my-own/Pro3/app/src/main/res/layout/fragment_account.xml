@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fhSwipeToRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,7 +32,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="5dp"
                     android:text="Имя:"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"/>
 
                 <TextView
                     android:id="@+id/fhNameTextView"
@@ -46,7 +47,7 @@
                     android:layout_toRightOf="@+id/fhNameTextView1"
                     android:text="Николаев Владимир Анатольевич"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"/>
 
                 <ImageView
                     android:id="@+id/fhPhoneImageView"
@@ -54,7 +55,7 @@
                     android:layout_height="30dp"
                     android:layout_below="@+id/fhNameTextView"
                     android:layout_marginTop="23dp"
-                    android:src="@drawable/ic_phone_black_36dp" />
+                    android:src="@drawable/ic_phone_black_36dp"/>
 
                 <TextView
                     android:id="@+id/fhPhoneNumberTextView"
@@ -66,7 +67,7 @@
                     android:layout_marginTop="27dp"
                     android:text="(747) 487-33-88"
                     android:textColor="@android:color/black"
-                    android:textSize="17sp" />
+                    android:textSize="17sp"/>
 
                 <ImageView
                     android:id="@+id/fhCarTypeImageView"
@@ -74,7 +75,7 @@
                     android:layout_height="30dp"
                     android:layout_below="@+id/fhPhoneImageView"
                     android:layout_marginTop="21dp"
-                    android:src="@drawable/ic_directions_car_black_36dp" />
+                    android:src="@drawable/ic_directions_car_black_36dp"/>
 
                 <TextView
                     android:id="@+id/fhCarTypeTextView"
@@ -86,7 +87,7 @@
                     android:layout_marginTop="30dp"
                     android:text="Внедорожник"
                     android:textColor="@android:color/black"
-                    android:textSize="17sp" />
+                    android:textSize="17sp"/>
 
                 <ImageView
                     android:id="@+id/fhCityTypeImageView"
@@ -94,7 +95,7 @@
                     android:layout_height="30dp"
                     android:layout_below="@+id/fhCarTypeTextView"
                     android:layout_marginTop="23dp"
-                    android:src="@drawable/ic_location_city_black_36dp" />
+                    android:src="@drawable/ic_location_city_black_36dp"/>
 
                 <TextView
                     android:id="@+id/fhCityTypeTextView"
@@ -106,7 +107,7 @@
                     android:layout_marginTop="28dp"
                     android:text="Астана"
                     android:textColor="@android:color/black"
-                    android:textSize="17sp" />
+                    android:textSize="17sp"/>
 
             </RelativeLayout>
 

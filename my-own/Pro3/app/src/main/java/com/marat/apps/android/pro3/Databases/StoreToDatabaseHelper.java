@@ -7,6 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class StoreToDatabaseHelper {
 
     private Context context;
@@ -16,7 +20,7 @@ public class StoreToDatabaseHelper {
     }
 
     public boolean saveCitiesAndCarTypes(JSONArray cities, JSONArray carTypes, String todaysData) {
-        CWStationsDatabase db = new CWStationsDatabase(context);
+        CarWashesDatabase db = new CarWashesDatabase(context);
         db.open();
         db.deleteAllCities();
         db.deleteAllCarTypes();
@@ -72,7 +76,7 @@ public class StoreToDatabaseHelper {
         editor.apply();
 
         // preparing Database
-        CWStationsDatabase db = new CWStationsDatabase(context);
+        CarWashesDatabase db = new CarWashesDatabase(context);
         db.open();
         db.deleteUserInformation();
         db.deleteAllStations();
@@ -120,7 +124,7 @@ public class StoreToDatabaseHelper {
     }
 
     public boolean saveAllCarWashers(JSONArray allCarWashers) throws JSONException {
-        CWStationsDatabase db = new CWStationsDatabase(context);
+        CarWashesDatabase db = new CarWashesDatabase(context);
         db.open();
         db.deleteAllStations();
         for (int i = 0; i < allCarWashers.length(); i++) {
@@ -141,12 +145,11 @@ public class StoreToDatabaseHelper {
             );
         }
         db.close();
-
         return true;
     }
 
     public boolean saveFavoriteCarWashers(JSONArray favoriteCarWashers) throws JSONException {
-        CWStationsDatabase db = new CWStationsDatabase(context);
+        CarWashesDatabase db = new CarWashesDatabase(context);
         db.open();
         db.deleteFavoriteStations();
         for (int i = 0; i < favoriteCarWashers.length(); i++) {
@@ -171,14 +174,14 @@ public class StoreToDatabaseHelper {
     }
 
     public boolean saveNewUserData(JSONObject userObject) {
+        CarWashesDatabase db = new CarWashesDatabase(context);
+        db.open();
+        db.deleteUserInformation();
         try {
             JSONObject cityObject = userObject.getJSONObject("city");
             JSONObject carTypeObject = userObject.getJSONObject("car_type");
 
             //saving user data to internal SQLite database
-            CWStationsDatabase db = new CWStationsDatabase(context);
-            db.open();
-            db.deleteUserInformation();
             db.addUserInformation(
                     userObject.getInt("id"),
                     userObject.getString("created_at"),
@@ -189,11 +192,58 @@ public class StoreToDatabaseHelper {
                     carTypeObject.getString("name"),
                     userObject.getString("phone_number")
             );
-            db.close();
-            return true;
         } catch (JSONException e) {
             e.printStackTrace();
+            db.close();
             return false;
         }
+        db.close();
+        return true;
+    }
+
+    public boolean saveUserOrders(JSONArray ordersArray) {
+        CarWashesDatabase db = new CarWashesDatabase(context);
+        db.open();
+        db.deleteMyOrders();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        Calendar date = Calendar.getInstance();
+        String startTime, status = "";
+        try {
+            for (int i = 0; i < ordersArray.length(); i++) {
+                JSONObject order = ordersArray.getJSONObject(i);
+                startTime = order.getString("start_time");
+                date.setTime(sdf1.parse(startTime.substring(0, startTime.length() - 1)));
+                switch (order.getInt("status")) {
+                    case 1:
+                        status = "Активный";
+                        break;
+                    case 2:
+                        status = "Завершен";
+                        break;
+                    case 3:
+                        status = "Отменен Пользователем";
+                        break;
+                    case 4:
+                        status = "Отменен Администратором";
+                        break;
+                }
+                db.addToUserOrders(
+                        order.getInt("id"),
+                        order.getString("carwash_name"),
+                        order.getString("carwash_address"),
+                        order.getString("car_type") + ": " + order.getString("service_name"),
+                        sdf2.format(date.getTime()),
+                        order.getString("price"),
+                        status
+                );
+            }
+        } catch (JSONException | ParseException e) {
+            e.printStackTrace();
+            db.close();
+            return false;
+        }
+        db.close();
+        return true;
     }
 }

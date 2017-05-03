@@ -27,7 +27,7 @@ import com.marat.apps.android.pro3.Models.CarType;
 import com.marat.apps.android.pro3.Models.City;
 import com.marat.apps.android.pro3.Models.PhoneNumberEditText;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
-import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
+import com.marat.apps.android.pro3.Internet.PostRequest;
 import com.marat.apps.android.pro3.R;
 
 import org.json.JSONException;
@@ -142,7 +142,7 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
     }
 
     public void registerUser(View v) {
-        UniversalPostRequest postRequest = new UniversalPostRequest(this);
+        PostRequest postRequest = new PostRequest(this);
         postRequest.delegate = this;
         if (postRequest.isNetworkAvailable()) {
             if (userNameIsEntered()) {
@@ -199,7 +199,7 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
         String responseMessage = response.message();
         Log.d(TAG, "CreateAccountActivity: " + "response message - " + responseMessage);
 
-        if (getString(R.string.server_response_user_created).equals(responseMessage)) {
+        if (getString(R.string.server_response_created).equals(responseMessage)) {
             try {
                 String res = response.body().string();
                 Log.d(TAG, "CreateAccountActivity: " + "response body - " + res);
@@ -223,7 +223,7 @@ public class CreateAccountActivity extends AppCompatActivity implements RequestR
     }
 
     private boolean userNameIsEntered() {
-        return (userNameEditText.length() >= 3);
+        return (userNameEditText.length() >= 3 && userNameEditText.length() <= 50);
     }
 
     private boolean passwordIsEntered() {

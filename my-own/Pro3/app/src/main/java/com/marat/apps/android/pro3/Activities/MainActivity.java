@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -27,14 +26,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.MenuCityPickerAdapter;
-import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Databases.CarWashesDatabase;
 import com.marat.apps.android.pro3.Interfaces.ToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.MenuSections.AboutProjectFragment;
-import com.marat.apps.android.pro3.MenuSections.AllCarWashersFragment;
+import com.marat.apps.android.pro3.MenuSections.AllCarWashesFragment;
 import com.marat.apps.android.pro3.MenuSections.ContactsFragment;
-import com.marat.apps.android.pro3.MenuSections.FavoriteFragment;
+import com.marat.apps.android.pro3.MenuSections.FavoriteCarWashesFragment;
 import com.marat.apps.android.pro3.MenuSections.AccountFragment;
-import com.marat.apps.android.pro3.MenuSections.MyOrdersFragment;
+import com.marat.apps.android.pro3.MenuSections.UserOrdersFragment;
 import com.marat.apps.android.pro3.Models.City;
 import com.marat.apps.android.pro3.R;
 
@@ -42,14 +41,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ToolbarTitleChangeListener {
 
-    private static final String TAG = "logtag";
+    private static final String TAG = "MainActivity";
 
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private AccountFragment accountFragment;
-    private AllCarWashersFragment allCarWashersFragment;
-    private FavoriteFragment favoriteFragment;
-    private MyOrdersFragment myOrdersFragment;
+    private AllCarWashesFragment allCarWashesFragment;
+    private FavoriteCarWashesFragment favoriteCarWashesFragment;
+    private UserOrdersFragment userOrdersFragment;
 
     private NavigationView navigationView;
     private TextView cityPickerTextView;
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        Log.v(TAG, "MainActivity: " + "onBackPressed");
+        Log.v(TAG, "onBackPressed");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "MainActivity: " + "onCreate");
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -102,13 +101,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                Log.d(TAG, "MainActivity: " + "onDrawerClosed");
+                Log.d(TAG, "onDrawerClosed");
                 if (isPickerShown) {
                     toggleMenu();
                 }
                 if (currentCityChanged) {
                     if (checkedFragmentId == R.id.nav_car_washers) {
-                        allCarWashersFragment.updateDataForCity(currentCityId, currentCityName);
+                        allCarWashesFragment.updateDataForCity(currentCityId, currentCityName);
                     }
                     currentCityChanged = false;
                 }
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         cityPickerTextView = (TextView) headerView.findViewById(R.id.cityPicker);
         pickerArrow = (ImageView) headerView.findViewById(R.id.pickerArrow);
 
-        downloadCitiesAndUserInfo();
+        getCitiesAndUserInfo();
         setUpStartingPage();
         setUpCitiesMenuList();
     }
@@ -134,39 +133,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
 
-        String startPage = getIntent().getExtras().getString("startPage");
-        Log.d(TAG, "MainActivity: " + "start Page is - " + startPage);
+        String startPage = getIntent().getExtras().getString("start_page");
+        Log.d(TAG, "start page is - " + startPage);
 
-        if ("AllCarWashers".equals(startPage)) {
-            allCarWashersFragment = AllCarWashersFragment.newInstance(currentCityId, currentCityName);
-            fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
+        if ("all_car_washes".equals(startPage)) {
+            allCarWashesFragment = AllCarWashesFragment.newInstance(currentCityId, currentCityName);
+            fragmentTransaction.replace(R.id.fragment_container, allCarWashesFragment);
             checkedFragmentId = R.id.nav_car_washers;
-        } else if ("Favorites".equals(startPage)) {
-            favoriteFragment = new FavoriteFragment();
-            fragmentTransaction.add(R.id.fragment_container, favoriteFragment);
+        } else if ("favorite_car_washes".equals(startPage)) {
+            favoriteCarWashesFragment = new FavoriteCarWashesFragment();
+            fragmentTransaction.add(R.id.fragment_container, favoriteCarWashesFragment);
             checkedFragmentId = R.id.nav_favorites;
-        } else if ("MyOrders".equals(startPage)) {
-            myOrdersFragment = new MyOrdersFragment();
-            fragmentTransaction.add(R.id.fragment_container, myOrdersFragment);
-            checkedFragmentId = R.id.nav_my_orders;
+        } else if ("user_orders".equals(startPage)) {
+            userOrdersFragment = new UserOrdersFragment();
+            fragmentTransaction.add(R.id.fragment_container, userOrdersFragment);
+            checkedFragmentId = R.id.nav_user_orders;
         }
         fragmentTransaction.commit();
     }
 
-    private void downloadCitiesAndUserInfo() {
-        CWStationsDatabase db = new CWStationsDatabase(this);
+    private void getCitiesAndUserInfo() {
+        CarWashesDatabase db = new CarWashesDatabase(this);
         db.open();
         Cursor cursorCities = db.getAllCities();
         Cursor cursorUser = db.getUserInformation();
 
         cursorUser.moveToFirst();
-        int downloadedCityId = cursorUser.getInt(cursorUser.getColumnIndex(CWStationsDatabase.KEY_USER_CITY_ID));
+        int downloadedCityId = cursorUser.getInt(cursorUser.getColumnIndex(CarWashesDatabase.KEY_USER_CITY_ID));
 
         for (cursorCities.moveToFirst(); !cursorCities.isAfterLast(); cursorCities.moveToNext()) {
             City city = new City();
-            city.setRowID(cursorCities.getLong(cursorCities.getColumnIndex(CWStationsDatabase.ROW_ID)));
-            city.setCityID(cursorCities.getInt(cursorCities.getColumnIndex(CWStationsDatabase.KEY_CITY_ID)));
-            city.setCityName(cursorCities.getString(cursorCities.getColumnIndex(CWStationsDatabase.KEY_CITY_NAME)));
+            city.setRowID(cursorCities.getLong(cursorCities.getColumnIndex(CarWashesDatabase.ROW_ID)));
+            city.setCityID(cursorCities.getInt(cursorCities.getColumnIndex(CarWashesDatabase.KEY_CITY_ID)));
+            city.setCityName(cursorCities.getString(cursorCities.getColumnIndex(CarWashesDatabase.KEY_CITY_NAME)));
             cities.add(city);
             if (city.getCityID() == downloadedCityId) {
                 currentCityId = city.getCityID();
@@ -230,7 +229,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onTitleChanged(String title) {
         if (title != null) {
-            getSupportActionBar().setTitle(title);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(title);
+            }
         }
     }
 
@@ -256,19 +257,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             checkedFragmentId = R.id.nav_home;
 
         } else if (id == R.id.nav_car_washers) {
-            allCarWashersFragment = AllCarWashersFragment.newInstance(currentCityId, currentCityName);
-            fragmentTransaction.replace(R.id.fragment_container, allCarWashersFragment);
+            allCarWashesFragment = AllCarWashesFragment.newInstance(currentCityId, currentCityName);
+            fragmentTransaction.replace(R.id.fragment_container, allCarWashesFragment);
             checkedFragmentId = R.id.nav_car_washers;
 
         } else if (id == R.id.nav_favorites) {
-            favoriteFragment = new FavoriteFragment();
-            fragmentTransaction.replace(R.id.fragment_container, favoriteFragment);
+            favoriteCarWashesFragment = new FavoriteCarWashesFragment();
+            fragmentTransaction.replace(R.id.fragment_container, favoriteCarWashesFragment);
             checkedFragmentId = R.id.nav_favorites;
 
-        } else if (id == R.id.nav_my_orders) {
-            myOrdersFragment = new MyOrdersFragment();
-            fragmentTransaction.replace(R.id.fragment_container, myOrdersFragment);
-            checkedFragmentId = R.id.nav_my_orders;
+        } else if (id == R.id.nav_user_orders) {
+            userOrdersFragment = new UserOrdersFragment();
+            fragmentTransaction.replace(R.id.fragment_container, userOrdersFragment);
+            checkedFragmentId = R.id.nav_user_orders;
 
         } else if (id == R.id.nav_contacts) {
             ContactsFragment contactsFragment = new ContactsFragment();
@@ -296,65 +297,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "MainActivity: " + "onStart");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d(TAG, "MainActivity: " + "onRestart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "MainActivity: " + "onResume");
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Log.d(TAG, "MainActivity: " + "onPostResume");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "MainActivity: " + "onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "MainActivity: " + "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.v(TAG, "MainActivity: " + "onDestroy");
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.v(TAG, "MainActivity: " + "onSaveInstanceState");
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Log.v(TAG, "MainActivity: " + "onRestoreInstanceState");
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState);
-        Log.v(TAG, "MainActivity: " + "onRestoreInstanceState 2");
     }
 }

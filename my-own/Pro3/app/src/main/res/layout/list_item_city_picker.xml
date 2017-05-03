@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingBottom="10dp"
@@ -14,7 +15,7 @@
         android:layout_alignLeft="@+id/dialogCityPickerRadioButton"
         android:layout_alignRight="@+id/dialogCityPickerRadioButton"
         android:layout_alignStart="@+id/dialogCityPickerRadioButton"
-        android:layout_alignTop="@+id/dialogCityPickerRadioButton" />
+        android:layout_alignTop="@+id/dialogCityPickerRadioButton"/>
 
     <RadioButton
         android:id="@+id/dialogCityPickerRadioButton"
@@ -24,7 +25,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"/>
 
     <TextView
         android:id="@+id/dialogCityPickerTextView"
@@ -37,6 +38,6 @@
         android:layout_toRightOf="@+id/dialogCityPickerRadioButton"
         android:text="Астана"
         android:textColor="@android:color/black"
-        android:textSize="17sp" />
+        android:textSize="17sp"/>
 
 </RelativeLayout>

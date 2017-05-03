@@ -6,7 +6,7 @@
     <string name="title_activity_login">Войти</string>
     <string name="title_activity_create_account">Регистрация</string>
     <string name="title_activity_restore_password">Восстановление Пароля</string>
-    <string name="title_activity_cwstation_details">Выбранная Автомойка</string>
+    <string name="title_activity_car_wash_details">Выбранная Автомойка</string>
     <string name="title_activity_order_details">Выбранный Заказ</string>
     <string name="title_activity_location_on_map">Адрес на Карте</string>
 
@@ -19,7 +19,7 @@
     <string name="title_main_fragment_about_project">О Проекте</string>
     <string name="title_main_fragment_logout">Выйти</string>
 
-    <string name="hint_new_phone_number">Номер телефона в формате: (XXX) XXX-XX-XX</string>
+    <string name="hint_new_phone_number">Номер телефона: (XXX) XXX-XX-XX</string>
     <string name="hint_phone_number">(XXX) XXX-XX-XX</string>
     <string name="hint_password">Пароль</string>
     <string name="hint_new_user_name">Ваше Имя</string>
@@ -33,9 +33,10 @@
     <string name="text_create_account">Создать Аккаунт</string>
     <string name="text_choose_city">Ваш Город:</string>
     <string name="text_choose_car_type">Тип Вашего Авто:</string>
-    <string name="text_no_car_washers">Не удалось загрузить список автомоек</string>
-    <string name="text_no_favorite_car_washers">Список избранных автомоек пуст</string>
-    <string name="text_no_my_orders">Не удалось загрузить список ваших заказов</string>
+    <string name="text_no_favorite_car_washes">Список избранных автомоек пуст</string>
+    <string name="text_no_my_orders">У Вас еще нет заказов</string>
+    <string name="text_no_time_slots_for_today">На сегодня больше не возможно забронировать</string>
+    <string name="text_no_time_slots_for_tomorrow">На завтра бронировать пока что не возможно</string>
     <string name="text_word_or">или</string>
     <string name="text_show_in_map"><u>Показать на Карте</u></string>
 
@@ -53,17 +54,17 @@
     <string name="error_could_not_create_user">Не удалось создать пользователя</string>
     <string name="error_wrong_phone_or_pass">Неверный Логин или Пароль</string>
 
-    <string name="server_response_cities_received">OK\u0020</string>
-    <string name="server_response_user_info_received">OK\u0020</string>
-    <string name="server_response_all_car_washers_received">OK\u0020</string>
-    <string name="server_response_favorite_car_washers_received">OK\u0020</string>
-    <string name="server_response_car_wash_timetable_received">OK\u0020</string>
-    <string name="server_response_user_created">Created\u0020</string>
-    <string name="server_response_login_successful">Created\u0020</string>
-    <string name="server_response_login_failed">Unauthorized\u0020</string>
+    <string name="server_response_ok">OK\u0020</string>
+    <string name="server_response_created">Created\u0020</string>
+    <string name="server_response_unauthorized">Unauthorized\u0020</string>
 
     <string name="dialog_choose_city">Выберите Город</string>
     <string name="dialog_choose_car_type">Выберите Тип Авто</string>
-    <string name="dialog_ok_button">OK</string>
-    <string name="dialog_cancel_button">ОТМЕНА</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel_1">ОТМЕНА</string>
+
+    <string name="dialog_button_today">Сегодня</string>
+    <string name="dialog_button_tomorrow">Завтра</string>
+    <string name="dialog_button_cancel_2">Отмена</string>
+    <string name="dialog_button_book">Забронировать</string>
 </resources>

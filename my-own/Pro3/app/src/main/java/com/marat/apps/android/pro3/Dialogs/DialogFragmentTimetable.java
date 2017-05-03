@@ -4,28 +4,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.marat.apps.android.pro3.Interfaces.RegistrationSuccessfullyFinishedListener;
+import com.marat.apps.android.pro3.Activities.MainActivity;
+import com.marat.apps.android.pro3.Adapters.TimetableListViewAdapter;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
-import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
-import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
-import com.marat.apps.android.pro3.Models.Box;
+import com.marat.apps.android.pro3.Internet.GetRequest;
+import com.marat.apps.android.pro3.Internet.PostRequest;
 import com.marat.apps.android.pro3.Models.TimetableRow;
 import com.marat.apps.android.pro3.R;
 
@@ -38,31 +36,28 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
 import okhttp3.Response;
 
-public class DialogFragmentTimetable extends DialogFragment implements View.OnClickListener, RequestResponseListener {
+public class DialogFragmentTimetable extends DialogFragment implements View.OnClickListener, RequestResponseListener, AdapterView.OnItemClickListener {
 
     private static final String TAG = "logtag";
 
-    private static final String CAR_WASH_SCHEDULES_URL = "https://propropro.herokuapp.com/api/v1/schedules/";
+    private static final String GET_CAR_WASH_SCHEDULES_URL = "https://propropro.herokuapp.com/api/v1/schedules/";
+    private static final String BOOK_TIME_SLOT_URL = "https://propropro.herokuapp.com/api/v1/orders/";
 
-    private ViewPager viewPager;
-    private TextView boxNumberTextView, cancelTextView, registerTextView, todayTextView, tomorrowTextView, emptyTextView;
-    private ImageView toLeftImageView, toRightImageView;
-    private RelativeLayout todayTextViewLayout, tomorrowTextViewLayout, containerLayout;
+    private ListView timetableListView;
+    private TextView todayTextView, tomorrowTextView, errorTextView, emptyTextView;
+    private RelativeLayout containerLayout;
     private ProgressBar progressBar;
+    private View containerView;
 
-    private BoxesPagerAdapter adapter;
+    private TimetableListViewAdapter adapter;
 
-    private RegistrationSuccessfullyFinishedListener regFinDelegate;
-
-    private UniversalGetRequest getRequest;
-    private UniversalPostRequest postRequest;
+    private GetRequest getRequest;
+    private PostRequest postRequest;
 
     private boolean timetableForToday = true;
     private boolean requestIsGet = false;
@@ -71,8 +66,8 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
     private String weekDay = "";
     private String chosenTime = "";
 
-    private ArrayList<Box> boxesForToday = new ArrayList<>();
-    private ArrayList<Box> boxesForTomorrow = new ArrayList<>();
+    private ArrayList<TimetableRow> timetableRowsForToday = new ArrayList<>();
+    private ArrayList<TimetableRow> timetableRowsForTomorrow = new ArrayList<>();
 
     private SimpleDateFormat sdfForSending = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSSS");
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -93,38 +88,36 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.dialog_fragment_timetable, container, false);
+        containerView = inflater.inflate(R.layout.dialog_fragment_timetable, container, false);
 
-        viewPager = (ViewPager) v.findViewById(R.id.dialogTimeTableContainer);
-        boxNumberTextView = (TextView) v.findViewById(R.id.dialogBoxNumberTextView);
-        cancelTextView = (TextView) v.findViewById(R.id.dialogCancelRegistrationTextView);
-        registerTextView = (TextView) v.findViewById(R.id.dialogRegisterTextView);
-        todayTextView = (TextView) v.findViewById(R.id.dialogTodayTimeTextView);
-        tomorrowTextView = (TextView) v.findViewById(R.id.dialogTomorrowTimeTextView);
-        emptyTextView = (TextView) v.findViewById(R.id.dialogTimeTableEmptyTextView);
-        toLeftImageView = (ImageView) v.findViewById(R.id.dialogToLeftArrowImageView);
-        toRightImageView = (ImageView) v.findViewById(R.id.dialogToRightArrowImageView);
-        todayTextViewLayout = (RelativeLayout) v.findViewById(R.id.dialogTodayTextViewLayout);
-        tomorrowTextViewLayout = (RelativeLayout) v.findViewById(R.id.dialogTomorrowTextViewLayout);
-        containerLayout = (RelativeLayout) v.findViewById(R.id.dialogChooseTimeContainerLayout);
-        progressBar = (ProgressBar) v.findViewById(R.id.dialogLoadingProgressBar);
+        timetableListView = (ListView) containerView.findViewById(R.id.dialogTimetableListView);
+        todayTextView = (TextView) containerView.findViewById(R.id.dialogTimetableTodayTimeTextView);
+        tomorrowTextView = (TextView) containerView.findViewById(R.id.dialogTimetableTomorrowTimeTextView);
+        containerLayout = (RelativeLayout) containerView.findViewById(R.id.dialogTimetableChooseTimeContainerLayout);
+        progressBar = (ProgressBar) containerView.findViewById(R.id.dialogTimetableLoadingProgressBar);
+        errorTextView = (TextView) containerView.findViewById(R.id.dialogTimetableErrorTextView);
+        emptyTextView = (TextView) containerView.findViewById(R.id.dialogTimetableEmptyTextView);
+
+        TextView cancelTextView = (TextView) containerView.findViewById(R.id.dialogTimetableCancelRegistrationTextView);
+        TextView registerTextView = (TextView) containerView.findViewById(R.id.dialogTimetableRegisterTextView);
+        RelativeLayout todayTextViewLayout = (RelativeLayout) containerView.findViewById(R.id.dialogTimetableTodayTextViewLayout);
+        RelativeLayout tomorrowTextViewLayout = (RelativeLayout) containerView.findViewById(R.id.dialogTimetableTomorrowTextViewLayout);
 
         cancelTextView.setOnClickListener(this);
         registerTextView.setOnClickListener(this);
         todayTextViewLayout.setOnClickListener(this);
         tomorrowTextViewLayout.setOnClickListener(this);
-        toLeftImageView.setOnClickListener(this);
-        toRightImageView.setOnClickListener(this);
 
         todayTextViewLayout.bringToFront();
         tomorrowTextViewLayout.bringToFront();
 
+        // initial setup
         toggleButtonsBackground(todayTextView, tomorrowTextView);
 
-        getRequest = new UniversalGetRequest(getContext());
+        getRequest = new GetRequest(getContext());
         getRequest.delegate = this;
 
-        postRequest = new UniversalPostRequest(getContext());
+        postRequest = new PostRequest(getContext());
         postRequest.delegate = this;
 
         sdfWeek = new SimpleDateFormat("EEEE", Locale.US);
@@ -132,7 +125,7 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         weekDay = (sdfWeek.format(d)).toLowerCase();
         Log.d(TAG, "ChooseTimeDialog: " + weekDay);
 
-        return v;
+        return containerView;
     }
 
     @Override
@@ -147,37 +140,29 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.dialogCancelRegistrationTextView:
+            case R.id.dialogTimetableCancelRegistrationTextView:
                 dismiss();
                 break;
-            case R.id.dialogRegisterTextView:
+            case R.id.dialogTimetableRegisterTextView:
                 if (registrationTimeIsValid) {
+                    containerLayout.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     bookChosenTimeSlot();
                 }
                 break;
-            case R.id.dialogTodayTextViewLayout:
+            case R.id.dialogTimetableTodayTextViewLayout:
                 toggleButtonsBackground(todayTextView, tomorrowTextView);
                 timetableForToday = true;
-                adapter.updateBoxes();
+                registrationTimeIsValid = false;
+                setupDataAndViews();
                 break;
-            case R.id.dialogTomorrowTextViewLayout:
+            case R.id.dialogTimetableTomorrowTextViewLayout:
                 toggleButtonsBackground(tomorrowTextView, todayTextView);
                 timetableForToday = false;
-                adapter.updateBoxes();
-                break;
-            case R.id.dialogToLeftArrowImageView:
-                turnPage(R.id.dialogToLeftArrowImageView);
-                break;
-            case R.id.dialogToRightArrowImageView:
-                turnPage(R.id.dialogToRightArrowImageView);
+                registrationTimeIsValid = false;
+                setupDataAndViews();
                 break;
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        regFinDelegate = (RegistrationSuccessfullyFinishedListener) context;
     }
 
     private void toggleButtonsBackground(TextView textView1, TextView textView2) {
@@ -185,23 +170,6 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         textView1.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
         textView2.setBackgroundResource(0);
         textView2.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-    }
-
-    public void turnPage(int itemId) {
-        int currentPage = viewPager.getCurrentItem();
-        if (itemId == R.id.dialogToLeftArrowImageView) {
-            currentPage--;
-        } else if (itemId == R.id.dialogToRightArrowImageView) {
-            currentPage++;
-        }
-        viewPager.setCurrentItem(currentPage, true);
-        boxNumberTextView.setText("Box " + (viewPager.getCurrentItem() + 1));
-    }
-
-    public void updateRegistrationValidity(boolean validOrNot, int id, String time) {
-        registrationTimeIsValid = validOrNot;
-        chosenBoxId = id;
-        chosenTime = time;
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -214,10 +182,12 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
 
         if (getRequest.isNetworkAvailable()) {
             requestIsGet = true;
-            getRequest.getTimetableOfCarWash(CAR_WASH_SCHEDULES_URL + getArguments().getInt("car_wash_id"), "Token token=\"" + token + "\"");
+            getRequest.getTimetableOfCarWash(GET_CAR_WASH_SCHEDULES_URL + getArguments().getInt("car_wash_id"), "Token token=\"" + token + "\"");
         } else {
-            Toast.makeText(getContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
-            stopRefreshImage();
+            Snackbar snackbar = Snackbar.make(containerView, getString(R.string.error_no_internet_connection), Snackbar.LENGTH_LONG);
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.holo_red_dark));
+            snackbar.show();
+            setErrorTextViewVisible();
         }
     }
 
@@ -227,11 +197,14 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
 
         if (postRequest.isNetworkAvailable()) {
             requestIsGet = false;
-            postRequest.bookTimeSlot(CAR_WASH_SCHEDULES_URL, getRegistrationDataAsJSON(), "Token token=\"" + token + "\"");
+            postRequest.bookTimeSlot(BOOK_TIME_SLOT_URL, getRegistrationDataAsJSON(), "Token token=\"" + token + "\"");
             Log.d(TAG, "ChooseTimeDialog: " + getRegistrationDataAsJSON());
         } else {
-            Toast.makeText(getContext(), getString(R.string.error_no_internet_connection), Toast.LENGTH_LONG).show();
-            stopRefreshImage();
+            Snackbar snackbar = Snackbar.make(containerView, getString(R.string.error_no_internet_connection), Snackbar.LENGTH_LONG);
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.holo_red_dark));
+            snackbar.show();
+            setErrorTextViewVisible();
+            stopRefreshImageToRepeatRequest();
         }
     }
 
@@ -256,21 +229,20 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
                 "\"box_id\":"           +    "\""    +    chosenBoxId                           +    "\""    +    ","    +
                 "\"price_id\":"         +    "\""    +    getArguments().getInt("price_id")     +    "\""    +    ","    +
                 "\"status\":"           +    "\""    +    1                                     +    "\""    +    ","    +
-                "\"start_time\":"       +    "\""    +    sdfForSending.format(s.getTime())               +    "\""    +    ","    +
-                "\"end_time\":"         +    "\""    +    sdfForSending.format(e.getTime())               +    "\""    +
+                "\"start_time\":"       +    "\""    +    sdfForSending.format(s.getTime())     +    "\""    +    ","    +
+                "\"end_time\":"         +    "\""    +    sdfForSending.format(e.getTime())     +    "\""    +
 
                 "}}";
     }
 
     @Override
     public void onFailure(IOException e) {
-        //showErrorToast(getString(R.string.error_could_not_load_data));
         Log.d(TAG, "ChooseTimeDialog: " + "onFailure");
         e.printStackTrace();
         if (requestIsGet) {
-            setEmptyTextViewVisible();
+            setErrorTextViewVisible();
         } else {
-            stopRefreshImage();
+            stopRefreshImageToRepeatRequest();
         }
     }
 
@@ -279,7 +251,7 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         String responseMessage = response.message();
         Log.d(TAG, "ChooseTimeDialog: " + "response message - " + responseMessage);
 
-        if (getString(R.string.server_response_car_wash_timetable_received).equals(responseMessage)) {
+        if (getString(R.string.server_response_ok).equals(responseMessage) || getString(R.string.server_response_created).equals(responseMessage)) {
             try {
                 String res = response.body().string();
                 Log.d(TAG, "ChooseTimeDialog: " + "response body - " + res);
@@ -292,21 +264,29 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
                         public void run() {
                             Intent finishIntent = new Intent("finish_main_activity");
                             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(finishIntent);
-                            regFinDelegate.registrationIsDone();
+                            finishIntent = new Intent("finish_car_wash_details_activity");
+                            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(finishIntent);
+
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+                            intent.putExtra("start_page", "user_orders");
+                            startActivity(intent);
                             dismiss();
                         }
                     });
                 }
-                Log.d(TAG, "ChooseTimeDialog: " + "after processTimetableData");
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
+                setErrorTextViewVisible();
+                return;
             }
         } else {
             if (requestIsGet) {
-                setEmptyTextViewVisible();
+                setErrorTextViewVisible();
                 return;
             } else {
                 showErrorToast(getString(R.string.error_could_not_load_data));
+                stopRefreshImageToRepeatRequest();
+                return;
             }
         }
         stopRefreshImage();
@@ -348,23 +328,22 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         cEnd.set(Calendar.HOUR_OF_DAY, Integer.valueOf(time.substring(5, 7)));
         cEnd.set(Calendar.MINUTE, Integer.valueOf(time.substring(7, 9)));
 
-        Log.d(TAG, "ChooseTimeDialog: " + sdfForSending.format(c.getTime()));
-        Log.d(TAG, "ChooseTimeDialog: " + sdfForSending.format(cEnd.getTime()));
+        //preparing time slots for TODAY
+        prepareTimeSlots(c, cEnd, timetableRowsForToday);
 
-        // setting boxes for TODAY
+        // setting time slots for TODAY
         JSONArray boxesObjects = carWashObject.getJSONObject("today").getJSONArray("boxes");
-        createTimetableForBoxes(boxesObjects, c, cEnd, boxesForToday);
+        createTimetableForBoxes(boxesObjects, c, timetableRowsForToday);
 
-        // setting boxes for TOMORROW
-        cStart.add(Calendar.DAY_OF_MONTH, 1);
-        cEnd.add(Calendar.DAY_OF_MONTH, 1);
+        // setting time slots for TOMORROW
         weekDay = (sdfWeek.format(cStart.getTime())).toLowerCase();
-        Log.d(TAG, "ChooseTimeDialog: " + weekDay);
 
         time = (schedulesObjects.getJSONObject(0).getString(weekDay));
 
+        cStart.add(Calendar.DAY_OF_MONTH, 1);
         cStart.set(Calendar.HOUR_OF_DAY, Integer.valueOf(time.substring(0, 2)));
         cStart.set(Calendar.MINUTE, Integer.valueOf(time.substring(2, 4)));
+        cEnd = (Calendar) cStart.clone();
 
         if (Integer.valueOf(time.substring(0, 2)) >= Integer.valueOf(time.substring(5, 7))) {
             cEnd.add(Calendar.DAY_OF_MONTH, 1);
@@ -372,19 +351,36 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         cEnd.set(Calendar.HOUR_OF_DAY, Integer.valueOf(time.substring(5, 7)));
         cEnd.set(Calendar.MINUTE, Integer.valueOf(time.substring(7, 9)));
 
-        boxesObjects = carWashObject.getJSONObject("tomorrow").getJSONArray("boxes");
-        createTimetableForBoxes(boxesObjects, cStart, cEnd, boxesForTomorrow);
+        prepareTimeSlots(cStart, cEnd, timetableRowsForTomorrow);
 
-        Log.d(TAG, "ChooseTimeDialog: " + "processing of data is completed");
+        boxesObjects = carWashObject.getJSONObject("tomorrow").getJSONArray("boxes");
+        createTimetableForBoxes(boxesObjects, cStart, timetableRowsForTomorrow);
     }
 
-    private void createTimetableForBoxes(JSONArray boxesObjects, Calendar cStart, Calendar cEnd, ArrayList<Box> boxes) throws JSONException {
+    private void prepareTimeSlots(Calendar cStart, Calendar cEnd, ArrayList<TimetableRow> timetableRows) {
+        Calendar start = (Calendar) cStart.clone();
+
+        TimetableRow timetableRow;
+
+        while (start.compareTo(cEnd) < 0) {
+            timetableRow = new TimetableRow();
+            timetableRow.setTime(start.get(Calendar.HOUR_OF_DAY) + ":" + String.format("%02d", start.get(Calendar.MINUTE)));
+            timetableRows.add(timetableRow);
+
+            if (duration == 30) {
+                start.add(Calendar.MINUTE, 30);
+            } else {
+                start.add(Calendar.HOUR_OF_DAY, 1);
+            }
+        }
+    }
+
+    private void createTimetableForBoxes(JSONArray boxesObjects, Calendar cStart, ArrayList<TimetableRow> timetableRows) throws JSONException {
         int length = boxesObjects.length();
         for (int i = 0; i < length; i++) {
             slotStartTime = (Calendar) cStart.clone();
-            ArrayList<TimetableRow> timetableRows = new ArrayList<>();
-            JSONArray onlineOrders = sortOrders(boxesObjects.getJSONObject(i).getJSONArray("orders"));
-            JSONArray offlineOrders = sortOrders(boxesObjects.getJSONObject(i).getJSONArray("offorders"));
+            JSONArray onlineOrders = boxesObjects.getJSONObject(i).getJSONArray("orders");
+            JSONArray offlineOrders = boxesObjects.getJSONObject(i).getJSONArray("offorders");
             int on = 0;
             int off = 0;
 
@@ -400,62 +396,73 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
                 endTime2 = offlineOrders.getJSONObject(off).getString("end_time");
             }
 
-            TimetableRow timetableRow;
+            for (int j = 0; j < timetableRows.size(); j++) {
+                if (timetableRows.get(j).isAvailable()) {
+                    addDurationToSlotStartTime();
+                    continue;
+                }
+                String time = slotStartTime.get(Calendar.HOUR_OF_DAY) + ":" + String.format("%02d", slotStartTime.get(Calendar.MINUTE));
+                if (!time.equals(timetableRows.get(j).getTime())) {
+                    addDurationToSlotStartTime();
+                    continue;
+                }
 
-            while (slotStartTime.compareTo(cEnd) < 0) {
-                timetableRow = new TimetableRow();
-                timetableRow.setTime(slotStartTime.get(Calendar.HOUR_OF_DAY) + ":" + String.format("%02d", slotStartTime.get(Calendar.MINUTE)));
-                timetableRow.setAvailable(true);
+                boolean available = true;
 
                 if (!"".equals(startTime1) && !"".equals(endTime1)) {
                     if (!slotIsAvailable(startTime1, endTime1)) {
-                        timetableRow.setAvailable(false);
+                        available = false;
                     }
-                    if (slotStartTime.compareTo(orderEndTime) >= 0) {
+                    while (slotStartTime.compareTo(orderEndTime) >= 0) {
                         on++;
                         if (on < onlineOrders.length()) {
                             startTime1 = onlineOrders.getJSONObject(on).getString("start_time");
                             endTime1 = onlineOrders.getJSONObject(on).getString("end_time");
                             if (!slotIsAvailable(startTime1, endTime1)) {
-                                timetableRow.setAvailable(false);
+                                available = false;
                             }
                         } else {
                             startTime1 = "";
                             endTime1 = "";
+                            break;
                         }
                     }
                 }
 
                 if (!"".equals(startTime2) && !"".equals(endTime2)) {
                     if (!slotIsAvailable(startTime2, endTime2)) {
-                        timetableRow.setAvailable(false);
+                        available = false;
                     }
-                    if (slotStartTime.compareTo(orderEndTime) >= 0) {
+                    while (slotStartTime.compareTo(orderEndTime) >= 0) {
                         off++;
                         if (off < offlineOrders.length()) {
                             startTime2 = offlineOrders.getJSONObject(off).getString("start_time");
                             endTime2 = offlineOrders.getJSONObject(off).getString("end_time");
                             if (!slotIsAvailable(startTime2, endTime2)) {
-                                timetableRow.setAvailable(false);
+                                available = false;
                             }
                         } else {
                             startTime2 = "";
                             endTime2 = "";
+                            break;
                         }
                     }
                 }
 
-                timetableRows.add(timetableRow);
-                if (duration == 30) {
-                    slotStartTime.add(Calendar.MINUTE, 30);
-                } else {
-                    slotStartTime.add(Calendar.HOUR_OF_DAY, 1);
+                if (available) {
+                    timetableRows.get(j).setBoxId(boxesObjects.getJSONObject(i).getInt("id"));
                 }
+
+                addDurationToSlotStartTime();
             }
-            Box box = new Box();
-            box.setBoxId(boxesObjects.getJSONObject(i).getInt("id"));
-            box.setTimetableRows(timetableRows);
-            boxes.add(box);
+        }
+    }
+
+    private void addDurationToSlotStartTime() {
+        if (duration == 30) {
+            slotStartTime.add(Calendar.MINUTE, 30);
+        } else {
+            slotStartTime.add(Calendar.HOUR_OF_DAY, 1);
         }
     }
 
@@ -463,13 +470,10 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         orderStartTime = Calendar.getInstance();
         orderEndTime = Calendar.getInstance();
 
-        Log.d(TAG, "ChooseTimeDialog: " + startTime);
-        Log.d(TAG, "ChooseTimeDialog: " + endTime);
-
         try {
-            orderStartTime.setTime(sdf.parse(startTime.substring(0, startTime.length()-1)));
+            orderStartTime.setTime(sdf.parse(startTime.substring(0, startTime.length() - 1)));
             orderStartTime.set(Calendar.MILLISECOND, 0);
-            orderEndTime.setTime(sdf.parse(endTime.substring(0, endTime.length()-1)));
+            orderEndTime.setTime(sdf.parse(endTime.substring(0, endTime.length() - 1)));
             orderEndTime.set(Calendar.MILLISECOND, 0);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -494,37 +498,6 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         return true;
     }
 
-    private JSONArray sortOrders(JSONArray orders) throws JSONException {
-        ArrayList<JSONObject> list = new ArrayList<>();
-        for (int i = 0; i < orders.length(); i++) {
-            list.add(orders.getJSONObject(i));
-        }
-
-        Collections.sort(list, new Comparator<JSONObject>() {
-            @Override
-            public int compare(JSONObject o1, JSONObject o2) {
-                String time1 = "";
-                String time2 = "";
-
-                try {
-                    time1 = o1.getString("start_time");
-                    time2 = o2.getString("start_time");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                return time1.compareTo(time2);
-            }
-        });
-
-        JSONArray sortedOrders = new JSONArray();
-        for (int i = 0; i< orders.length(); i++) {
-            sortedOrders.put(list.get(i));
-        }
-
-        return sortedOrders;
-    }
-
     private void showErrorToast(final String message) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -534,83 +507,74 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         });
     }
 
-    private void setEmptyTextViewVisible() {
-        Log.d(TAG, "ChooseTimeDialog: " + "setEmptyTextViewVisible");
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                containerLayout.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
-                emptyTextView.setVisibility(View.VISIBLE);
-                Log.d(TAG, "ChooseTimeDialog: " + "information updated");
-            }
-        });
-    }
-
-    private void stopRefreshImage() {
-        Log.d(TAG, "ChooseTimeDialog: " + "stopRefreshImage");
+    private void setErrorTextViewVisible() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 containerLayout.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
                 emptyTextView.setVisibility(View.GONE);
+                errorTextView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void stopRefreshImageToRepeatRequest() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                containerLayout.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+                emptyTextView.setVisibility(View.GONE);
+                errorTextView.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void stopRefreshImage() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                containerLayout.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+                errorTextView.setVisibility(View.GONE);
                 setupDataAndViews();
-                Log.d(TAG, "ChooseTimeDialog: " + "information updated");
             }
         });
     }
 
     private void setupDataAndViews() {
-        Log.d(TAG, "ChooseTimeDialog: " + "setupDataAndViews");
         if (timetableForToday) {
-            adapter = new BoxesPagerAdapter(getChildFragmentManager(), boxesForToday);
-        } else {
-            adapter = new BoxesPagerAdapter(getChildFragmentManager(), boxesForTomorrow);
-        }
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new OnPageChangeListener());
-    }
-
-    private class BoxesPagerAdapter extends FragmentStatePagerAdapter {
-
-        private ArrayList<Box> boxes;
-
-        BoxesPagerAdapter(FragmentManager fm, ArrayList<Box> boxes) {
-            super(fm);
-            this.boxes = boxes;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Log.d(TAG, "ChooseTimeDialog: BoxesPagerAdapter - " + "getItem");
-            return DialogFragmentTimetableContent.newInstance(boxes.get(position));
-        }
-
-        @Override
-        public int getCount() {
-            return boxes.size();
-        }
-
-        @Override
-        public int getItemPosition(Object object) {
-            return POSITION_NONE;
-        }
-
-        void updateBoxes() {
-            if (timetableForToday) {
-                boxes = boxesForToday;
+            adapter = new TimetableListViewAdapter(getContext(), timetableRowsForToday);
+            if (timetableRowsForToday.size() == 0) {
+                emptyTextView.setText(R.string.text_no_time_slots_for_today);
+                emptyTextView.setVisibility(View.VISIBLE);
             } else {
-                boxes = boxesForTomorrow;
+                emptyTextView.setVisibility(View.GONE);
             }
-            notifyDataSetChanged();
+        } else {
+            adapter = new TimetableListViewAdapter(getContext(), timetableRowsForTomorrow);
+            if (timetableRowsForTomorrow.size() == 0) {
+                emptyTextView.setText(R.string.text_no_time_slots_for_tomorrow);
+                emptyTextView.setVisibility(View.VISIBLE);
+            } else {
+                emptyTextView.setVisibility(View.GONE);
+            }
         }
+        timetableListView.setAdapter(adapter);
+        timetableListView.setOnItemClickListener(this);
     }
 
-    private class OnPageChangeListener extends ViewPager.SimpleOnPageChangeListener {
-        @Override
-        public void onPageSelected(int position) {
-            boxNumberTextView.setText("Box " + (position + 1));
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        registrationTimeIsValid = adapter.setAndCheckTimeSlot(position);
+        if (registrationTimeIsValid) {
+            if (timetableForToday) {
+                chosenBoxId = timetableRowsForToday.get(position).getBoxId();
+            } else {
+                chosenBoxId = timetableRowsForTomorrow.get(position).getBoxId();
+            }
+            chosenTime = adapter.getChosenTimeSlot();
         }
     }
 }

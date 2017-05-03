@@ -10,11 +10,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Databases.CarWashesDatabase;
 import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
-import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
-import com.marat.apps.android.pro3.Internet.UniversalPostRequest;
+import com.marat.apps.android.pro3.Internet.GetRequest;
+import com.marat.apps.android.pro3.Internet.PostRequest;
 import com.marat.apps.android.pro3.R;
 
 import org.json.JSONArray;
@@ -31,7 +31,7 @@ import okhttp3.Response;
 
 public class SplashScreenActivity extends AppCompatActivity implements RequestResponseListener {
 
-    private static final String TAG = "logtag";
+    private static final String TAG = "SplashScreenActivity";
 
     private static final String CITIES_AND_CAR_TYPES_URL = "https://propropro.herokuapp.com/api/v1/sessions";
     private static final String USER_AUTHORIZATION_URL = "https://propropro.herokuapp.com/api/v1/sessions";
@@ -44,21 +44,12 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
 
     private String phoneNumber, password;         // user credentials
 
-    private String[] order1 = new String[]{"1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "Внедорожник: Кузов + Салон + Багажник", "02.02.2017", "3500", "Активный"};
-    private String[] order2 = new String[]{"3", "Fast Wash", "АЗС NOMAD, ул. Керей-Жанибек 63", "Кроссовер: Кузов + Салон", "28.01.2017", "2800", "Завершен"};
-    private String[] order3 = new String[]{"3", "Fast Wash", "АЗС NOMAD, ул. Керей-Жанибек 63", "Кроссовер: Кузов + Салон", "25.01.2017", "2800", "Завершен"};
-    private String[] order4 = new String[]{"1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "Седан: Кузов + Салон + Багажник + Двигатель", "20.01.2017", "4500", "Завершен"};
-    private String[] order5 = new String[]{"1", "ECA Car Wash", "ТЦ Хан-Шатыр, ул. Туран 50, 0-этаж", "Малолитражка: Кузов + Салон", "15.01.2017", "2500", "Завершен"};
-    private String[] order6 = new String[]{"2", "Master Keruen", "ТЦ Керуен, ул. Достык 21, 0-этаж", "Седан: Кузов + Салон", "13.01.2017", "2700", "Завершен"};
-    private String[] order7 = new String[]{"3", "Fast Wash", "АЗС NOMAD, ул. Керей-Жанибек 63", "Седан: Кузов + Салон", "09.01.2017", "2800", "Завершен"};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
         startTime = System.currentTimeMillis();
-        initializeDatabase();
 
         SharedPreferences sharedPreferences = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         phoneNumber = sharedPreferences.getString("phone_number", "empty");
@@ -76,9 +67,9 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
     }
 
     private void getCitiesAndCarTypes() {
-        if (citiesAndCarTypesDataIsOld()) {
-            Log.d(TAG, "SplashScreenActivity: " + "GetCitiesAndCarTypes: " + "data is to be updated");
-            UniversalGetRequest getRequest = new UniversalGetRequest(this);
+        if (isCitiesAndCarTypesDataOld()) {
+            Log.d(TAG, "GetCitiesAndCarTypes: " + "data is to be updated");
+            GetRequest getRequest = new GetRequest(this);
             getRequest.delegate = this;
             if (getRequest.isNetworkAvailable()) {
                 getRequest.get(CITIES_AND_CAR_TYPES_URL);
@@ -87,13 +78,13 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
                 goToNextActivity();
             }
         } else {
-            Log.d(TAG, "SplashScreenActivity: " + "GetCitiesAndCarTypes: " + "data is OK");
+            Log.d(TAG, "GetCitiesAndCarTypes: " + "data is OK");
             goToNextActivity();
         }
     }
 
     private void logInUser() {
-        UniversalPostRequest postRequest = new UniversalPostRequest(this);
+        PostRequest postRequest = new PostRequest(this);
         postRequest.delegate = this;
         if (postRequest.isNetworkAvailable()) {
             postRequest.post(USER_AUTHORIZATION_URL, createUserDataInJson());
@@ -105,15 +96,15 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
 
     private String createUserDataInJson() {
         return "{\"user\":{"
-                + "\"phone_number\":" + "\"" + phoneNumber + "\"" + ","
-                + "\"password\":" + "\"" + password + "\""
+                + "\"phone_number\":"   +   "\""     +   phoneNumber    +   "\""   +   ","
+                + "\"password\":"       +   "\""     +   password       +   "\""
                 + "}}";
     }
 
     @Override
     public void onFailure(IOException e) {
         showErrorToast(getString(R.string.error_could_not_load_data));
-        Log.d(TAG, "SplashScreenActivity: " + "onFailure");
+        Log.d(TAG, "onFailure");
         e.printStackTrace();
         goToNextActivity();
     }
@@ -134,19 +125,19 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
 
     private void logInResponse(Response response) {
         String responseMessage = response.message();
-        Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " + responseMessage);
+        Log.d(TAG, "response message - " + responseMessage);
 
-        if (getString(R.string.server_response_login_successful).equals(responseMessage)) {
+        if (getString(R.string.server_response_created).equals(responseMessage)) {
             try {
                 String res = response.body().string();
-                Log.d(TAG, "SplashScreenActivity: " + "LogInResponse: " + res);
+                Log.d(TAG, "response body - " + res);
 
                 JSONObject result = new JSONObject(res);
                 JSONObject userObject = result.getJSONObject("user");
                 JSONArray cities = result.getJSONArray("cities");             // get cities array
                 JSONArray carTypes = result.getJSONArray("car_types");        // get car_types array
 
-                if (citiesAndCarTypesDataIsOld()) {
+                if (isCitiesAndCarTypesDataOld()) {
                     saveCitiesAndCarTypes(cities, carTypes);                  // save two arrays to DB
                 }
                 saveUserData(userObject);
@@ -158,7 +149,7 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
                 showErrorToast(getString(R.string.error_could_not_load_data));
                 e.printStackTrace();
             }
-        } else if (getString(R.string.server_response_login_failed).equals(responseMessage)) {
+        } else if (getString(R.string.server_response_unauthorized).equals(responseMessage)) {
             showErrorToast(getString(R.string.error_wrong_phone_or_pass));
         } else {
             showErrorToast(getString(R.string.error_could_not_load_data));
@@ -169,12 +160,12 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
 
     private void citiesAndCarTypesResponse(Response response) {
         String responseMessage = response.message();
-        Log.d(TAG, "SplashScreenActivity: " + "citiesAndCarTypesResponse: " + responseMessage);
+        Log.d(TAG, "response message - " + responseMessage);
 
-        if (getString(R.string.server_response_cities_received).equals(responseMessage)) {
+        if (getString(R.string.server_response_ok).equals(responseMessage)) {
             try {
                 String res = response.body().string();
-                Log.d(TAG, "SplashScreenActivity: " + "citiesAndCarTypesResponse: " + res);
+                Log.d(TAG, "response body - " + res);
                 JSONObject result = new JSONObject(res);
                 JSONArray cities = result.getJSONArray("cities");             // get cities array
                 JSONArray carTypes = result.getJSONArray("car_types");        // get car_types array
@@ -207,12 +198,12 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
     /**
      * returns true if cities or carTypes were downloaded before 6am today.
      */
-    private boolean citiesAndCarTypesDataIsOld() {
+    private boolean isCitiesAndCarTypesDataOld() {
         Calendar c = Calendar.getInstance();
         todaysData = c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " +
                 c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
 
-        CWStationsDatabase db = new CWStationsDatabase(this);
+        CarWashesDatabase db = new CarWashesDatabase(this);
         db.open();
         Cursor c1 = db.getAllCities();
         Cursor c2 = db.getAllCarTypes();
@@ -222,8 +213,8 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
         if (c1.getCount() > 0 && c2.getCount() > 0) {
             c1.moveToFirst();
             c2.moveToFirst();
-            cityDate = c1.getString(c1.getColumnIndex(CWStationsDatabase.KEY_CITY_UPDATED));
-            carTypeDate = c2.getString(c2.getColumnIndex(CWStationsDatabase.KEY_CAR_TYPE_UPDATED));
+            cityDate = c1.getString(c1.getColumnIndex(CarWashesDatabase.KEY_CITY_UPDATED));
+            carTypeDate = c2.getString(c2.getColumnIndex(CarWashesDatabase.KEY_CAR_TYPE_UPDATED));
             db.close();
         } else {
             db.close();
@@ -252,20 +243,20 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
     }
 
     private void goToNextActivity() {
-        CWStationsDatabase db = new CWStationsDatabase(this);
+        CarWashesDatabase db = new CarWashesDatabase(this);
         db.open();
         if (db.userHasFavoriteStations()) {
-            intent1.putExtra("startPage", "Favorites");
+            intent1.putExtra("start_page", "favorite_car_washes");
         } else {
-            intent1.putExtra("startPage", "AllCarWashers");
+            intent1.putExtra("start_page", "all_car_washes");
         }
 
         endTime = System.currentTimeMillis();
 
-        Log.d(TAG, "SplashScreenActivity: " + "start time = " + startTime + "");
-        Log.d(TAG, "SplashScreenActivity: " + "end time   = " + endTime + "");
-        Log.d(TAG, "SplashScreenActivity: " + "difference = " + (endTime - startTime) + "");
-        Log.d(TAG, "SplashScreenActivity: " + "to wait    = " + (SPLASH_TIME_OUT - (endTime - startTime)) + "");
+        Log.d(TAG, "start time = " + startTime + "");
+        Log.d(TAG, "end time   = " + endTime + "");
+        Log.d(TAG, "difference = " + (endTime - startTime) + "");
+        Log.d(TAG, "to wait    = " + (SPLASH_TIME_OUT - (endTime - startTime)) + "");
 
         if ((endTime - startTime) >= SPLASH_TIME_OUT) {
             startActivity(intent1);
@@ -298,19 +289,5 @@ public class SplashScreenActivity extends AppCompatActivity implements RequestRe
                 Toast.makeText(SplashScreenActivity.this, message, Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private void initializeDatabase() {
-        CWStationsDatabase db = new CWStationsDatabase(this);
-        db.open();
-        db.deleteMyOrders();
-        db.addToMyOrders(Integer.parseInt(order1[0]), order1[1], order1[2], order1[3], order1[4], order1[5], order1[6]);
-        db.addToMyOrders(Integer.parseInt(order2[0]), order2[1], order2[2], order2[3], order2[4], order2[5], order2[6]);
-        db.addToMyOrders(Integer.parseInt(order3[0]), order3[1], order3[2], order3[3], order3[4], order3[5], order3[6]);
-        db.addToMyOrders(Integer.parseInt(order4[0]), order4[1], order4[2], order4[3], order4[4], order4[5], order4[6]);
-        db.addToMyOrders(Integer.parseInt(order5[0]), order5[1], order5[2], order5[3], order5[4], order5[5], order5[6]);
-        db.addToMyOrders(Integer.parseInt(order6[0]), order6[1], order6[2], order6[3], order6[4], order6[5], order6[6]);
-        db.addToMyOrders(Integer.parseInt(order7[0]), order7[1], order7[2], order7[3], order7[4], order7[5], order7[6]);
-        db.close();
     }
 }

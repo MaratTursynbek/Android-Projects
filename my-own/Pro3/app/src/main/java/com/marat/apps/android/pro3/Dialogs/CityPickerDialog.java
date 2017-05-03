@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.marat.apps.android.pro3.Adapters.DialogCityPickerAdapter;
-import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Databases.CarWashesDatabase;
 import com.marat.apps.android.pro3.Interfaces.DialogCityChosenListener;
 import com.marat.apps.android.pro3.Models.City;
 import com.marat.apps.android.pro3.R;
@@ -52,15 +52,15 @@ public class CityPickerDialog extends DialogFragment {
 
         cities = new ArrayList<>();
 
-        CWStationsDatabase db = new CWStationsDatabase(getActivity());
+        CarWashesDatabase db = new CarWashesDatabase(getActivity());
         db.open();
         Cursor cursor = db.getAllCities();
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             City city = new City();
-            city.setRowID(cursor.getLong(cursor.getColumnIndex(CWStationsDatabase.ROW_ID)));
-            city.setCityID(cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_CITY_ID)));
-            city.setCityName(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_CITY_NAME)));
+            city.setRowID(cursor.getLong(cursor.getColumnIndex(CarWashesDatabase.ROW_ID)));
+            city.setCityID(cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_CITY_ID)));
+            city.setCityName(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CITY_NAME)));
             cities.add(city);
         }
 

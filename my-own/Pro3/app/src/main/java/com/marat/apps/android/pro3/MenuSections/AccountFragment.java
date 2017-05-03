@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.marat.apps.android.pro3.Databases.CWStationsDatabase;
+import com.marat.apps.android.pro3.Databases.CarWashesDatabase;
 import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Interfaces.ToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
-import com.marat.apps.android.pro3.Internet.UniversalGetRequest;
+import com.marat.apps.android.pro3.Internet.GetRequest;
 import com.marat.apps.android.pro3.R;
 
 import org.json.JSONException;
@@ -34,10 +34,10 @@ public class AccountFragment extends Fragment implements RequestResponseListener
     private static final String GET_USER_URL = "https://propropro.herokuapp.com/api/v1/users/";
     private int userId;
 
-    private CWStationsDatabase db;
+    private CarWashesDatabase db;
     private Cursor cursor;
 
-    private UniversalGetRequest getRequest;
+    private GetRequest getRequest;
 
     private TextView userNameTextView;
     private TextView userPhoneNumberTextView;
@@ -60,7 +60,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         ToolbarTitleChangeListener listener = (ToolbarTitleChangeListener) getActivity();
         listener.onTitleChanged(getString(R.string.title_main_fragment_account));
 
-        getRequest = new UniversalGetRequest(getContext());
+        getRequest = new GetRequest(getContext());
         getRequest.delegate = this;
 
         return v;
@@ -74,17 +74,17 @@ public class AccountFragment extends Fragment implements RequestResponseListener
     }
 
     private void setUserInformationOnLayout() {
-        db = new CWStationsDatabase(getContext());
+        db = new CarWashesDatabase(getContext());
         db.open();
         cursor = db.getUserInformation();
         cursor.moveToFirst();
-        userId = cursor.getInt(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_ID));
-        userNameTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_NAME)));
-        String phoneNumber = cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_PHONE_NUMBER));
+        userId = cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_USER_ID));
+        userNameTextView.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_USER_NAME)));
+        String phoneNumber = cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_USER_PHONE_NUMBER));
         phoneNumber = "(" + phoneNumber.substring(0, 3) + ") " + phoneNumber.substring(3, 6) + "-" + phoneNumber.substring(6, 8) + "-" + phoneNumber.substring(8);
         userPhoneNumberTextView.setText(phoneNumber);
-        userCarTypeTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_CAR_TYPE_NAME)));
-        userCityTextView.setText(cursor.getString(cursor.getColumnIndex(CWStationsDatabase.KEY_USER_CITY_NAME)));
+        userCarTypeTextView.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_USER_CAR_TYPE_NAME)));
+        userCityTextView.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_USER_CITY_NAME)));
         db.close();
     }
 
@@ -92,7 +92,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE);
         String token = sharedPreferences.getString("ACCESS_TOKEN", "");
 
-        getRequest = new UniversalGetRequest(getContext());
+        getRequest = new GetRequest(getContext());
         getRequest.delegate = this;
 
         if (getRequest.isNetworkAvailable()) {
@@ -117,7 +117,7 @@ public class AccountFragment extends Fragment implements RequestResponseListener
         String responseMessage = response.message();
         Log.d(TAG, "AccountFragment: " + "GetUserMessage: " + responseMessage);
 
-        if (getString(R.string.server_response_user_info_received).equals(responseMessage)) {
+        if (getString(R.string.server_response_ok).equals(responseMessage)) {
             try {
                 String res = response.body().string();
                 Log.d(TAG, "AccountFragment: " + "GetUserResponse: " + res);
