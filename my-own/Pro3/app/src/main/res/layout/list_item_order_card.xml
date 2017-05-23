@@ -5,116 +5,153 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginStart="10dp"
     android:layout_marginTop="5dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardElevation="3dp">
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="10dp"
-        android:paddingEnd="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingStart="20dp"
-        android:paddingTop="10dp">
+        android:padding="20dp">
 
-        <TextView
-            android:id="@+id/moStationNameTextView"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/ocOrderStatusRelativeLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/moOrderStatus"
-            android:layout_toStartOf="@+id/moOrderStatus"
-            android:gravity="center_vertical"
             android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:text="ECA Car Wash"
-            android:textColor="@android:color/black"
-            android:textSize="16.4sp"
-            android:textStyle="bold"/>
+            android:paddingTop="2dp">
 
-        <TextView
-            android:id="@+id/moOrderStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/bg_order_status_ended"
-            android:gravity="center"
-            android:paddingBottom="3dp"
-            android:paddingEnd="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingStart="5dp"
-            android:paddingTop="3dp"
-            android:text="Активный"
-            android:textColor="@android:color/black"/>
+            <TextView
+                android:id="@+id/ocStationNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_toLeftOf="@+id/ocOrderStatus"
+                android:layout_toStartOf="@+id/ocOrderStatus"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="ECA Car Wash"
+                android:textColor="@android:color/black"
+                android:textSize="16.8sp"
+                android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/moStationAddressTextView"
+            <TextView
+                android:id="@+id/ocOrderStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_order_status_ended"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingBottom="3dp"
+                android:paddingEnd="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingTop="3dp"
+                android:text="Активный"
+                android:textColor="@android:color/black"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ocOrderServiceRelativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/moStationNameTextView"
-            android:layout_marginTop="6dp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
+            android:layout_below="@+id/ocOrderStatusRelativeLayout"
+            android:layout_marginTop="15dp"
             android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:text="ТЦ Хан-Шатыр, ул. Туран 50, 0 этаж"
-            android:textSize="12.8sp"/>
+            android:paddingTop="2dp">
 
-        <TextView
-            android:id="@+id/moOrderServiceTextView"
+            <ImageView
+                android:id="@+id/ocServiceImageView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_shopping_cart_black_24dp"/>
+
+            <TextView
+                android:id="@+id/ocOrderServiceTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/ocServiceImageView"
+                android:layout_toRightOf="@+id/ocServiceImageView"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="Седан: Кузов + Салон + Багажник"
+                android:textColor="@android:color/black"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ocOrderDateRelativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/moStationAddressTextView"
-            android:layout_marginTop="6dp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
+            android:layout_below="@+id/ocOrderServiceRelativeLayout"
+            android:layout_marginTop="12dp"
             android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:text="Седан: Кузов + Салон + Багажник"
-            android:textColor="@android:color/black"/>
+            android:paddingTop="2dp">
 
-        <TextView
-            android:id="@+id/moOrderDateTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/moOrderServiceTextView"
-            android:layout_marginTop="6dp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:text="02.02.2017"
-            android:textColor="@android:color/black"/>
+            <ImageView
+                android:id="@+id/ocTimeImageView"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_schedule_black_24dp"/>
 
-        <TextView
-            android:id="@+id/moOrderPriceTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/moOrderServiceTextView"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="6dp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:text="3500 тг."
-            android:textColor="@android:color/black"/>
+            <TextView
+                android:id="@+id/ocOrderDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/ocTimeImageView"
+                android:layout_toRightOf="@+id/ocTimeImageView"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="02/02 в 19:00"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:id="@+id/ocOrderPriceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/ocOrderDateTextView"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="3500 тг."
+                android:textColor="@android:color/black"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

@@ -51,7 +51,7 @@ public class FavoriteCarWashesFragment extends Fragment implements RequestRespon
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_car_washers, container, false);
+        View v = inflater.inflate(R.layout.fragment_car_washes_favorite, container, false);
 
         ToolbarTitleChangeListener listener = (ToolbarTitleChangeListener) getActivity();
         listener.onTitleChanged(getString(R.string.title_main_fragment_favorite_stations));

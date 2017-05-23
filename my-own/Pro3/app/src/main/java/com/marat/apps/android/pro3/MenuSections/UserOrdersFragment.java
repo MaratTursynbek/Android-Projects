@@ -19,16 +19,21 @@ import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Adapters.OrdersRecyclerViewAdapter;
 import com.marat.apps.android.pro3.Databases.CarWashesDatabase;
-import com.marat.apps.android.pro3.Databases.StoreToDatabaseHelper;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
 import com.marat.apps.android.pro3.Interfaces.ToolbarTitleChangeListener;
 import com.marat.apps.android.pro3.Internet.GetRequest;
+import com.marat.apps.android.pro3.Models.Order;
 import com.marat.apps.android.pro3.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import okhttp3.Response;
 
@@ -44,11 +49,11 @@ public class UserOrdersFragment extends Fragment implements RequestResponseListe
     private SwipeRefreshLayout refreshLayout;
     private ProgressBar progressBar;
 
-    private Cursor cursor;
-    private CarWashesDatabase db;
     private OrdersRecyclerViewAdapter adapter;
 
     private GetRequest getRequest;
+
+    private ArrayList<Order> ordersArrayList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -145,9 +150,9 @@ public class UserOrdersFragment extends Fragment implements RequestResponseListe
                 String res = response.body().string();
                 Log.d(TAG, "response body - " + res);
                 JSONArray ordersArray = new JSONArray(res);
-                saveUserOrdersToDB(ordersArray);
+                processAllOrders(ordersArray);
                 stopRefreshImage(1);
-            } catch (IOException | JSONException e) {
+            } catch (IOException | JSONException | ParseException e) {
                 e.printStackTrace();
                 stopRefreshImage(2);
             }
@@ -157,9 +162,44 @@ public class UserOrdersFragment extends Fragment implements RequestResponseListe
         }
     }
 
-    private void saveUserOrdersToDB(JSONArray ordersArray) throws JSONException {
-        StoreToDatabaseHelper helper = new StoreToDatabaseHelper(getContext());
-        helper.saveUserOrders(ordersArray);
+    private void processAllOrders(JSONArray ordersJSONArray) throws JSONException, ParseException {
+        ordersArrayList = new ArrayList<>();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
+        SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm");
+        Calendar date = Calendar.getInstance();
+        String startTime;
+        JSONObject orderJSON;
+        for (int i = 0; i < ordersJSONArray.length(); i++) {
+            Order order = new Order();
+            orderJSON = ordersJSONArray.getJSONObject(i);
+
+            order.setOrderID(orderJSON.getInt("id"));
+            order.setCarWashName(orderJSON.getString("carwash_name"));
+            order.setOrderCarType(orderJSON.getString("car_type"));
+            order.setOrderServices(orderJSON.getString("service_name"));
+            order.setOrderPrice(orderJSON.getString("price") + " тг.");
+
+            startTime = orderJSON.getString("start_time");
+            date.setTime(sdf1.parse(startTime.substring(0, startTime.length() - 1)));
+            order.setOrderTime(sdf2.format(date.getTime()) + " в " + sdf3.format(date.getTime()));
+
+            int status = orderJSON.getInt("status");
+
+            if (status == 1 && date.compareTo(Calendar.getInstance()) > 0) {
+                order.setOrderStatus("Активный");
+            } else {
+                if (status == 1 && date.compareTo(Calendar.getInstance()) <= 0) {
+                    order.setOrderStatus("Завершен");
+                } else if (status == 2) {
+                    order.setOrderStatus("Отменен");
+                } else if (status == 3) {
+                    order.setOrderStatus("Отказано");
+                }
+            }
+
+            ordersArrayList.add(order);
+        }
     }
 
     private void stopRefreshImage(final int status) {
@@ -177,26 +217,20 @@ public class UserOrdersFragment extends Fragment implements RequestResponseListe
     }
 
     private void setupDataAndViews() {
-        db = new CarWashesDatabase(getContext());
-        db.open();
-        cursor = db.getUserOrders();
-
-        if (cursor.getCount() <= 0) {
+        if (ordersArrayList.size() <= 0) {
             setVisibilityOfViews(3);
         } else {
             setVisibilityOfViews(1);
             setAdapterToRecyclerView();
         }
-
-        db.close();
     }
 
     private void setAdapterToRecyclerView() {
         if (adapter == null) {
-            adapter = new OrdersRecyclerViewAdapter(cursor, getContext(), db);
+            adapter = new OrdersRecyclerViewAdapter(getContext(), ordersArrayList);
             ordersRecyclerView.setAdapter(adapter);
         } else {
-            adapter.updateCursor(cursor);
+            adapter.updateCursor(ordersArrayList);
         }
     }
 
@@ -217,13 +251,13 @@ public class UserOrdersFragment extends Fragment implements RequestResponseListe
 
     @Override
     public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
         getRequest.cancelCall();
         if (refreshLayout != null) {
             refreshLayout.setRefreshing(false);
             refreshLayout.destroyDrawingCache();
             refreshLayout.clearAnimation();
         }
-        super.onPause();
-        Log.d(TAG, "onPause");
     }
 }

@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.marat.apps.android.pro3.Activities.MainActivity;
 import com.marat.apps.android.pro3.Adapters.TimetableListViewAdapter;
@@ -69,7 +68,6 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
     private ArrayList<TimetableRow> timetableRowsForToday = new ArrayList<>();
     private ArrayList<TimetableRow> timetableRowsForTomorrow = new ArrayList<>();
 
-    private SimpleDateFormat sdfForSending = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSSS");
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     private SimpleDateFormat sdfWeek;
 
@@ -184,9 +182,7 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
             requestIsGet = true;
             getRequest.getTimetableOfCarWash(GET_CAR_WASH_SCHEDULES_URL + getArguments().getInt("car_wash_id"), "Token token=\"" + token + "\"");
         } else {
-            Snackbar snackbar = Snackbar.make(containerView, getString(R.string.error_no_internet_connection), Snackbar.LENGTH_LONG);
-            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.holo_red_dark));
-            snackbar.show();
+            showErrorSnack(getString(R.string.error_no_internet_connection));
             setErrorTextViewVisible();
         }
     }
@@ -200,9 +196,7 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
             postRequest.bookTimeSlot(BOOK_TIME_SLOT_URL, getRegistrationDataAsJSON(), "Token token=\"" + token + "\"");
             Log.d(TAG, "ChooseTimeDialog: " + getRegistrationDataAsJSON());
         } else {
-            Snackbar snackbar = Snackbar.make(containerView, getString(R.string.error_no_internet_connection), Snackbar.LENGTH_LONG);
-            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.holo_red_dark));
-            snackbar.show();
+            showErrorSnack(getString(R.string.error_no_internet_connection));
             setErrorTextViewVisible();
             stopRefreshImageToRepeatRequest();
         }
@@ -226,11 +220,11 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
 
         return "{\"order\":{" +
 
-                "\"box_id\":"           +    "\""    +    chosenBoxId                           +    "\""    +    ","    +
-                "\"price_id\":"         +    "\""    +    getArguments().getInt("price_id")     +    "\""    +    ","    +
-                "\"status\":"           +    "\""    +    1                                     +    "\""    +    ","    +
-                "\"start_time\":"       +    "\""    +    sdfForSending.format(s.getTime())     +    "\""    +    ","    +
-                "\"end_time\":"         +    "\""    +    sdfForSending.format(e.getTime())     +    "\""    +
+                "\"box_id\":" + "\"" + chosenBoxId + "\"" + "," +
+                "\"price_id\":" + "\"" + getArguments().getInt("price_id") + "\"" + "," +
+                "\"status\":" + "\"" + 1 + "\"" + "," +
+                "\"start_time\":" + "\"" + sdf.format(s.getTime()) + "\"" + "," +
+                "\"end_time\":" + "\"" + sdf.format(e.getTime()) + "\"" +
 
                 "}}";
     }
@@ -284,7 +278,7 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
                 setErrorTextViewVisible();
                 return;
             } else {
-                showErrorToast(getString(R.string.error_could_not_load_data));
+                showErrorSnack(getString(R.string.error_could_not_load_data));
                 stopRefreshImageToRepeatRequest();
                 return;
             }
@@ -498,11 +492,15 @@ public class DialogFragmentTimetable extends DialogFragment implements View.OnCl
         return true;
     }
 
-    private void showErrorToast(final String message) {
+    private void showErrorSnack(final String message) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+
+                Snackbar snackbar = Snackbar.make(containerView, message, Snackbar.LENGTH_LONG);
+                snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.holo_red_dark));
+                snackbar.show();
             }
         });
     }

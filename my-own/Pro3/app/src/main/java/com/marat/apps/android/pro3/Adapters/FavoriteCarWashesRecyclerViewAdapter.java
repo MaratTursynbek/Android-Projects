@@ -33,22 +33,19 @@ public class FavoriteCarWashesRecyclerViewAdapter extends RecyclerView.Adapter<F
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView carWashPhoto;
         private TextView carWashName;
-        private TextView carWashAddress;
         private TextView carWashPrice;
         private TextView carWashDistance;
         private ItemClickListener listener;
-        private View cardView;
-        private RelativeLayout parentLayout;
+        private RelativeLayout parentLayout, cardView;
         private View headerLayout;
         private TextView header;
 
         ViewHolder(View itemView, ItemClickListener listener) {
             super(itemView);
-            carWashName = (TextView) itemView.findViewById(R.id.carWashNameTextView);
-            carWashAddress = (TextView) itemView.findViewById(R.id.carWashAddressTextView);
-            carWashPrice = (TextView) itemView.findViewById(R.id.carWashPriceTextView);
-            carWashDistance = (TextView) itemView.findViewById(R.id.carWashDistanceToTextView);
-            cardView = itemView.findViewById(R.id.listItemCarWashCardView);
+            carWashName = (TextView) itemView.findViewById(R.id.cwcNameTextView);
+            carWashPrice = (TextView) itemView.findViewById(R.id.cwcPriceTextView);
+            carWashDistance = (TextView) itemView.findViewById(R.id.cwcDistanceToTextView);
+            cardView = (RelativeLayout) itemView.findViewById(R.id.listItemCarWashCardLayout);
             parentLayout = (RelativeLayout) itemView.findViewById(R.id.listItemCarWashParentLayout);
             headerLayout = itemView.findViewById(R.id.listItemCarWashHeaderLayout);
             header = (TextView) itemView.findViewById(R.id.listItemCarWashHeaderTextView);
@@ -88,10 +85,9 @@ public class FavoriteCarWashesRecyclerViewAdapter extends RecyclerView.Adapter<F
         db.open();
         cursor.moveToPosition(position);
         holder.carWashName.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_NAME)));
-        holder.carWashAddress.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_ADDRESS)));
         holder.carWashPrice.setText("Кузов + Салон от " + cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_EXAMPLE_PRICE)) + " тг.");
 
-        if ( (position == 0) || (currentCityId != cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_CITY_ID)))) {
+        if ((position == 0) || (currentCityId != cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_CITY_ID)))) {
             holder.header.setText(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_CITY_NAME)));
             currentCityId = cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_CITY_ID));
         } else {

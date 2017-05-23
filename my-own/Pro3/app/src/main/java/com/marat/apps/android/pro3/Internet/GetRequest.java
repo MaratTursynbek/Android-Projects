@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.marat.apps.android.pro3.Activities.OrderDetailsActivity;
 import com.marat.apps.android.pro3.Interfaces.RequestResponseListener;
 
 import java.io.IOException;
@@ -94,6 +95,17 @@ public class GetRequest {
     }
 
     public void getAllUserOrders(String url, String token) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .url(url)
+                .build();
+
+        call = client.newCall(request);
+        executeCall();
+    }
+
+    public void getUserOrder(String url, String token) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .header("Authorization", token)

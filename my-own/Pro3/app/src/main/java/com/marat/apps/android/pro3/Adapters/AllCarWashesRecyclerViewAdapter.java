@@ -38,10 +38,10 @@ public class AllCarWashesRecyclerViewAdapter extends RecyclerView.Adapter<AllCar
 
         ViewHolder(View itemView, ItemClickListener listener) {
             super(itemView);
-            carWashName = (TextView) itemView.findViewById(R.id.carWashNameTextView);
-            carWashAddress = (TextView) itemView.findViewById(R.id.carWashAddressTextView);
-            carWashPrice = (TextView) itemView.findViewById(R.id.carWashPriceTextView);
-            carWashDistance = (TextView) itemView.findViewById(R.id.carWashDistanceToTextView);
+            carWashName = (TextView) itemView.findViewById(R.id.cwcNameTextView);
+            carWashAddress = (TextView) itemView.findViewById(R.id.cwcAddressTextView);
+            carWashPrice = (TextView) itemView.findViewById(R.id.cwcPriceTextView);
+            carWashDistance = (TextView) itemView.findViewById(R.id.cwcDistanceToTextView);
             this.listener = listener;
             itemView.setOnClickListener(this);
         }

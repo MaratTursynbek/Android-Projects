@@ -65,7 +65,7 @@ public class AllCarWashesFragment extends Fragment implements RequestResponseLis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_car_washers, container, false);
+        View v = inflater.inflate(R.layout.fragment_car_washes_all, container, false);
 
         listener = (ToolbarTitleChangeListener) getActivity();
 
