@@ -168,7 +168,7 @@ public class UserOrdersFragment extends Fragment implements RequestResponseListe
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
         SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm");
         Calendar date = Calendar.getInstance();
-        String startTime;
+        String time;
         JSONObject orderJSON;
         for (int i = 0; i < ordersJSONArray.length(); i++) {
             Order order = new Order();
@@ -180,9 +180,11 @@ public class UserOrdersFragment extends Fragment implements RequestResponseListe
             order.setOrderServices(orderJSON.getString("service_name"));
             order.setOrderPrice(orderJSON.getString("price") + " тг.");
 
-            startTime = orderJSON.getString("start_time");
-            date.setTime(sdf1.parse(startTime.substring(0, startTime.length() - 1)));
+            time = orderJSON.getString("start_time");
+            date.setTime(sdf1.parse(time.substring(0, time.length() - 1)));
             order.setOrderTime(sdf2.format(date.getTime()) + " в " + sdf3.format(date.getTime()));
+            time = orderJSON.getString("end_time");
+            date.setTime(sdf1.parse(time.substring(0, time.length() - 1)));
 
             int status = orderJSON.getInt("status");
 

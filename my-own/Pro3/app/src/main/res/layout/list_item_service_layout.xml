@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cwdService1Layout"
+    android:id="@+id/cwdServiceLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RadioButton
-        android:id="@+id/cwdService1RadioButton"
+        android:id="@+id/cwdServiceRadioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -21,13 +21,13 @@
         android:focusableInTouchMode="false"/>
 
     <TextView
-        android:id="@+id/cwdService1TextView"
+        android:id="@+id/cwdServiceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:layout_toEndOf="@+id/cwdService1RadioButton"
-        android:layout_toRightOf="@+id/cwdService1RadioButton"
+        android:layout_toEndOf="@+id/cwdServiceRadioButton"
+        android:layout_toRightOf="@+id/cwdServiceRadioButton"
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingBottom="8dp"

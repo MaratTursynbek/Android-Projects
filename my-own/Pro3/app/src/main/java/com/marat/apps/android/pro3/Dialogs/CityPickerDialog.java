@@ -58,7 +58,6 @@ public class CityPickerDialog extends DialogFragment {
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             City city = new City();
-            city.setRowID(cursor.getLong(cursor.getColumnIndex(CarWashesDatabase.ROW_ID)));
             city.setCityID(cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_CITY_ID)));
             city.setCityName(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CITY_NAME)));
             cities.add(city);

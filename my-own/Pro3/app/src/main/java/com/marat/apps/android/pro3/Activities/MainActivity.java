@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         for (cursorCities.moveToFirst(); !cursorCities.isAfterLast(); cursorCities.moveToNext()) {
             City city = new City();
-            city.setRowID(cursorCities.getLong(cursorCities.getColumnIndex(CarWashesDatabase.ROW_ID)));
             city.setCityID(cursorCities.getInt(cursorCities.getColumnIndex(CarWashesDatabase.KEY_CITY_ID)));
             city.setCityName(cursorCities.getString(cursorCities.getColumnIndex(CarWashesDatabase.KEY_CITY_NAME)));
             cities.add(city);

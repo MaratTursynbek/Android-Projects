@@ -40,13 +40,12 @@
     </android.support.v7.widget.CardView>
 
     <RelativeLayout
-        android:id="@+id/listItemCarWashCardLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/listItemCarWashHeaderLayout">
 
         <include
-            android:id="@+id/header"
+            android:id="@+id/listItemCarWashCardLayout"
             layout="@layout/list_item_car_wash_card"/>
 
     </RelativeLayout>

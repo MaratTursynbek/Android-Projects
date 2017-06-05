@@ -1,7 +1,6 @@
 package com.marat.apps.android.pro3.Activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -91,7 +90,6 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
     protected void onResume() {
         super.onResume();
         updateRequest = new UpdateRequest(this);
-        updateRequest.delegate = this;
         getRequest = new GetRequest(this);
         getRequest.delegate = this;
         getOrder(1);
@@ -141,11 +139,10 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
         String token = getSharedPreferences("carWashUserInfo", Context.MODE_PRIVATE).getString("ACCESS_TOKEN", "");
 
         updateRequest = new UpdateRequest(this);
-        updateRequest.delegate = this;
 
         cancelButtonPressed = true;
 
-        if (updateRequest.isNetworkAvailable()) {
+        if (updateRequest.networkIsAvailable()) {
             showProgressBarVisible(1);
             requestIsGet = false;
             updateRequest.cancelOrder(ORDERS_URL + orderId, "Token token=\"" + token + "\"");
@@ -293,7 +290,7 @@ public class OrderDetailsActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onBackPressed() {
         if (cancelButtonPressed) {
-            
+
         }
         super.onBackPressed();
     }

@@ -3,6 +3,7 @@ package com.marat.apps.android.pro3.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +21,12 @@ public class FavoriteCarWashesRecyclerViewAdapter extends RecyclerView.Adapter<F
     private Cursor cursor;
     private Context context;
     private CarWashesDatabase db;
-    private String origin = "";
     private int currentCityId = -1;
 
-    public FavoriteCarWashesRecyclerViewAdapter(Cursor data, Context c, CarWashesDatabase database, String origin) {
+    public FavoriteCarWashesRecyclerViewAdapter(Cursor data, Context c, CarWashesDatabase database) {
         cursor = data;
         context = c;
         db = database;
-        this.origin = origin;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -36,7 +35,8 @@ public class FavoriteCarWashesRecyclerViewAdapter extends RecyclerView.Adapter<F
         private TextView carWashPrice;
         private TextView carWashDistance;
         private ItemClickListener listener;
-        private RelativeLayout parentLayout, cardView;
+        private RelativeLayout parentLayout;
+        private CardView cardView;
         private View headerLayout;
         private TextView header;
 
@@ -45,8 +45,8 @@ public class FavoriteCarWashesRecyclerViewAdapter extends RecyclerView.Adapter<F
             carWashName = (TextView) itemView.findViewById(R.id.cwcNameTextView);
             carWashPrice = (TextView) itemView.findViewById(R.id.cwcPriceTextView);
             carWashDistance = (TextView) itemView.findViewById(R.id.cwcDistanceToTextView);
-            cardView = (RelativeLayout) itemView.findViewById(R.id.listItemCarWashCardLayout);
             parentLayout = (RelativeLayout) itemView.findViewById(R.id.listItemCarWashParentLayout);
+            cardView = (CardView) itemView.findViewById(R.id.listItemCarWashCardLayout);
             headerLayout = itemView.findViewById(R.id.listItemCarWashHeaderLayout);
             header = (TextView) itemView.findViewById(R.id.listItemCarWashHeaderTextView);
             this.listener = listener;
@@ -72,8 +72,8 @@ public class FavoriteCarWashesRecyclerViewAdapter extends RecyclerView.Adapter<F
                 db.open();
                 cursor.moveToPosition(position);
                 Intent intent = new Intent(context, CarWashDetailsActivity.class);
-                intent.putExtra("row_id", cursor.getLong(cursor.getColumnIndex(CarWashesDatabase.ROW_ID)));
-                intent.putExtra("origin", origin);
+                intent.putExtra("car_wash_id", cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_ID)));
+                intent.putExtra("car_wash_name", cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_NAME)));
                 db.close();
                 context.startActivity(intent);
             }

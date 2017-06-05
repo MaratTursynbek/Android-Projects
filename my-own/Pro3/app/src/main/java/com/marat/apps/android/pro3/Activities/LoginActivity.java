@@ -94,6 +94,9 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
     }
 
     public void logInUser(View v) {
+        postRequest = new PostRequest(this);
+        postRequest.delegate = this;
+
         if (postRequest.isNetworkAvailable()) {
             if (phoneNumberIsFullyEntered()) {
                 if (passwordIsEntered()) {
@@ -116,8 +119,8 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
         formattedPhoneNumber = phone.substring(1, 4) + phone.substring(6, 9) + phone.substring(10, 12) + phone.substring(13);
         return "{\"user\":{" +
 
-                    "\"phone_number\":"      +    "\""    +      formattedPhoneNumber                     +    "\""    +    ","    +
-                    "\"password\":"          +    "\""    +      passwordEditText.getText().toString()    +    "\""    +
+                "\"phone_number\":" + "\"" + formattedPhoneNumber + "\"" + "," +
+                "\"password\":" + "\"" + passwordEditText.getText().toString() + "\"" +
 
                 "}}";
     }
@@ -220,7 +223,9 @@ public class LoginActivity extends AppCompatActivity implements RequestResponseL
     @Override
     protected void onPause() {
         postRequest.cancelCall();
-        dialog.dismiss();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
         super.onPause();
     }
 }

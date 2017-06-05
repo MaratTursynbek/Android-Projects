@@ -101,7 +101,7 @@ public class FavoriteCarWashesFragment extends Fragment implements RequestRespon
     }
 
     private void setAdapterToRecyclerView() {
-        FavoriteCarWashesRecyclerViewAdapter adapter = new FavoriteCarWashesRecyclerViewAdapter(cursor, getContext(), db, "favorite_car_washes");
+        FavoriteCarWashesRecyclerViewAdapter adapter = new FavoriteCarWashesRecyclerViewAdapter(cursor, getContext(), db);
         recyclerView.setAdapter(adapter);
     }
 

@@ -58,7 +58,6 @@ public class CarTypePickerDialog extends DialogFragment {
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             CarType carType = new CarType();
-            carType.setRowID(cursor.getLong(cursor.getColumnIndex(CarWashesDatabase.ROW_ID)));
             carType.setCarTypeID(cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_TYPE_ID)));
             carType.setCarTypeName(cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_TYPE_NAME)));
             carTypes.add(carType);

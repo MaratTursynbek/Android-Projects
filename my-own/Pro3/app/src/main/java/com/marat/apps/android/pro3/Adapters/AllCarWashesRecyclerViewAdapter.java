@@ -19,13 +19,11 @@ public class AllCarWashesRecyclerViewAdapter extends RecyclerView.Adapter<AllCar
     private Cursor cursor;
     private Context context;
     private CarWashesDatabase db;
-    private String origin = "";
 
-    public AllCarWashesRecyclerViewAdapter(Cursor data, Context c, CarWashesDatabase database, String org) {
+    public AllCarWashesRecyclerViewAdapter(Cursor data, Context c, CarWashesDatabase database) {
         cursor = data;
         context = c;
         db = database;
-        origin = org;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -65,8 +63,8 @@ public class AllCarWashesRecyclerViewAdapter extends RecyclerView.Adapter<AllCar
                 db.open();
                 cursor.moveToPosition(position);
                 Intent intent = new Intent(context, CarWashDetailsActivity.class);
-                intent.putExtra("row_id", cursor.getLong(cursor.getColumnIndex(CarWashesDatabase.ROW_ID)));
-                intent.putExtra("origin", origin);
+                intent.putExtra("car_wash_id", cursor.getInt(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_ID)));
+                intent.putExtra("car_wash_name", cursor.getString(cursor.getColumnIndex(CarWashesDatabase.KEY_CAR_WASH_NAME)));
                 db.close();
                 context.startActivity(intent);
             }

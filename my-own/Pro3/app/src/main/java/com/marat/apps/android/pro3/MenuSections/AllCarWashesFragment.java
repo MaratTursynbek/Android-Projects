@@ -132,7 +132,7 @@ public class AllCarWashesFragment extends Fragment implements RequestResponseLis
 
     private void setAdapterToRecyclerView() {
         if (adapter == null) {
-            adapter = new AllCarWashesRecyclerViewAdapter(cursor, getContext(), db, "all_car_washes");
+            adapter = new AllCarWashesRecyclerViewAdapter(cursor, getContext(), db);
             recyclerView.setAdapter(adapter);
         } else {
             adapter.updateCursor(cursor);

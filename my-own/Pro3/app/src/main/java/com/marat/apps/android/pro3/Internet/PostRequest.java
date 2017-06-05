@@ -56,6 +56,19 @@ public class PostRequest {
         executeCall();
     }
 
+    public void addCarWashToFavorites(String url, String json, String token) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .url(url)
+                .post(body)
+                .build();
+
+        call = client.newCall(request);
+        executeCall();
+    }
+
     private void executeCall() {
         call.enqueue(new Callback() {
             @Override

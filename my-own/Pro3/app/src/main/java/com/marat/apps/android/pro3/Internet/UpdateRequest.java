@@ -1,5 +1,6 @@
 package com.marat.apps.android.pro3.Internet;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,14 +21,27 @@ public class UpdateRequest {
     private Call call;
     private boolean callerAlive;
 
-    public RequestResponseListener delegate = null;
+    private RequestResponseListener delegate = null;
 
-    public UpdateRequest(Context c) {
-        context = c;
+    public UpdateRequest(Activity a) {
+        context = a;
+        delegate = (RequestResponseListener) a;
         callerAlive = true;
     }
 
     public void cancelOrder(String url, String token) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .header("Authorization", token)
+                .url(url)
+                .delete()
+                .build();
+
+        call = client.newCall(request);
+        executeCall();
+    }
+
+    public void deleteCarWashFromFavorites(String url, String token) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .header("Authorization", token)
@@ -61,7 +75,7 @@ public class UpdateRequest {
         callerAlive = false;
     }
 
-    public boolean isNetworkAvailable() {
+    public boolean networkIsAvailable() {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         boolean isAvailable = false;

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="developer.marat.apps.days.Activities.MainActivity">
+
+    <item
+        android:id="@+id/create_or_delete_favorite"
+        android:icon="@drawable/ic_star_border_white_36dp"
+        android:title="@string/menu_make_favorite"
+        app:showAsAction="always"/>
+
+</menu>

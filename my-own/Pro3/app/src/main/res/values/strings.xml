@@ -39,6 +39,10 @@
     <string name="text_no_time_slots_for_tomorrow">На завтра бронировать пока что не возможно</string>
     <string name="text_word_or">или</string>
     <string name="text_show_in_map"><u>Показать на Карте</u></string>
+    <string name="text_30_minutes">30 мин</string>
+    <string name="text_60_minutes">60 мин</string>
+    <string name="text_0_tenge">0 тг</string>
+    <string name="text_0_minutes">0 мин</string>
 
     <string name="navigation_drawer_open">Открыть Меню</string>
     <string name="navigation_drawer_close">Закрыть Меню</string>
@@ -53,6 +57,11 @@
     <string name="error_could_not_load_data">Не удалось загрузить данные</string>
     <string name="error_could_not_create_user">Не удалось создать пользователя</string>
     <string name="error_wrong_phone_or_pass">Неверный Логин или Пароль</string>
+    <string name="error_could_not_make_favorite">Не удалось Добавить в Избранные</string>
+    <string name="error_could_not_cancel_favorite">Не удалось Удалить из Избранные</string>
+
+    <string name="success_car_wash_added_to_favorites">Добавлено в Избранные</string>
+    <string name="success_car_wash_deleted_from_favorites">Удалено из Избранных</string>
 
     <string name="server_response_ok">OK\u0020</string>
     <string name="server_response_created">Created\u0020</string>
@@ -67,4 +76,10 @@
     <string name="dialog_button_tomorrow">Завтра</string>
     <string name="dialog_button_cancel_2">Отмена</string>
     <string name="dialog_button_book">Забронировать</string>
+
+    <string name="dialog_text_adding_to_favorites">Добавляю в Избранные</string>
+    <string name="dialog_text_deleting_from_favorites">Удаляю в Избранные</string>
+
+    <string name="menu_make_favorite">Добавить в Избранные</string>
+    <string name="menu_cancel_favorite">Удалить из Избранные</string>
 </resources>
